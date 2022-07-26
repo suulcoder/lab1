@@ -9,36 +9,36 @@ program             : (my_class ';')+ ;
 
 my_class            : 'class' TYPE ('inherits' TYPE)? '{' (feature ';')+ '}' ;
 
-feature             : (ID '(' ( formal ','? )* ')' ':' TYPE '{' expr '}')
-                    |  ID ':' TYPE ('<-' expr )?
+feature             : (ID '(' ( formal ','? )* ')' ':' TYPE '{' expr '}')                       # MethodFeature
+                    |  ID ':' TYPE ('<-' expr )?                                                # DeclarationFeature
                     ;
 
 formal              : ID ':' TYPE ;
 
-expr                : ID '<-' expr 
-                    | expr '(' (expr ','?)+ ')' 
-                    | expr  ('@' TYPE)?  '.' ID '(' expr (',' expr)* ')'
-                    | 'if' expr 'then' expr 'else' expr 'fi'
-                    | 'while' expr 'loop' expr 'pool' 
-                    | '{' (expr ';')+ '}'
-                    | 'let' ID ':' TYPE ('<-' expr)? (',' ID ':' TYPE  '<-' expr )* 'in' expr
-                    | 'new' TYPE
-                    | 'isvoID' expr
-                    | expr '+' expr
-                    | expr '-' expr
-                    | expr '*' expr
-                    | expr '/' expr
-                    | '~' expr
-                    | expr '<' expr
-                    | expr '<=' expr
-                    | expr '=' expr
-                    | 'not' expr
-                    | '(' expr ')'
-                    | ID
-                    | INT
-                    | STRING
-                    | 'true'
-                    | 'false'
+expr                : ID '<-' expr                                                              # DeclarationExpr
+                    | expr '(' (expr ','?)+ ')'                                                 # FunctionExpr
+                    | expr  ('@' TYPE)?  '.' ID '(' expr (',' expr)* ')'                        # MethodExpr
+                    | 'if' expr 'then' expr 'else' expr 'fi'                                    # ifelseExpr
+                    | 'while' expr 'loop' expr 'pool'                                           # whileExpr
+                    | '{' (expr ';')+ '}'                                                       # BracketsExpr
+                    | 'let' ID ':' TYPE ('<-' expr)? (',' ID ':' TYPE  '<-' expr )* 'in' expr   # LetExpr
+                    | 'new' TYPE                                                                # InstanceExpr
+                    | 'isvoID' expr                                                             # voidExpr
+                    | expr '+' expr                                                             # sumExpr
+                    | expr '-' expr                                                             # minusExpr
+                    | expr '*' expr                                                             # timesExpr
+                    | expr '/' expr                                                             # divideExpr
+                    | '~' expr                                                                  # negateExpr
+                    | expr '<' expr                                                             # lessThanExpr
+                    | expr '<=' expr                                                            # lessThanEqualExpr
+                    | expr '=' expr                                                             # equalExpr
+                    | 'not' expr                                                                # notExpr
+                    | '(' expr ')'                                                              # parensExpr
+                    | ID                                                                        # idExpr
+                    | INT                                                                       # intExpr
+                    | STRING                                                                    # stringExpr
+                    | 'true'                                                                    # trueExpr
+                    | 'false'                                                                   # falseExpr
                     ;
 
 /*

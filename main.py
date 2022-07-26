@@ -1,11 +1,11 @@
 import sys
-import os
+from visitor import Visitor
 
 from antlr4 import *
 from antlr4.error.ErrorListener import ErrorListener
 from antlr4.tree.Trees import Trees
-from Compiled.__my__Lexer import __my__Lexer
-from Compiled.__my__Parser import __my__Parser
+from Compiled.YAPLLexer import YAPLLexer
+from Compiled.YAPLParser import YAPLParser
 
 #Error Listener when error is detected
 class MyErrorListener(ErrorListener):
@@ -22,13 +22,13 @@ def testGrammar(test_file):
     input_stream = FileStream(test_file)
     
     #Lexer actions
-    lexer = __my__Lexer(input_stream)
+    lexer = YAPLLexer(input_stream)
     lexer.removeErrorListeners()
     lexer.addErrorListener(error_listener)
     stream = CommonTokenStream(lexer)
     
     #Parser actions
-    parser = __my__Parser(stream)
+    parser = YAPLParser(stream)
     parser.removeErrorListeners()
     parser.addErrorListener(error_listener)
     
@@ -37,6 +37,10 @@ def testGrammar(test_file):
     
     #Pretty print of parse tree
     print(Trees.toStringTree(tree, None, parser))
+    
+    # evaluator
+    visitor = Visitor()
+    output = visitor.visit(tree)
 
 def main(argv):
     test_file = argv[1]
