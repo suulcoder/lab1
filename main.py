@@ -4,8 +4,8 @@ from visitor import Visitor, symbolTable
 from antlr4 import *
 from antlr4.error.ErrorListener import ErrorListener
 from antlr4.tree.Trees import Trees
-from Compiled.YAPLLexer import YAPLLexer
-from Compiled.YAPLParser import YAPLParser
+from Compiled.__my__Lexer import __my__Lexer
+from Compiled.__my__Parser import __my__Parser
 
 #Error Listener when error is detected
 class MyErrorListener(ErrorListener):
@@ -22,13 +22,13 @@ def testGrammar(test_file):
     input_stream = FileStream(test_file)
     
     #Lexer actions
-    lexer = YAPLLexer(input_stream)
+    lexer = __my__Lexer(input_stream)
     lexer.removeErrorListeners()
     lexer.addErrorListener(error_listener)
     stream = CommonTokenStream(lexer)
     
     #Parser actions
-    parser = YAPLParser(stream)
+    parser = __my__Parser(stream)
     parser.removeErrorListeners()
     parser.addErrorListener(error_listener)
     
