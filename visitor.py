@@ -7,18 +7,34 @@ from Compiled.YAPLVisitor import YAPLVisitor
 
 class Visitor(YAPLVisitor):
 
+    # Visit a parse tree produced by YAPLParser#my_class.
+    def visitMy_class(self, ctx):
+        class_name = ctx.TYPE()[0]
+        print('Simbol Name: ' + str(class_name),'\tType: ' + 'Class, ' + str(class_name), '\tScope: ' + 'Global')
+        return self.visitChildren(ctx)
+
+
     # Visit a parse tree produced by YAPLParser#MethodFeature.
     def visitMethodFeature(self, ctx):
+        func_name = ctx.ID()
+        type = ctx.TYPE()
+        print('Simbol Name: ' + str(func_name),'\tType: ' + 'Feature, ' + str(type), '\tScope: ' + 'Bracket Feature')
         return self.visitChildren(ctx)
 
 
     # Visit a parse tree produced by YAPLParser#DeclarationFeature.
     def visitDeclarationFeature(self, ctx):
+        func_name = ctx.ID()
+        type = ctx.TYPE()
+        print('Simbol Name: ' + str(func_name),'\tType: ' + 'Feature, ' + str(type), '\tScope: ' + 'Arrow Feature')
         return self.visitChildren(ctx)
 
 
     # Visit a parse tree produced by YAPLParser#formal.
     def visitFormal(self, ctx):
+        var_name = ctx.ID()
+        type = ctx.TYPE()
+        print('Simbol Name: ' + str(var_name),'\tType: ' + str(type), '\tScope: ' + 'Function Parameter')
         return self.visitChildren(ctx)
 
 
@@ -120,7 +136,6 @@ class Visitor(YAPLVisitor):
         children = []
         for node in ctx.expr():
             children.append(self.visit(node))
-        print(children)
         return children
 
 
