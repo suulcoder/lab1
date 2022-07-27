@@ -36,7 +36,7 @@ def testGrammar(test_file):
     tree = parser.program()
     
     #Pretty print of parse tree
-    print(Trees.toStringTree(tree, None, parser))
+    #print(Trees.toStringTree(tree, None, parser))
     
     # evaluator
     visitor = Visitor()

@@ -34,7 +34,8 @@ class Visitor(YAPLVisitor):
 
     # Visit a parse tree produced by YAPLParser#intExpr.
     def visitIntExpr(self, ctx):
-        return self.visitChildren(ctx)
+        #return self.visitChildren(ctx)
+        return {'type':'INT', 'value':ctx.getText()}
 
 
     # Visit a parse tree produced by YAPLParser#FunctionExpr.
@@ -49,7 +50,8 @@ class Visitor(YAPLVisitor):
 
     # Visit a parse tree produced by YAPLParser#trueExpr.
     def visitTrueExpr(self, ctx):
-        return self.visitChildren(ctx)
+        #return self.visitChildren(ctx)
+        return {'type':'bool', 'value':ctx.getText()}
 
 
     # Visit a parse tree produced by YAPLParser#MethodExpr.
@@ -99,7 +101,8 @@ class Visitor(YAPLVisitor):
 
     # Visit a parse tree produced by YAPLParser#stringExpr.
     def visitStringExpr(self, ctx):
-        return self.visitChildren(ctx)
+        #return self.visitChildren(ctx)
+        return {'type':'INT', 'value':ctx.getText()}
 
 
     # Visit a parse tree produced by YAPLParser#negateExpr.
@@ -114,9 +117,11 @@ class Visitor(YAPLVisitor):
 
     # Visit a parse tree produced by YAPLParser#sumExpr.
     def visitSumExpr(self, ctx):
-        l = ctx.getText()
-        print(l)
-        return self.visitChildren(ctx)
+        children = []
+        for node in ctx.expr():
+            children.append(self.visit(node))
+        print(children)
+        return children
 
 
     # Visit a parse tree produced by YAPLParser#whileExpr.
@@ -126,17 +131,18 @@ class Visitor(YAPLVisitor):
 
     # Visit a parse tree produced by YAPLParser#falseExpr.
     def visitFalseExpr(self, ctx):
-        return self.visitChildren(ctx)
+        #return self.visitChildren(ctx)
+        return {'type':'bool', 'value':ctx.getText()}
 
 
     # Visit a parse tree produced by YAPLParser#lessThanEqualExpr.
     def visitLessThanEqualExpr(self, ctx):
         return self.visitChildren(ctx)
 
-
     # Visit a parse tree produced by YAPLParser#idExpr.
     def visitIdExpr(self, ctx):
-        return self.visitChildren(ctx)
+        #return self.visitChildren(ctx)
+        return {'type':'ID', 'value':ctx.getText()}
 
 
     # Visit a parse tree produced by YAPLParser#equalExpr.
