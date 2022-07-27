@@ -1,5 +1,5 @@
 import sys
-from visitor import Visitor
+from visitor import Visitor, symbolTable
 
 from antlr4 import *
 from antlr4.error.ErrorListener import ErrorListener
@@ -41,6 +41,11 @@ def testGrammar(test_file):
     # evaluator
     visitor = Visitor()
     output = visitor.visit(tree)
+    
+    #Print Table
+    print("\n\n\n##############################  Symbol Table  ##############################\n")
+    for symbol in symbolTable.symbols_table:
+        print('Symbol Name: ' + symbol[0], '\t\tType: ' + symbol[1], '\t\tScope: ' + symbol[2])
 
 def main(argv):
     test_file = argv[1]

@@ -1,8 +1,8 @@
 # Generated from YAPL.g4 by ANTLR 4.10
-import sys
-from antlr4 import *
 from Compiled.YAPLVisitor import YAPLVisitor
+from SymbolTable import SymbolsTable
 
+symbolTable = SymbolsTable()
 # This class defines a complete generic visitor for a parse tree produced by YAPLParser.
 
 class Visitor(YAPLVisitor):
@@ -10,7 +10,11 @@ class Visitor(YAPLVisitor):
     # Visit a parse tree produced by YAPLParser#my_class.
     def visitMy_class(self, ctx):
         class_name = ctx.TYPE()[0]
-        print('Simbol Name: ' + str(class_name),'\tType: ' + 'Class, ' + str(class_name), '\tScope: ' + 'Global')
+        symbolTable.AddSymbol(
+            str(class_name),
+            'Class, ' + str(class_name), 
+            'Global'
+        )
         return self.visitChildren(ctx)
 
 
@@ -18,7 +22,11 @@ class Visitor(YAPLVisitor):
     def visitMethodFeature(self, ctx):
         func_name = ctx.ID()
         type = ctx.TYPE()
-        print('Simbol Name: ' + str(func_name),'\tType: ' + 'Feature, ' + str(type), '\tScope: ' + 'Bracket Feature')
+        symbolTable.AddSymbol(
+            str(func_name),
+            'Feature, ' + str(type),
+            'Bracket Feature'
+        )
         return self.visitChildren(ctx)
 
 
@@ -26,7 +34,11 @@ class Visitor(YAPLVisitor):
     def visitDeclarationFeature(self, ctx):
         func_name = ctx.ID()
         type = ctx.TYPE()
-        print('Simbol Name: ' + str(func_name),'\tType: ' + 'Feature, ' + str(type), '\tScope: ' + 'Arrow Feature')
+        symbolTable.AddSymbol(
+            str(func_name),
+            'Feature, ' + str(type),
+            'Arrow Feature'
+        )
         return self.visitChildren(ctx)
 
 
@@ -34,7 +46,11 @@ class Visitor(YAPLVisitor):
     def visitFormal(self, ctx):
         var_name = ctx.ID()
         type = ctx.TYPE()
-        print('Simbol Name: ' + str(var_name),'\tType: ' + str(type), '\tScope: ' + 'Function Parameter')
+        symbolTable.AddSymbol(
+            str(var_name),
+            str(type),
+            'Function Parameter'
+        )
         return self.visitChildren(ctx)
 
 
@@ -77,6 +93,14 @@ class Visitor(YAPLVisitor):
 
     # Visit a parse tree produced by YAPLParser#LetExpr.
     def visitLetExpr(self, ctx):
+        ids = ctx.ID()
+        types = ctx.TYPE()
+        for index in range(0, len(ids)):
+            symbolTable.AddSymbol(
+                str(ids[index]),
+                str(types[index]),
+                'Let Declaration Variable' if index == 0  else 'Let Declaration parameter'
+            )
         return self.visitChildren(ctx)
 
 
