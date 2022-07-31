@@ -6,7 +6,7 @@ from antlr4.error.ErrorListener import ErrorListener
 from antlr4.tree.Trees import Trees
 from Compiled.__my__Lexer import __my__Lexer
 from Compiled.__my__Parser import __my__Parser
-
+from tabulate import tabulate
 #Error Listener when error is detected
 class MyErrorListener(ErrorListener):
     def syntaxError(self, recognizer, offendingSymbol, line, column, msg, e):
@@ -43,9 +43,15 @@ def testGrammar(test_file):
     output = visitor.visit(tree)
     
     #Print Table
+    names = []
+    types = []
+    scopes = []
     print("\n\n\n##############################  Symbol Table  ##############################\n")
     for symbol in symbolTable.symbols_table:
-        print('Symbol Name: ' + symbol[0], '\t\tType: ' + symbol[1], '\t\tScope: ' + symbol[2])
+        names.append(symbol[0])
+        types.append(symbol[1])
+        scopes.append(symbol[2])
+    print(tabulate({'Symbol Name:': names, 'Type:': types,  'Scope:':scopes}, headers="keys", tablefmt='fancy_grid'))
 
 def main(argv):
     test_file = argv[1]
