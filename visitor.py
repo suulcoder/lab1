@@ -1,6 +1,6 @@
 # Generated from __my__.g4 by ANTLR 4.10
 from Compiled.__my__Visitor import __my__Visitor
-from SymbolTable import SymbolsTable
+from symbolTable import SymbolsTable
 
 symbolTable = SymbolsTable()
 # This class defines a complete generic visitor for a parse tree produced by __my__Parser.
