@@ -56,7 +56,24 @@ class Visitor(__my__Visitor):
 
     # Visit a parse tree produced by __my__Parser#divideExpr.
     def visitDivideExpr(self, ctx):
-        return self.visitChildren(ctx)
+        children = []
+        for node in ctx.expr():
+            child = self.visit(node)
+            if child.get('type') == 'ID':
+                type = symbolTable.FindSymbol(child.get('value'))[1]
+                if type == 'Symbol not found':
+                    children.append({'type':'ERROR', 'value':'ID doesnt exist in ' + ctx.getText()})
+                else:
+                    children.append({'type': type, 'value':child.get('value')})
+            else:
+                children.append(child)
+        print('division between ', children[0].get('type'), 'and', children[1].get('type'))
+        if  children[0].get('type') == 'Int' and children[1].get('type') == 'Int':
+            print('Int is returned\n\n')
+            return {'type':'Int', 'value':ctx.getText()}
+        else: 
+            print('Error is returned\n\n' + ctx.getText())
+            return {'type':'ERROR', 'value':ctx.getText()}
 
 
     # Visit a parse tree produced by __my__Parser#ifelseExpr.
@@ -153,8 +170,24 @@ class Visitor(__my__Visitor):
 
     # Visit a parse tree produced by __my__Parser#timesExpr.
     def visitTimesExpr(self, ctx):
-        return self.visitChildren(ctx)
-
+        children = []
+        for node in ctx.expr():
+            child = self.visit(node)
+            if child.get('type') == 'ID':
+                type = symbolTable.FindSymbol(child.get('value'))[1]
+                if type == 'Symbol not found':
+                    children.append({'type':'ERROR', 'value':'ID doesnt exist in ' + ctx.getText()})
+                else:
+                    children.append({'type': type, 'value':child.get('value')})
+            else:
+                children.append(child)
+        print('multiplication between ', children[0].get('type'), 'and', children[1].get('type'))
+        if  children[0].get('type') == 'Int' and children[1].get('type') == 'Int':
+            print('Int is returned\n\n')
+            return {'type':'Int', 'value':ctx.getText()}
+        else: 
+            print('Error is returned\n\n' + ctx.getText())
+            return {'type':'ERROR', 'value':ctx.getText()}
 
     # Visit a parse tree produced by __my__Parser#stringExpr.
     def visitStringExpr(self, ctx):
