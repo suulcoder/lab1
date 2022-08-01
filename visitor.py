@@ -67,7 +67,7 @@ class Visitor(__my__Visitor):
     # Visit a parse tree produced by __my__Parser#intExpr.
     def visitIntExpr(self, ctx):
         #return self.visitChildren(ctx)
-        return {'type':'INT', 'value':ctx.getText()}
+        return {'type':'Int', 'value':ctx.getText()}
 
 
     # Visit a parse tree produced by __my__Parser#FunctionExpr.
@@ -126,7 +126,24 @@ class Visitor(__my__Visitor):
 
     # Visit a parse tree produced by __my__Parser#minusExpr.
     def visitMinusExpr(self, ctx):
-        return self.visitChildren(ctx)
+        children = []
+        for node in ctx.expr():
+            child = self.visit(node)
+            if child.get('type') == 'ID':
+                type = symbolTable.FindSymbol(child.get('value'))[1]
+                if type == 'Symbol not found':
+                    children.append({'type':'ERROR', 'value':'ID doesnt exist in ' + ctx.getText()})
+                else:
+                    children.append({'type': type, 'value':child.get('value')})
+            else:
+                children.append(child)
+        print('substraction between ', children[0].get('type'), 'and', children[1].get('type'))
+        if  children[0].get('type') == 'Int' and children[1].get('type') == 'Int':
+            print('Int is returned\n\n')
+            return {'type':'Int', 'value':ctx.getText()}
+        else: 
+            print('Error is returned\n\n' + ctx.getText())
+            return {'type':'ERROR', 'value':ctx.getText()}
 
 
     # Visit a parse tree produced by __my__Parser#DeclarationExpr.
@@ -142,7 +159,7 @@ class Visitor(__my__Visitor):
     # Visit a parse tree produced by __my__Parser#stringExpr.
     def visitStringExpr(self, ctx):
         #return self.visitChildren(ctx)
-        return {'type':'INT', 'value':ctx.getText()}
+        return {'type':'String', 'value':ctx.getText()}
 
 
     # Visit a parse tree produced by __my__Parser#negateExpr.
@@ -159,10 +176,26 @@ class Visitor(__my__Visitor):
     def visitSumExpr(self, ctx):
         children = []
         for node in ctx.expr():
-            children.append(self.visit(node))
-        return children
-
-
+            child = self.visit(node)
+            if child.get('type') == 'ID':
+                type = symbolTable.FindSymbol(child.get('value'))[1]
+                if type == 'Symbol not found':
+                    children.append({'type':'ERROR', 'value':'ID doesnt exist in ' + ctx.getText()})
+                else:
+                    children.append({'type': type, 'value':child.get('value')})
+            else:
+                children.append(child)
+        print('sum between ', children[0].get('type'), 'and', children[1].get('type'))
+        if  children[0].get('type') == 'Int' and children[1].get('type') == 'Int':
+            print('Int is returned\n\n')
+            return {'type':'Int', 'value':ctx.getText()}
+        #TODO
+        elif children[0].get('type') == 'String' and children[1].get('type') == 'String':
+            print('String is returned\n\n')
+            return {'type':'String', 'value':ctx.getText()}
+        else: 
+            print('Error is returned\n\n')
+            return {'type':'ERROR', 'value':ctx.getText()}
     # Visit a parse tree produced by __my__Parser#whileExpr.
     def visitWhileExpr(self, ctx):
         return self.visitChildren(ctx)

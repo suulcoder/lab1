@@ -14,8 +14,8 @@ class A {
       self
    };
 
-   method2(num1 : Int, num2 : Int) : B {  -- plus
-      (let x : Int in
+   method2(num1 : String, num2 : String) : B {  -- plus
+      (let x : String in
 	 {
             x <- num1 + num2;
 	    (new B).set_var(x);
@@ -57,7 +57,7 @@ class A {
 	       while y <= num loop
 	          {
                      x <- x * y;
-	             y <- y + 1;
+	             y <- y - 1;
 	          }
 	       pool
 	    );
@@ -106,12 +106,12 @@ class C inherits B {
 class D inherits B {  
 		
    method7(num : Int) : Bool {  -- divisible by 3
-      (let x : Int <- num in
-            if x < 0 then method7(~x) else
-            if 0 = x then true else
-            if 1 = x then false else
-	    if 2 = x then false else
-	       method7(x - 3)
+      (let z : Int <- num in
+            if z < 0 then method7(~z) else
+            if 0 = z then true else
+            if 1 = z then false else
+	    if 2 = z then false else
+	       method7(z - 3 + 1)
 	    fi fi fi fi
       )
    };
