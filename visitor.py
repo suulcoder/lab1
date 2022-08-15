@@ -22,12 +22,12 @@ class Visitor(YAPLVisitor):
         
         # Every YAPL program must contain a Main class.
         # ==============================================================
-        is_there_a_main_class = False
+        count_main_class = 0
         for node in ctx.my_class():
             child = self.visit(node)
             if(str(child)=='Main'):
-                is_there_a_main_class = True
-        if(not is_there_a_main_class):
+                count_main_class += 1
+        if(count_main_class!=1):
             printError('Every YAPL program must contain a Main class')
         # ==============================================================
 
@@ -47,14 +47,14 @@ class Visitor(YAPLVisitor):
                     'The Main class cannot inherit from any other class',
                     ctx.TYPE()[1].getPayload().line,
                 ) 
-            is_there_a_valid_main_method = False
             
             #Validation of a main method with no formal parameters:
+            count_main_method = 0
             for node in ctx.feature():
                 child = self.visit(node)
                 if(child[0]=='method' and str(child[1])=='main' and child[2]==0):
-                    is_there_a_valid_main_method = True
-            if(not is_there_a_valid_main_method):
+                    count_main_method += 1
+            if(count_main_method != 1):
                 printError(
                     'The Main class must contain a main method with no formal parameters',
                     class_name.getPayload().line,
