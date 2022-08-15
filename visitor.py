@@ -1,60 +1,128 @@
-# Generated from __my__.g4 by ANTLR 4.10
-from Compiled.__my__Visitor import __my__Visitor
+# Generated from YAPL.g4 by ANTLR 4.10
+from Compiled.YAPLVisitor import YAPLVisitor
 from symbolTable import SymbolsTable
 
 symbolTable = SymbolsTable()
-# This class defines a complete generic visitor for a parse tree produced by __my__Parser.
+# This class defines a complete generic visitor for a parse tree produced by YAPLParser.
 
-class Visitor(__my__Visitor):
 
-    # Visit a parse tree produced by __my__Parser#my_class.
+def printError(error, line=None, start_index=None):
+    if(line!=None and start_index!=None):
+        print('\nSemantic Error: ' + error + ' (at line ' + str(line) + ':' + str(start_index) + ')\n')
+    elif(line!=None):
+        print('\nSemantic Error: ' + error + ' (at line ' + str(line) + ')\n')
+    else:
+        print('\nSemantic Error: ' + error + '\n')
+        
+
+class Visitor(YAPLVisitor):
+    
+    # Visit a parse tree produced by YAPLParser#program.
+    def visitProgram(self, ctx):
+        
+        # Every YAPL program must contain a Main class.
+        # ==============================================================
+        is_there_a_main_class = False
+        for node in ctx.my_class():
+            child = self.visit(node)
+            if(str(child)=='Main'):
+                is_there_a_main_class = True
+        if(not is_there_a_main_class):
+            printError('Every YAPL program must contain a Main class')
+        # ==============================================================
+
+    # Visit a parse tree produced by YAPLParser#my_class.
     def visitMy_class(self, ctx):
+        
         class_name = ctx.TYPE()[0]
+        
+        # The Main class must contain a main method with no formal parameters.
+        # The Main class cannot inherit from any other class.
+        # ==============================================================
+        if(str(class_name)=='Main'):
+            
+            #When this condition is true it is inherting from any other class:
+            if(len(ctx.TYPE())==2):                                    
+                printError(
+                    'The Main class cannot inherit from any other class',
+                    ctx.TYPE()[1].getPayload().line,
+                ) 
+            is_there_a_valid_main_method = False
+            
+            #Validation of a main method with no formal parameters:
+            for node in ctx.feature():
+                child = self.visit(node)
+                if(child[0]=='method' and str(child[1])=='main' and child[2]==0):
+                    is_there_a_valid_main_method = True
+            if(not is_there_a_valid_main_method):
+                printError(
+                    'The Main class must contain a main method with no formal parameters',
+                    class_name.getPayload().line,
+                )
+        # ==============================================================
+        
         symbolTable.AddSymbol(
             str(class_name),
             'Class, ' + str(class_name), 
             'Global'
         )
-        return self.visitChildren(ctx)
+        
+        # ==============================================================
+        # Important to return class_name in order to check that there
+        # is a Main Class
+        return class_name                                       
+        # ==============================================================
+                                                                
 
-
-    # Visit a parse tree produced by __my__Parser#MethodFeature.
+    # Visit a parse tree produced by YAPLParser#MethodFeature.
     def visitMethodFeature(self, ctx):
-        func_name = ctx.ID()
+        name = ctx.ID()
         type = ctx.TYPE()
         symbolTable.AddSymbol(
-            str(func_name),
+            str(name),
             'Feature, ' + str(type),
-            'Bracket Feature'
+            'Method Feature'
         )
-        return self.visitChildren(ctx)
+        self.visitChildren(ctx)
+        
+        # ==============================================================
+        # Important to return ('method',name,len(ctx.formal())) 
+        # in order to check Main.main() structure
+        return ('method',name,len(ctx.formal()))
+        # ==============================================================
 
 
-    # Visit a parse tree produced by __my__Parser#DeclarationFeature.
-    def visitDeclarationFeature(self, ctx):
-        func_name = ctx.ID()
+    # Visit a parse tree produced by YAPLParser#AtributeFeature.
+    def visitAtributeFeature(self, ctx):
+        name = ctx.ID()
         type = ctx.TYPE()
         symbolTable.AddSymbol(
-            str(func_name),
+            str(name),
             'Feature, ' + str(type),
-            'Arrow Feature'
+            'Atribute Feature'
         )
-        return self.visitChildren(ctx)
+        self.visitChildren(ctx)
+        
+        # ==============================================================
+        # Important to return ('method',name,len(ctx.formal())) 
+        # in order to check Main.main() structure
+        return ('atribute',name)
+        # ==============================================================
 
 
-    # Visit a parse tree produced by __my__Parser#formal.
+    # Visit a parse tree produced by YAPLParser#formal.
     def visitFormal(self, ctx):
         var_name = ctx.ID()
         type = ctx.TYPE()
         symbolTable.AddSymbol(
             str(var_name),
             str(type),
-            'Function Parameter'
+            'Method Parameter'
         )
         return self.visitChildren(ctx)
 
 
-    # Visit a parse tree produced by __my__Parser#divideExpr.
+    # Visit a parse tree produced by YAPLParser#divideExpr.
     def visitDivideExpr(self, ctx):
         children = []
         for node in ctx.expr():
@@ -67,48 +135,48 @@ class Visitor(__my__Visitor):
                     children.append({'type': type, 'value':child.get('value')})
             else:
                 children.append(child)
-        print('division between ', children[0].get('type'), 'and', children[1].get('type'))
+        #print('division between ', children[0].get('type'), 'and', children[1].get('type'))
         if  children[0].get('type') == 'Int' and children[1].get('type') == 'Int':
-            print('Int is returned\n\n')
+            #print('Int is returned\n\n')
             return {'type':'Int', 'value':ctx.getText()}
         else: 
-            print('Error is returned\n\n' + ctx.getText())
+            #print('Error is returned\n\n' + ctx.getText())
             return {'type':'ERROR', 'value':ctx.getText()}
 
 
-    # Visit a parse tree produced by __my__Parser#ifelseExpr.
+    # Visit a parse tree produced by YAPLParser#ifelseExpr.
     def visitIfelseExpr(self, ctx):
         return self.visitChildren(ctx)
 
 
-    # Visit a parse tree produced by __my__Parser#intExpr.
+    # Visit a parse tree produced by YAPLParser#intExpr.
     def visitIntExpr(self, ctx):
         #return self.visitChildren(ctx)
         return {'type':'Int', 'value':ctx.getText()}
 
 
-    # Visit a parse tree produced by __my__Parser#FunctionExpr.
+    # Visit a parse tree produced by YAPLParser#FunctionExpr.
     def visitFunctionExpr(self, ctx):
         return self.visitChildren(ctx)
 
 
-    # Visit a parse tree produced by __my__Parser#voidExpr.
+    # Visit a parse tree produced by YAPLParser#voidExpr.
     def visitVoidExpr(self, ctx):
         return self.visitChildren(ctx)
 
 
-    # Visit a parse tree produced by __my__Parser#trueExpr.
+    # Visit a parse tree produced by YAPLParser#trueExpr.
     def visitTrueExpr(self, ctx):
         #return self.visitChildren(ctx)
         return {'type':'bool', 'value':ctx.getText()}
 
 
-    # Visit a parse tree produced by __my__Parser#MethodExpr.
+    # Visit a parse tree produced by YAPLParser#MethodExpr.
     def visitMethodExpr(self, ctx):
         return self.visitChildren(ctx)
 
 
-    # Visit a parse tree produced by __my__Parser#LetExpr.
+    # Visit a parse tree produced by YAPLParser#LetExpr.
     def visitLetExpr(self, ctx):
         ids = ctx.ID()
         types = ctx.TYPE()
@@ -121,27 +189,27 @@ class Visitor(__my__Visitor):
         return self.visitChildren(ctx)
 
 
-    # Visit a parse tree produced by __my__Parser#InstanceExpr.
+    # Visit a parse tree produced by YAPLParser#InstanceExpr.
     def visitInstanceExpr(self, ctx):
         return self.visitChildren(ctx)
 
 
-    # Visit a parse tree produced by __my__Parser#lessThanExpr.
+    # Visit a parse tree produced by YAPLParser#lessThanExpr.
     def visitLessThanExpr(self, ctx):
         return self.visitChildren(ctx)
 
 
-    # Visit a parse tree produced by __my__Parser#BracketsExpr.
+    # Visit a parse tree produced by YAPLParser#BracketsExpr.
     def visitBracketsExpr(self, ctx):
         return self.visitChildren(ctx)
 
 
-    # Visit a parse tree produced by __my__Parser#parensExpr.
+    # Visit a parse tree produced by YAPLParser#parensExpr.
     def visitParensExpr(self, ctx):
         return self.visitChildren(ctx)
 
 
-    # Visit a parse tree produced by __my__Parser#minusExpr.
+    # Visit a parse tree produced by YAPLParser#minusExpr.
     def visitMinusExpr(self, ctx):
         children = []
         for node in ctx.expr():
@@ -154,21 +222,21 @@ class Visitor(__my__Visitor):
                     children.append({'type': type, 'value':child.get('value')})
             else:
                 children.append(child)
-        print('substraction between ', children[0].get('type'), 'and', children[1].get('type'))
+        #print('substraction between ', children[0].get('type'), 'and', children[1].get('type'))
         if  children[0].get('type') == 'Int' and children[1].get('type') == 'Int':
-            print('Int is returned\n\n')
+            #print('Int is returned\n\n')
             return {'type':'Int', 'value':ctx.getText()}
         else: 
-            print('Error is returned\n\n' + ctx.getText())
+            #print('Error is returned\n\n' + ctx.getText())
             return {'type':'ERROR', 'value':ctx.getText()}
 
 
-    # Visit a parse tree produced by __my__Parser#DeclarationExpr.
+    # Visit a parse tree produced by YAPLParser#DeclarationExpr.
     def visitDeclarationExpr(self, ctx):
         return self.visitChildren(ctx)
 
 
-    # Visit a parse tree produced by __my__Parser#timesExpr.
+    # Visit a parse tree produced by YAPLParser#timesExpr.
     def visitTimesExpr(self, ctx):
         children = []
         for node in ctx.expr():
@@ -181,31 +249,31 @@ class Visitor(__my__Visitor):
                     children.append({'type': type, 'value':child.get('value')})
             else:
                 children.append(child)
-        print('multiplication between ', children[0].get('type'), 'and', children[1].get('type'))
+        #print('multiplication between ', children[0].get('type'), 'and', children[1].get('type'))
         if  children[0].get('type') == 'Int' and children[1].get('type') == 'Int':
-            print('Int is returned\n\n')
+            #print('Int is returned\n\n')
             return {'type':'Int', 'value':ctx.getText()}
         else: 
-            print('Error is returned\n\n' + ctx.getText())
+            #print('Error is returned\n\n' + ctx.getText())
             return {'type':'ERROR', 'value':ctx.getText()}
 
-    # Visit a parse tree produced by __my__Parser#stringExpr.
+    # Visit a parse tree produced by YAPLParser#stringExpr.
     def visitStringExpr(self, ctx):
         #return self.visitChildren(ctx)
         return {'type':'String', 'value':ctx.getText()}
 
 
-    # Visit a parse tree produced by __my__Parser#negateExpr.
+    # Visit a parse tree produced by YAPLParser#negateExpr.
     def visitNegateExpr(self, ctx):
         return self.visitChildren(ctx)
 
 
-    # Visit a parse tree produced by __my__Parser#notExpr.
+    # Visit a parse tree produced by YAPLParser#notExpr.
     def visitNotExpr(self, ctx):
         return self.visitChildren(ctx)
 
 
-    # Visit a parse tree produced by __my__Parser#sumExpr.
+    # Visit a parse tree produced by YAPLParser#sumExpr.
     def visitSumExpr(self, ctx):
         children = []
         for node in ctx.expr():
@@ -218,38 +286,38 @@ class Visitor(__my__Visitor):
                     children.append({'type': type, 'value':child.get('value')})
             else:
                 children.append(child)
-        print('sum between ', children[0].get('type'), 'and', children[1].get('type'))
+        #print('sum between ', children[0].get('type'), 'and', children[1].get('type'))
         if  children[0].get('type') == 'Int' and children[1].get('type') == 'Int':
-            print('Int is returned\n\n')
+            #print('Int is returned\n\n')
             return {'type':'Int', 'value':ctx.getText()}
         #TODO
         elif children[0].get('type') == 'String' and children[1].get('type') == 'String':
-            print('String is returned\n\n')
+            #print('String is returned\n\n')
             return {'type':'String', 'value':ctx.getText()}
         else: 
-            print('Error is returned\n\n')
+            #print('Error is returned\n\n')
             return {'type':'ERROR', 'value':ctx.getText()}
-    # Visit a parse tree produced by __my__Parser#whileExpr.
+    # Visit a parse tree produced by YAPLParser#whileExpr.
     def visitWhileExpr(self, ctx):
         return self.visitChildren(ctx)
 
 
-    # Visit a parse tree produced by __my__Parser#falseExpr.
+    # Visit a parse tree produced by YAPLParser#falseExpr.
     def visitFalseExpr(self, ctx):
         #return self.visitChildren(ctx)
         return {'type':'bool', 'value':ctx.getText()}
 
 
-    # Visit a parse tree produced by __my__Parser#lessThanEqualExpr.
+    # Visit a parse tree produced by YAPLParser#lessThanEqualExpr.
     def visitLessThanEqualExpr(self, ctx):
         return self.visitChildren(ctx)
 
-    # Visit a parse tree produced by __my__Parser#idExpr.
+    # Visit a parse tree produced by YAPLParser#idExpr.
     def visitIdExpr(self, ctx):
         #return self.visitChildren(ctx)
         return {'type':'ID', 'value':ctx.getText()}
 
 
-    # Visit a parse tree produced by __my__Parser#equalExpr.
+    # Visit a parse tree produced by YAPLParser#equalExpr.
     def visitEqualExpr(self, ctx):
         return self.visitChildren(ctx)

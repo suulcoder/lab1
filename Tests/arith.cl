@@ -132,7 +132,7 @@ class E inherits D {
 };
 
 
-class Main inherits IO {
+class Main {
    
    char : String;
    avar : A; 

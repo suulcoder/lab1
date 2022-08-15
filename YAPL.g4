@@ -10,7 +10,7 @@ program             : (my_class ';')+ ;
 my_class            : 'class' TYPE ('inherits' TYPE)? '{' (feature ';')+ '}' ;
 
 feature             : (ID '(' ( formal ','? )* ')' ':' TYPE '{' expr '}')                       # MethodFeature
-                    |  ID ':' TYPE ('<-' expr )?                                                # DeclarationFeature
+                    |  ID ':' TYPE ('<-' expr )?                                                # AtributeFeature
                     ;
 
 formal              : ID ':' TYPE ;
