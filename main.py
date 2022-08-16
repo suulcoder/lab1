@@ -43,15 +43,17 @@ def testGrammar(test_file):
     output = visitor.visit(tree)
     
     # #Print Table
-    # names = []
-    # types = []
-    # scopes = []
-    # print("\n\n\n##############################  Symbol Table  ##############################\n")
-    # for symbol in symbolTable.symbols_table:
-    #     names.append(symbol[0])
-    #     types.append(symbol[1])
-    #     scopes.append(symbol[2])
-    # print(tabulate({'Symbol Name:': names, 'Type:': types,  'Scope:':scopes}, headers="keys", tablefmt='fancy_grid'))
+    names = []
+    types = []
+    scopes = []
+    contexts = []
+    print("\n\n\n##############################  Symbol Table  ##############################\n")
+    for symbol in symbolTable.symbols_table:
+        names.append(symbol[0])
+        types.append(symbol[1])
+        scopes.append(symbol[2])
+        contexts.append(symbol[3])
+    print(tabulate({'Symbol Name:': names, 'Type:': types,  'Scope:':scopes, 'Context': contexts}, headers="keys", tablefmt='fancy_grid'))
 
 def main(argv):
     test_file = argv[1]

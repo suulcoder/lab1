@@ -1,6 +1,8 @@
 # Generated from YAPL.g4 by ANTLR 4.10
 from Compiled.YAPLVisitor import YAPLVisitor
-from symbolTable import SymbolsTable
+from symbolTable import SymbolsTable, Symbol_not_found
+
+current_class = ''
 
 symbolTable = SymbolsTable()
 # This class defines a complete generic visitor for a parse tree produced by YAPLParser.
@@ -35,20 +37,22 @@ class Visitor(YAPLVisitor):
     def visitMy_class(self, ctx):
         
         class_name = ctx.TYPE()[0]
+        global current_class
+        current_class = str(class_name)
         
         # The Main class must contain a main method with no formal parameters.
         # The Main class cannot inherit from any other class.
         # ==============================================================
         if(str(class_name)=='Main'):
             
-            #When this condition is true it is inherting from any other class:
+            # When this condition is true it is inherting from any other class:
             if(len(ctx.TYPE())==2):                                    
                 printError(
                     'The Main class cannot inherit from any other class',
                     ctx.TYPE()[1].getPayload().line,
-                ) 
+                )
             
-            #Validation of a main method with no formal parameters:
+            # Validation of a main method with no formal parameters:
             count_main_method = 0
             for node in ctx.feature():
                 child = self.visit(node)
@@ -61,10 +65,35 @@ class Visitor(YAPLVisitor):
                 )
         # ==============================================================
         
+        else:
+            for node in ctx.feature():
+                child = self.visit(node)
+        
+        # Multiple inheritance of classes and recursive inheritance is not possible.
+        # Class inheritance validation
+        # ==============================================================
+        if(len(ctx.TYPE())==2):
+            if(str(class_name) == str(ctx.TYPE()[1])):
+                printError(
+                    'Recursive inheritance is not possible.',
+                    ctx.TYPE()[1].getPayload().line,
+                )
+            if(
+                symbolTable.FindSymbol(
+                    name=str(ctx.TYPE()[1]), context='Class'
+                    ) == Symbol_not_found
+                ):
+                printError(
+                    str(ctx.TYPE()[1]) + ' not defined',
+                    ctx.TYPE()[1].getPayload().line,
+                )
+        # ==============================================================
+        
         symbolTable.AddSymbol(
-            str(class_name),
-            'Class, ' + str(class_name), 
-            'Global'
+            str(class_name),       #Name
+            '',                    #Type
+            '',                    #Scope: Not valid
+            'Class',               #Context  
         )
         
         # ==============================================================
@@ -79,9 +108,10 @@ class Visitor(YAPLVisitor):
         name = ctx.ID()
         type = ctx.TYPE()
         symbolTable.AddSymbol(
-            str(name),
-            'Feature, ' + str(type),
-            'Method Feature'
+            str(name),                     #Name
+            str(type),                     #Type
+            '',                            #Scope     
+            'Method'                       #Context
         )
         self.visitChildren(ctx)
         
@@ -97,9 +127,10 @@ class Visitor(YAPLVisitor):
         name = ctx.ID()
         type = ctx.TYPE()
         symbolTable.AddSymbol(
-            str(name),
-            'Feature, ' + str(type),
-            'Atribute Feature'
+            str(name),                     #Name
+            str(type),                     #Type
+            current_class + '-Global',     #Scope     
+            'Atribute'                     #Context
         )
         self.visitChildren(ctx)
         
@@ -115,9 +146,10 @@ class Visitor(YAPLVisitor):
         var_name = ctx.ID()
         type = ctx.TYPE()
         symbolTable.AddSymbol(
-            str(var_name),
-            str(type),
-            'Method Parameter'
+            str(var_name),                 #Name
+            str(type),                     #Type
+            current_class + '-Local',      #Scope     
+            'Method Parameter'             #Context
         )
         return self.visitChildren(ctx)
 
@@ -182,9 +214,10 @@ class Visitor(YAPLVisitor):
         types = ctx.TYPE()
         for index in range(0, len(ids)):
             symbolTable.AddSymbol(
-                str(ids[index]),
-                str(types[index]),
-                'Let Declaration Variable' if index == 0  else 'Let Declaration parameter'
+                str(ids[index]),                                                               #Name
+                str(types[index]),                                                             #Type
+                current_class + '-Local',                                                      #Scope     
+                'Let Declaration Variable' if index == 0  else 'Let Declaration parameter'     #Context
             )
         return self.visitChildren(ctx)
 
@@ -234,7 +267,6 @@ class Visitor(YAPLVisitor):
     # Visit a parse tree produced by YAPLParser#DeclarationExpr.
     def visitDeclarationExpr(self, ctx):
         return self.visitChildren(ctx)
-
 
     # Visit a parse tree produced by YAPLParser#timesExpr.
     def visitTimesExpr(self, ctx):
