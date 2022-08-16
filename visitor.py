@@ -56,7 +56,7 @@ class Visitor(YAPLVisitor):
             count_main_method = 0
             for node in ctx.feature():
                 child = self.visit(node)
-                if(child[0]=='method' and str(child[1])=='main' and child[2]==0):
+                if(child[0]=='method' and str(child[1])=='main' and len(child[2])==0):
                     count_main_method += 1
             if(count_main_method != 1):
                 printError(
@@ -64,20 +64,22 @@ class Visitor(YAPLVisitor):
                     class_name.getPayload().line,
                 )
         # ==============================================================
-        
-        else:
-            for node in ctx.feature():
-                child = self.visit(node)
+                    
         
         # Multiple inheritance of classes and recursive inheritance is not possible.
         # Class inheritance validation
+        # If B inherits from A and B overrides a method of A, this method must have the same signature with which it was declared in A.
         # ==============================================================
-        if(len(ctx.TYPE())==2):
+        elif(len(ctx.TYPE())==2):
+            
+            #Recursive inheritance
             if(str(class_name) == str(ctx.TYPE()[1])):
                 printError(
                     'Recursive inheritance is not possible.',
                     ctx.TYPE()[1].getPayload().line,
                 )
+                
+            #Inheritance of not defined class
             if(
                 symbolTable.FindSymbol(
                     name=str(ctx.TYPE()[1]), context='Class'
@@ -87,7 +89,42 @@ class Visitor(YAPLVisitor):
                     str(ctx.TYPE()[1]) + ' not defined',
                     ctx.TYPE()[1].getPayload().line,
                 )
+            for node in ctx.feature():
+                child = self.visit(node)
+                
+                #Checking method signatures
+                if(child[0]=='method'):
+                    method_name = child[1]
+                    method_type = child[3]
+                    method_signature = child[2]
+                    parent_name = str(ctx.TYPE()[1])
+                    
+                    #Find if method is being overwritten
+                    parent = symbolTable.FindSymbol(
+                        method_name,
+                        scope=parent_name,
+                        context='Method'
+                    )
+                    
+                    if parent!=Symbol_not_found:
+                        _, parent_type, _, _, parent_signature = parent
+                        valid = parent_type==method_type and len(method_signature)==len(parent_signature)
+                        if(valid and len(method_signature)!=0):
+                            for index in range(0,len(method_signature)):
+                                method_formal = method_signature[index]
+                                parent_formal = parent_signature[index]
+                                valid = (valid and 
+                                         str(method_formal.ID())==str(parent_formal.ID()) and 
+                                         str(method_formal.TYPE())==str(parent_formal.TYPE()))
+                        if(not valid):
+                            printError(
+                                parent_name + '.' + method_name + ' is beign over overtwritten but signature does not match with ' + current_class + '.'+ method_name + ' method.'
+                            )
         # ==============================================================
+        
+        else:
+            for node in ctx.feature():
+                child = self.visit(node)
         
         symbolTable.AddSymbol(
             str(class_name),       #Name
@@ -110,15 +147,16 @@ class Visitor(YAPLVisitor):
         symbolTable.AddSymbol(
             str(name),                     #Name
             str(type),                     #Type
-            '',                            #Scope     
-            'Method'                       #Context
+            current_class,                 #Scope     
+            'Method',                      #Context
+            ctx.formal()                   #Signature
         )
         self.visitChildren(ctx)
         
         # ==============================================================
         # Important to return ('method',name,len(ctx.formal())) 
         # in order to check Main.main() structure
-        return ('method',name,len(ctx.formal()))
+        return ('method',str(name),ctx.formal(), str(type))
         # ==============================================================
 
 

@@ -1,3 +1,4 @@
+from inspect import signature
 import sys
 from visitor import Visitor, symbolTable
 
@@ -47,13 +48,15 @@ def testGrammar(test_file):
     types = []
     scopes = []
     contexts = []
-    print("\n\n\n##############################  Symbol Table  ##############################\n")
-    for symbol in symbolTable.symbols_table:
-        names.append(symbol[0])
-        types.append(symbol[1])
-        scopes.append(symbol[2])
-        contexts.append(symbol[3])
-    print(tabulate({'Symbol Name:': names, 'Type:': types,  'Scope:':scopes, 'Context': contexts}, headers="keys", tablefmt='fancy_grid'))
+    signatures = []
+    # print("\n\n\n##############################  Symbol Table  ##############################\n")
+    # for symbol in symbolTable.symbols_table:
+    #     names.append(symbol[0])
+    #     types.append(symbol[1])
+    #     scopes.append(symbol[2])
+    #     contexts.append(symbol[3])
+    #     signatures.append(symbol[4])
+    # print(tabulate({'Symbol Name:': names, 'Type:': types,  'Scope:':scopes, 'Context': contexts, 'Signature': signatures}, headers="keys", tablefmt='fancy_grid'))
 
 def main(argv):
     test_file = argv[1]

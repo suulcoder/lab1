@@ -1,5 +1,5 @@
 Symbol_not_found = 'Symbol not found'
-
+Symbol_not_available = 'Symbol not available'
 
 # There is a big definition about the scope:
 # In YAPL we have the Global and Local scope
@@ -12,9 +12,11 @@ class SymbolsTable:
     def __init__(self):
         self.symbols_table = []
 
-    def AddSymbol(self, name, type, scope, context):
+    def AddSymbol(self, name, type, scope, context, signature=None):
         if(self.FindSymbol(name, type, scope, context)==Symbol_not_found):
-            return self.symbols_table.append((name, type, scope, context))
+            return self.symbols_table.append((name, type, scope, context, signature))
+        else:
+            return Symbol_not_available
 
     def FindSymbol(self, name, type=None, scope=None, context = None):
         if(not type and not scope and not context):
