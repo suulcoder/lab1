@@ -1,21 +1,14 @@
 # Generated from YAPL.g4 by ANTLR 4.10
 from Compiled.YAPLVisitor import YAPLVisitor
 from symbolTable import SymbolsTable, Symbol_not_found
+from error import printError
 
 current_class = ''
+current_method = ''
 
 symbolTable = SymbolsTable()
 # This class defines a complete generic visitor for a parse tree produced by YAPLParser.
 
-
-def printError(error, line=None, start_index=None):
-    if(line!=None and start_index!=None):
-        print('\nSemantic Error: ' + error + ' (at line ' + str(line) + ':' + str(start_index) + ')\n')
-    elif(line!=None):
-        print('\nSemantic Error: ' + error + ' (at line ' + str(line) + ')\n')
-    else:
-        print('\nSemantic Error: ' + error + '\n')
-        
 
 class Visitor(YAPLVisitor):
     
@@ -131,6 +124,7 @@ class Visitor(YAPLVisitor):
             '',                    #Type
             '',                    #Scope: Not valid
             'Class',               #Context  
+            line=class_name.getPayload().line
         )
         
         # ==============================================================
@@ -143,13 +137,16 @@ class Visitor(YAPLVisitor):
     # Visit a parse tree produced by YAPLParser#MethodFeature.
     def visitMethodFeature(self, ctx):
         name = ctx.ID()
+        global current_method
+        current_method = str(name)
         type = ctx.TYPE()
         symbolTable.AddSymbol(
             str(name),                     #Name
             str(type),                     #Type
             current_class,                 #Scope     
             'Method',                      #Context
-            ctx.formal()                   #Signature
+            ctx.formal(),                  #Signature,
+            line=ctx.ID().getPayload().line
         )
         self.visitChildren(ctx)
         
@@ -168,7 +165,8 @@ class Visitor(YAPLVisitor):
             str(name),                     #Name
             str(type),                     #Type
             current_class + '-Global',     #Scope     
-            'Atribute'                     #Context
+            'Atribute',                    #Context
+            line=name.getPayload().line
         )
         self.visitChildren(ctx)
         
@@ -184,35 +182,18 @@ class Visitor(YAPLVisitor):
         var_name = ctx.ID()
         type = ctx.TYPE()
         symbolTable.AddSymbol(
-            str(var_name),                 #Name
-            str(type),                     #Type
-            current_class + '-Local',      #Scope     
-            'Method Parameter'             #Context
+            str(var_name),                                   #Name
+            str(type),                                       #Type
+            current_class + '-Local-' + current_method,      #Scope     
+            'Method Parameter',                              #Context
+            line=var_name.getPayload().line
         )
         return self.visitChildren(ctx)
 
 
     # Visit a parse tree produced by YAPLParser#divideExpr.
     def visitDivideExpr(self, ctx):
-        children = []
-        for node in ctx.expr():
-            child = self.visit(node)
-            if child.get('type') == 'ID':
-                type = symbolTable.FindSymbol(child.get('value'))[1]
-                if type == 'Symbol not found':
-                    children.append({'type':'ERROR', 'value':'ID doesnt exist in ' + ctx.getText()})
-                else:
-                    children.append({'type': type, 'value':child.get('value')})
-            else:
-                children.append(child)
-        #print('division between ', children[0].get('type'), 'and', children[1].get('type'))
-        if  children[0].get('type') == 'Int' and children[1].get('type') == 'Int':
-            #print('Int is returned\n\n')
-            return {'type':'Int', 'value':ctx.getText()}
-        else: 
-            #print('Error is returned\n\n' + ctx.getText())
-            return {'type':'ERROR', 'value':ctx.getText()}
-
+        return self.visitChildren(ctx)
 
     # Visit a parse tree produced by YAPLParser#ifelseExpr.
     def visitIfelseExpr(self, ctx):
@@ -254,8 +235,9 @@ class Visitor(YAPLVisitor):
             symbolTable.AddSymbol(
                 str(ids[index]),                                                               #Name
                 str(types[index]),                                                             #Type
-                current_class + '-Local',                                                      #Scope     
-                'Let Declaration Variable' if index == 0  else 'Let Declaration parameter'     #Context
+                current_class + '-Local-' + current_method,                                    #Scope     
+                'Let Declaration Variable' if index == 0  else 'Let Declaration parameter',    #Context
+                line=ctx.ID()[0].getPayload().line
             )
         return self.visitChildren(ctx)
 
@@ -282,24 +264,7 @@ class Visitor(YAPLVisitor):
 
     # Visit a parse tree produced by YAPLParser#minusExpr.
     def visitMinusExpr(self, ctx):
-        children = []
-        for node in ctx.expr():
-            child = self.visit(node)
-            if child.get('type') == 'ID':
-                type = symbolTable.FindSymbol(child.get('value'))[1]
-                if type == 'Symbol not found':
-                    children.append({'type':'ERROR', 'value':'ID doesnt exist in ' + ctx.getText()})
-                else:
-                    children.append({'type': type, 'value':child.get('value')})
-            else:
-                children.append(child)
-        #print('substraction between ', children[0].get('type'), 'and', children[1].get('type'))
-        if  children[0].get('type') == 'Int' and children[1].get('type') == 'Int':
-            #print('Int is returned\n\n')
-            return {'type':'Int', 'value':ctx.getText()}
-        else: 
-            #print('Error is returned\n\n' + ctx.getText())
-            return {'type':'ERROR', 'value':ctx.getText()}
+        return self.visitChildren(ctx)
 
 
     # Visit a parse tree produced by YAPLParser#DeclarationExpr.
@@ -308,24 +273,7 @@ class Visitor(YAPLVisitor):
 
     # Visit a parse tree produced by YAPLParser#timesExpr.
     def visitTimesExpr(self, ctx):
-        children = []
-        for node in ctx.expr():
-            child = self.visit(node)
-            if child.get('type') == 'ID':
-                type = symbolTable.FindSymbol(child.get('value'))[1]
-                if type == 'Symbol not found':
-                    children.append({'type':'ERROR', 'value':'ID doesnt exist in ' + ctx.getText()})
-                else:
-                    children.append({'type': type, 'value':child.get('value')})
-            else:
-                children.append(child)
-        #print('multiplication between ', children[0].get('type'), 'and', children[1].get('type'))
-        if  children[0].get('type') == 'Int' and children[1].get('type') == 'Int':
-            #print('Int is returned\n\n')
-            return {'type':'Int', 'value':ctx.getText()}
-        else: 
-            #print('Error is returned\n\n' + ctx.getText())
-            return {'type':'ERROR', 'value':ctx.getText()}
+        return self.visitChildren(ctx)
 
     # Visit a parse tree produced by YAPLParser#stringExpr.
     def visitStringExpr(self, ctx):
@@ -345,28 +293,8 @@ class Visitor(YAPLVisitor):
 
     # Visit a parse tree produced by YAPLParser#sumExpr.
     def visitSumExpr(self, ctx):
-        children = []
-        for node in ctx.expr():
-            child = self.visit(node)
-            if child.get('type') == 'ID':
-                type = symbolTable.FindSymbol(child.get('value'))[1]
-                if type == 'Symbol not found':
-                    children.append({'type':'ERROR', 'value':'ID doesnt exist in ' + ctx.getText()})
-                else:
-                    children.append({'type': type, 'value':child.get('value')})
-            else:
-                children.append(child)
-        #print('sum between ', children[0].get('type'), 'and', children[1].get('type'))
-        if  children[0].get('type') == 'Int' and children[1].get('type') == 'Int':
-            #print('Int is returned\n\n')
-            return {'type':'Int', 'value':ctx.getText()}
-        #TODO
-        elif children[0].get('type') == 'String' and children[1].get('type') == 'String':
-            #print('String is returned\n\n')
-            return {'type':'String', 'value':ctx.getText()}
-        else: 
-            #print('Error is returned\n\n')
-            return {'type':'ERROR', 'value':ctx.getText()}
+        return self.visitChildren(ctx)
+        
     # Visit a parse tree produced by YAPLParser#whileExpr.
     def visitWhileExpr(self, ctx):
         return self.visitChildren(ctx)

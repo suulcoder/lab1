@@ -41,10 +41,10 @@ class A {
 	          }
                )
             else
-               (let x : Int in
+               (let y : Int in
 		  {
-	             x <- num2 - num1;
-	             (new D).set_var(x);
+	             y <- num2 - num1;
+	             (new D).set_var(y);
 		  }
                )
             fi

@@ -1,3 +1,6 @@
+from error import printError
+
+
 Symbol_not_found = 'Symbol not found'
 Symbol_not_available = 'Symbol not available'
 
@@ -6,17 +9,18 @@ Symbol_not_available = 'Symbol not available'
 # here we need to define a protocol: The scope
 # must be a string with the following structure>
 # 
-# <Class name> - <Scope>
+# <Class name> - <Global>
+# <Class name> - <Local> - <Method name>
 
 class SymbolsTable:
     def __init__(self):
         self.symbols_table = []
 
-    def AddSymbol(self, name, type, scope, context, signature=None):
+    def AddSymbol(self, name, type, scope, context, signature=None, line=None):
         if(self.FindSymbol(name, type, scope, context)==Symbol_not_found):
             return self.symbols_table.append((name, type, scope, context, signature))
         else:
-            return Symbol_not_available
+            printError(name + ' has already been declared.', line)
 
     def FindSymbol(self, name, type=None, scope=None, context = None):
         if(not type and not scope and not context):
