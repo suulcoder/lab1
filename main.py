@@ -49,6 +49,7 @@ def testGrammar(test_file):
     scopes = []
     contexts = []
     signatures = []
+    values = []
     print("\n\n\n##############################  Symbol Table  ##############################\n")
     for symbol in symbolTable.symbols_table:
         names.append(symbol[0])
@@ -56,7 +57,8 @@ def testGrammar(test_file):
         scopes.append(symbol[2])
         contexts.append(symbol[3])
         signatures.append(symbol[4])
-    print(tabulate({'Symbol Name:': names, 'Type:': types,  'Scope:':scopes, 'Context': contexts}, headers="keys", tablefmt='fancy_grid'))
+        values.append(symbol[5])
+    print(tabulate({'Symbol Name:': names, 'Type:': types,  'Scope:':scopes, 'Context': contexts, 'Values': values}, headers="keys", tablefmt='fancy_grid'))
 
 def main(argv):
     test_file = argv[1]

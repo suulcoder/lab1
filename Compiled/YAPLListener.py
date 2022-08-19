@@ -197,12 +197,12 @@ class YAPLListener(ParseTreeListener):
         pass
 
 
-    # Enter a parse tree produced by YAPLParser#negateExpr.
-    def enterNegateExpr(self, ctx:YAPLParser.NegateExprContext):
+    # Enter a parse tree produced by YAPLParser#unaryExpr.
+    def enterUnaryExpr(self, ctx:YAPLParser.UnaryExprContext):
         pass
 
-    # Exit a parse tree produced by YAPLParser#negateExpr.
-    def exitNegateExpr(self, ctx:YAPLParser.NegateExprContext):
+    # Exit a parse tree produced by YAPLParser#unaryExpr.
+    def exitUnaryExpr(self, ctx:YAPLParser.UnaryExprContext):
         pass
 
 

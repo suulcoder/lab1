@@ -28,7 +28,7 @@ expr                : ID '<-' expr                                              
                     | expr '-' expr                                                             # minusExpr
                     | expr '*' expr                                                             # timesExpr
                     | expr '/' expr                                                             # divideExpr
-                    | '~' expr                                                                  # negateExpr
+                    | '~' expr                                                                  # unaryExpr
                     | expr '<' expr                                                             # lessThanExpr
                     | expr '<=' expr                                                            # lessThanEqualExpr
                     | expr '=' expr                                                             # equalExpr

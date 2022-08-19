@@ -14,10 +14,10 @@ class A {
       self
    };
 
-   method2(num1 : String, num2 : String) : B {  -- plus
+   method2(num1 : Int, num2 : String) : B {  -- plus
       (let x : String in
 	 {
-            x <- num1 + num2;
+            x <- num1 + new Int;
 	    (new B).set_var(x);
 	 }
       )

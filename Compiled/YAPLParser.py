@@ -989,7 +989,7 @@ class YAPLParser ( Parser ):
                 return visitor.visitChildren(self)
 
 
-    class NegateExprContext(ExprContext):
+    class UnaryExprContext(ExprContext):
 
         def __init__(self, parser, ctx:ParserRuleContext): # actually a YAPLParser.ExprContext
             super().__init__(parser)
@@ -1000,16 +1000,16 @@ class YAPLParser ( Parser ):
 
 
         def enterRule(self, listener:ParseTreeListener):
-            if hasattr( listener, "enterNegateExpr" ):
-                listener.enterNegateExpr(self)
+            if hasattr( listener, "enterUnaryExpr" ):
+                listener.enterUnaryExpr(self)
 
         def exitRule(self, listener:ParseTreeListener):
-            if hasattr( listener, "exitNegateExpr" ):
-                listener.exitNegateExpr(self)
+            if hasattr( listener, "exitUnaryExpr" ):
+                listener.exitUnaryExpr(self)
 
         def accept(self, visitor:ParseTreeVisitor):
-            if hasattr( visitor, "visitNegateExpr" ):
-                return visitor.visitNegateExpr(self)
+            if hasattr( visitor, "visitUnaryExpr" ):
+                return visitor.visitUnaryExpr(self)
             else:
                 return visitor.visitChildren(self)
 
@@ -1353,7 +1353,7 @@ class YAPLParser ( Parser ):
                 pass
 
             elif la_ == 8:
-                localctx = YAPLParser.NegateExprContext(self, localctx)
+                localctx = YAPLParser.UnaryExprContext(self, localctx)
                 self._ctx = localctx
                 _prevctx = localctx
                 self.state = 117

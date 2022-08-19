@@ -1,6 +1,7 @@
 # Generated from YAPL.g4 by ANTLR 4.10
 from Compiled.YAPLVisitor import YAPLVisitor
 from symbolTable import SymbolsTable, Symbol_not_found
+from expresion import Expresion
 from error import printError
 
 current_class = ''
@@ -100,7 +101,7 @@ class Visitor(YAPLVisitor):
                     )
                     
                     if parent!=Symbol_not_found:
-                        _, parent_type, _, _, parent_signature = parent
+                        _, parent_type, _, _, parent_signature, _ = parent
                         valid = parent_type==method_type and len(method_signature)==len(parent_signature)
                         if(valid and len(method_signature)!=0):
                             for index in range(0,len(method_signature)):
@@ -120,10 +121,10 @@ class Visitor(YAPLVisitor):
                 child = self.visit(node)
         
         symbolTable.AddSymbol(
-            str(class_name),       #Name
-            '',                    #Type
-            '',                    #Scope: Not valid
-            'Class',               #Context  
+            str(class_name),                                                #Name
+            ctx.TYPE()[1] if len(ctx.TYPE())==2 else '',                    #Type
+            '',                                                             #Scope: Not valid
+            'Class',                                                        #Context  
             line=class_name.getPayload().line
         )
         
@@ -190,21 +191,9 @@ class Visitor(YAPLVisitor):
         )
         return self.visitChildren(ctx)
 
-
-    # Visit a parse tree produced by YAPLParser#divideExpr.
-    def visitDivideExpr(self, ctx):
-        return self.visitChildren(ctx)
-
     # Visit a parse tree produced by YAPLParser#ifelseExpr.
     def visitIfelseExpr(self, ctx):
         return self.visitChildren(ctx)
-
-
-    # Visit a parse tree produced by YAPLParser#intExpr.
-    def visitIntExpr(self, ctx):
-        #return self.visitChildren(ctx)
-        return {'type':'Int', 'value':ctx.getText()}
-
 
     # Visit a parse tree produced by YAPLParser#FunctionExpr.
     def visitFunctionExpr(self, ctx):
@@ -214,13 +203,6 @@ class Visitor(YAPLVisitor):
     # Visit a parse tree produced by YAPLParser#voidExpr.
     def visitVoidExpr(self, ctx):
         return self.visitChildren(ctx)
-
-
-    # Visit a parse tree produced by YAPLParser#trueExpr.
-    def visitTrueExpr(self, ctx):
-        #return self.visitChildren(ctx)
-        return {'type':'bool', 'value':ctx.getText()}
-
 
     # Visit a parse tree produced by YAPLParser#MethodExpr.
     def visitMethodExpr(self, ctx):
@@ -241,12 +223,6 @@ class Visitor(YAPLVisitor):
             )
         return self.visitChildren(ctx)
 
-
-    # Visit a parse tree produced by YAPLParser#InstanceExpr.
-    def visitInstanceExpr(self, ctx):
-        return self.visitChildren(ctx)
-
-
     # Visit a parse tree produced by YAPLParser#lessThanExpr.
     def visitLessThanExpr(self, ctx):
         return self.visitChildren(ctx)
@@ -261,61 +237,120 @@ class Visitor(YAPLVisitor):
     def visitParensExpr(self, ctx):
         return self.visitChildren(ctx)
 
-
-    # Visit a parse tree produced by YAPLParser#minusExpr.
-    def visitMinusExpr(self, ctx):
-        return self.visitChildren(ctx)
-
-
     # Visit a parse tree produced by YAPLParser#DeclarationExpr.
     def visitDeclarationExpr(self, ctx):
         return self.visitChildren(ctx)
 
-    # Visit a parse tree produced by YAPLParser#timesExpr.
-    def visitTimesExpr(self, ctx):
-        return self.visitChildren(ctx)
-
-    # Visit a parse tree produced by YAPLParser#stringExpr.
-    def visitStringExpr(self, ctx):
-        #return self.visitChildren(ctx)
-        return {'type':'String', 'value':ctx.getText()}
-
-
-    # Visit a parse tree produced by YAPLParser#negateExpr.
-    def visitNegateExpr(self, ctx):
-        return self.visitChildren(ctx)
-
-
     # Visit a parse tree produced by YAPLParser#notExpr.
     def visitNotExpr(self, ctx):
-        return self.visitChildren(ctx)
-
-
-    # Visit a parse tree produced by YAPLParser#sumExpr.
-    def visitSumExpr(self, ctx):
         return self.visitChildren(ctx)
         
     # Visit a parse tree produced by YAPLParser#whileExpr.
     def visitWhileExpr(self, ctx):
         return self.visitChildren(ctx)
 
-
-    # Visit a parse tree produced by YAPLParser#falseExpr.
-    def visitFalseExpr(self, ctx):
-        #return self.visitChildren(ctx)
-        return {'type':'bool', 'value':ctx.getText()}
-
-
     # Visit a parse tree produced by YAPLParser#lessThanEqualExpr.
     def visitLessThanEqualExpr(self, ctx):
         return self.visitChildren(ctx)
-
-    # Visit a parse tree produced by YAPLParser#idExpr.
-    def visitIdExpr(self, ctx):
-        #return self.visitChildren(ctx)
-        return {'type':'ID', 'value':ctx.getText()}
-
-
+    
     # Visit a parse tree produced by YAPLParser#equalExpr.
     def visitEqualExpr(self, ctx):
         return self.visitChildren(ctx)
+    
+    # Visit a parse tree produced by YAPLParser#unaryExpr.
+    def visitUnaryExpr(self, ctx):
+        expr = ctx.expr()
+        child = self.visit(expr)
+        #Impicit cast from bool to int
+        if(child.get('type')=='Bool'):
+            return {'type':'Bool'}
+                
+        if(child.get('type')=='Int'):
+            return {'type':'Int'}
+
+        printError("Unary exprasion cannot be aplied on " + child.get('type'), ctx.start.line)
+    
+    # Visit a parse tree produced by YAPLParser#sumExpr.
+    def visitSumExpr(self, ctx):
+        for node in ctx.expr():
+            child = self.visit(node)
+            
+            #Impicit cast from bool to int
+            if(child.get('type')=='Bool'):
+                child['type'] = 'Int'
+                    
+            if(child.get('type')!='Int'):
+                printError(child.get('type') + ' not valid in a addition expression',ctx.start.line)
+        return {'type':'Int'}
+    
+    # Visit a parse tree produced by YAPLParser#minusExpr.
+    def visitMinusExpr(self, ctx):
+        for node in ctx.expr():
+            child = self.visit(node)
+            
+            #Impicit cast from bool to int
+            if(child.get('type')=='Bool'):
+                child['type'] = 'Int'
+                    
+            if(child.get('type')!='Int'):
+                printError(child.get('type') + ' not valid in a difference expression',ctx.start.line)
+        return {'type':'Int'}
+    
+    # Visit a parse tree produced by YAPLParser#timesExpr.
+    def visitTimesExpr(self, ctx):
+        for node in ctx.expr():
+            child = self.visit(node)
+            
+            #Impicit cast from bool to int
+            if(child.get('type')=='Bool'):
+                child['type'] = 'Int'
+                    
+            if(child.get('type')!='Int'):
+                printError(child.get('type') + ' not valid in a multiplication expression',ctx.start.line)
+        return {'type':'Int'}
+    
+    # Visit a parse tree produced by YAPLParser#divideExpr.
+    def visitDivideExpr(self, ctx):
+        for node in ctx.expr():
+            child = self.visit(node)
+            
+            #Impicit cast from bool to int
+            if(child.get('type')=='Bool'):
+                child['type'] = 'Int'
+                    
+            if(child.get('type')!='Int'):
+                printError(child.get('type') + ' not valid in a division expression',ctx.start.line)
+        return {'type':'Int'}
+
+    # Visit a parse tree produced by YAPLParser#idExpr.
+    def visitIdExpr(self, ctx):
+        symbol = symbolTable.FindSymbol(ctx.getText())
+        if(ctx.getText()=='self'):
+            return {'type':'self', 'value': ctx.getText()}
+        elif(symbol==Symbol_not_found):
+            printError(ctx.getText() + ' has not been declared.')
+        return {'type':symbol[1]}
+    
+    # Visit a parse tree produced by YAPLParser#InstanceExpr.
+    def visitInstanceExpr(self, ctx):
+        type = ctx.TYPE()
+        self.visitChildren(ctx)
+        return {'type':str(type)}
+    
+    # Visit a parse tree produced by YAPLParser#intExpr.
+    def visitIntExpr(self, ctx):
+        return {'type':'Int'}
+    
+    # Visit a parse tree produced by YAPLParser#stringExpr.
+    def visitStringExpr(self, ctx):
+        #return self.visitChildren(ctx)
+        return {'type':'String'}
+    
+     # Visit a parse tree produced by YAPLParser#trueExpr.
+    def visitTrueExpr(self, ctx):
+        return {'type':'Bool'}
+    
+     # Visit a parse tree produced by YAPLParser#falseExpr.
+    def visitFalseExpr(self, ctx):
+        #return self.visitChildren(ctx)
+        return {'type':'bool'}

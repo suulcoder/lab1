@@ -16,11 +16,11 @@ class SymbolsTable:
     def __init__(self):
         self.symbols_table = []
 
-    def AddSymbol(self, name, type, scope, context, signature=None, line=None):
+    def AddSymbol(self, name, type, scope, context, signature=None, line=None, value=None):
         if(self.FindSymbol(name, type, scope, context)==Symbol_not_found):
-            return self.symbols_table.append((name, type, scope, context, signature))
+            return self.symbols_table.append((name, type, scope, context, signature, value))
         else:
-            printError(name + ' has already been declared.', line)
+            printError(name + ' has already been declared in current scope.', line)
 
     def FindSymbol(self, name, type=None, scope=None, context = None):
         if(not type and not scope and not context):
@@ -54,8 +54,7 @@ class SymbolsTable:
                 if (
                     name == symbol[0] and
                     type == symbol[1] and
-                    scope == symbol[2] and
-                    context == symbol[3]
+                    scope == symbol[2]
                     ):
                     return symbol
         return Symbol_not_found

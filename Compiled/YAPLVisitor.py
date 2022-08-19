@@ -114,8 +114,8 @@ class YAPLVisitor(ParseTreeVisitor):
         return self.visitChildren(ctx)
 
 
-    # Visit a parse tree produced by YAPLParser#negateExpr.
-    def visitNegateExpr(self, ctx:YAPLParser.NegateExprContext):
+    # Visit a parse tree produced by YAPLParser#unaryExpr.
+    def visitUnaryExpr(self, ctx:YAPLParser.UnaryExprContext):
         return self.visitChildren(ctx)
 
 
