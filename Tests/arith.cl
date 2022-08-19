@@ -136,16 +136,16 @@ class Main {
    
    char : String;
    avar : A; 
-   a_var : A;
+   a_var : B;
    flag : Bool <- true;
 
 
 
    is_even(num : Int) : Bool {
       (let x : Int <- num in
-            if x < 0 then is_even(~x) else
-            if 0 = x then true else
-	    if 1 = x then false else
+            if x < char then is_even(~x) else
+            if avar = a_var then true else
+	    if 1 = 0 then false else
 	          is_even(x - 2)
 	    fi fi fi
       )

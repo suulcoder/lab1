@@ -6,10 +6,20 @@ from error import printError
 
 current_class = ''
 current_method = ''
+basic_types = ['Int','String','Bool']
 
 symbolTable = SymbolsTable()
 # This class defines a complete generic visitor for a parse tree produced by YAPLParser.
 
+def areSameType(type1, type2):
+    if(type1 in basic_types or type2 in basic_types):
+        return type1 == type2
+    types1 = symbolTable.GetTypeInheritance(type1)
+    types2 = symbolTable.GetTypeInheritance(type2)
+    
+    if(type1 in types2 or type2 in types1):
+        return True
+    return False
 
 class Visitor(YAPLVisitor):
     
@@ -223,18 +233,8 @@ class Visitor(YAPLVisitor):
             )
         return self.visitChildren(ctx)
 
-    # Visit a parse tree produced by YAPLParser#lessThanExpr.
-    def visitLessThanExpr(self, ctx):
-        return self.visitChildren(ctx)
-
-
     # Visit a parse tree produced by YAPLParser#BracketsExpr.
     def visitBracketsExpr(self, ctx):
-        return self.visitChildren(ctx)
-
-
-    # Visit a parse tree produced by YAPLParser#parensExpr.
-    def visitParensExpr(self, ctx):
         return self.visitChildren(ctx)
 
     # Visit a parse tree produced by YAPLParser#DeclarationExpr.
@@ -251,11 +251,64 @@ class Visitor(YAPLVisitor):
 
     # Visit a parse tree produced by YAPLParser#lessThanEqualExpr.
     def visitLessThanEqualExpr(self, ctx):
-        return self.visitChildren(ctx)
+        node1, node2 = ctx.expr()
+        child1 = self.visit(node1)
+        child2 = self.visit(node2)
+            
+        #Impicit cast from Int to Bool
+        if(child1.get('type')=='Int'):
+            child1['type'] = 'Bool'
+            
+        #Impicit cast from Int to Bool
+        if(child2.get('type')=='Int'):
+            child2['type'] = 'Bool'
+        
+        if (not areSameType(child1.get('type'),child2.get('type'))):
+            printError('Cannot use operant "<" between ' + child1.get('type') + ' and ' + child2.get('type'), ctx.start.line)
+        return {'type':'Bool'}
+    
+    # Visit a parse tree produced by YAPLParser#lessThanExpr.
+    def visitLessThanExpr(self, ctx):
+        node1, node2 = ctx.expr()
+        child1 = self.visit(node1)
+        child2 = self.visit(node2)
+            
+        #Impicit cast from Int to Bool
+        if(child1.get('type')=='Int'):
+            child1['type'] = 'Bool'
+            
+        #Impicit cast from Int to Bool
+        if(child2.get('type')=='Int'):
+            child2['type'] = 'Bool'
+        
+        if (not areSameType(child1.get('type'),child2.get('type'))):
+            printError('Cannot use operant "<=" between ' + child1.get('type') + ' and ' + child2.get('type'), ctx.start.line)
+        return {'type':'Bool'}
     
     # Visit a parse tree produced by YAPLParser#equalExpr.
     def visitEqualExpr(self, ctx):
-        return self.visitChildren(ctx)
+        node1, node2 = ctx.expr()
+        child1 = self.visit(node1)
+        child2 = self.visit(node2)
+            
+        #Impicit cast from Int to Bool
+        if(child1.get('type')=='Int'):
+            child1['type'] = 'Bool'
+            
+        #Impicit cast from Int to Bool
+        if(child2.get('type')=='Int'):
+            child2['type'] = 'Bool'
+        
+        if (not areSameType(child1.get('type'),child2.get('type'))):
+            printError('Cannot use operant "=" between ' + child1.get('type') + ' and ' + child2.get('type'), ctx.start.line)
+        return {'type':'Bool'}
+    
+    # Visit a parse tree produced by YAPLParser#parensExpr.
+    def visitParensExpr(self, ctx):
+        expr = ctx.expr()
+        child = self.visit(expr)
+        #return {'type':child.get('type')}
+        return {'type':'Bool'}
     
     # Visit a parse tree produced by YAPLParser#unaryExpr.
     def visitUnaryExpr(self, ctx):
@@ -268,7 +321,7 @@ class Visitor(YAPLVisitor):
         if(child.get('type')=='Int'):
             return {'type':'Int'}
 
-        printError("Unary exprasion cannot be aplied on " + child.get('type'), ctx.start.line)
+        printError("Unary expression cannot be aplied on a " + child.get('type'), ctx.start.line)
     
     # Visit a parse tree produced by YAPLParser#sumExpr.
     def visitSumExpr(self, ctx):
@@ -280,7 +333,7 @@ class Visitor(YAPLVisitor):
                 child['type'] = 'Int'
                     
             if(child.get('type')!='Int'):
-                printError(child.get('type') + ' not valid in a addition expression',ctx.start.line)
+                printError(child.get('type') + ' not valid with operant "+"',ctx.start.line)
         return {'type':'Int'}
     
     # Visit a parse tree produced by YAPLParser#minusExpr.
@@ -293,7 +346,7 @@ class Visitor(YAPLVisitor):
                 child['type'] = 'Int'
                     
             if(child.get('type')!='Int'):
-                printError(child.get('type') + ' not valid in a difference expression',ctx.start.line)
+                printError(child.get('type') + ' not valid with operant "-"',ctx.start.line)
         return {'type':'Int'}
     
     # Visit a parse tree produced by YAPLParser#timesExpr.
@@ -306,7 +359,7 @@ class Visitor(YAPLVisitor):
                 child['type'] = 'Int'
                     
             if(child.get('type')!='Int'):
-                printError(child.get('type') + ' not valid in a multiplication expression',ctx.start.line)
+                printError(child.get('type') + ' not valid with operant "*"',ctx.start.line)
         return {'type':'Int'}
     
     # Visit a parse tree produced by YAPLParser#divideExpr.
@@ -319,7 +372,7 @@ class Visitor(YAPLVisitor):
                 child['type'] = 'Int'
                     
             if(child.get('type')!='Int'):
-                printError(child.get('type') + ' not valid in a division expression',ctx.start.line)
+                printError(child.get('type') + ' not valid with operant "/"',ctx.start.line)
         return {'type':'Int'}
 
     # Visit a parse tree produced by YAPLParser#idExpr.

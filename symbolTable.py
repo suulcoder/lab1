@@ -21,6 +21,15 @@ class SymbolsTable:
             return self.symbols_table.append((name, type, scope, context, signature, value))
         else:
             printError(name + ' has already been declared in current scope.', line)
+            
+    def GetTypeInheritance(self, type):
+        inheritance_types = []
+        while (type!=''):
+            inheritance_types.append(str(type))
+            for symbol in self.symbols_table:
+                if(str(type) == symbol[0]):
+                    type = symbol[1]     
+        return inheritance_types
 
     def FindSymbol(self, name, type=None, scope=None, context = None):
         if(not type and not scope and not context):
