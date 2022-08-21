@@ -16,7 +16,7 @@ feature             : (ID '(' ( formal ','? )* ')' ':' TYPE '{' expr '}')       
 formal              : ID ':' TYPE ;
 
 expr                : call '<-' (expr | call)                                                   # DeclarationExpr
-                    | call '(' (expr ','?)+ ')'                                                 # FunctionExpr
+                    | call '(' ((expr | call) ','?)+ ')'                                        # FunctionExpr
                     | expr  ('@' TYPE)?  '.' ID ('(' expr? (',' expr)* ')')                     # MethodExpr
                     | 'if' expr 'then' expr 'else' expr 'fi'                                    # ifelseExpr
                     | 'while' expr 'loop' expr 'pool'                                           # whileExpr
