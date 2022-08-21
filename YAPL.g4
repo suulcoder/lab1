@@ -15,15 +15,15 @@ feature             : (ID '(' ( formal ','? )* ')' ':' TYPE '{' expr '}')       
 
 formal              : ID ':' TYPE ;
 
-expr                : ID '<-' expr                                                              # DeclarationExpr
-                    | expr '(' (expr ','?)+ ')'                                                 # FunctionExpr
-                    | expr  ('@' TYPE)?  '.' ID '(' expr (',' expr)* ')'                        # MethodExpr
+expr                : call '<-' (expr | call)                                                   # DeclarationExpr
+                    | call '(' (expr ','?)+ ')'                                                 # FunctionExpr
+                    | expr  ('@' TYPE)?  '.' ID ('(' expr? (',' expr)* ')')                     # MethodExpr
                     | 'if' expr 'then' expr 'else' expr 'fi'                                    # ifelseExpr
                     | 'while' expr 'loop' expr 'pool'                                           # whileExpr
                     | '{' (expr ';')+ '}'                                                       # BracketsExpr
                     | 'let' ID ':' TYPE ('<-' expr)? (',' ID ':' TYPE  '<-' expr )* 'in' expr   # LetExpr
                     | 'new' TYPE                                                                # InstanceExpr
-                    | 'isvoID' expr                                                             # voidExpr
+                    | 'isvoid' expr                                                             # voidExpr
                     | expr '+' expr                                                             # sumExpr
                     | expr '-' expr                                                             # minusExpr
                     | expr '*' expr                                                             # timesExpr
@@ -40,6 +40,8 @@ expr                : ID '<-' expr                                              
                     | 'true'                                                                    # trueExpr
                     | 'false'                                                                   # falseExpr
                     ;
+
+call                : ID ('.' ID)* ;
 
 /*
  * Lexer Rules

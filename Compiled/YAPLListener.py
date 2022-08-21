@@ -71,21 +71,21 @@ class YAPLListener(ParseTreeListener):
         pass
 
 
-    # Enter a parse tree produced by YAPLParser#intExpr.
-    def enterIntExpr(self, ctx:YAPLParser.IntExprContext):
-        pass
-
-    # Exit a parse tree produced by YAPLParser#intExpr.
-    def exitIntExpr(self, ctx:YAPLParser.IntExprContext):
-        pass
-
-
     # Enter a parse tree produced by YAPLParser#FunctionExpr.
     def enterFunctionExpr(self, ctx:YAPLParser.FunctionExprContext):
         pass
 
     # Exit a parse tree produced by YAPLParser#FunctionExpr.
     def exitFunctionExpr(self, ctx:YAPLParser.FunctionExprContext):
+        pass
+
+
+    # Enter a parse tree produced by YAPLParser#intExpr.
+    def enterIntExpr(self, ctx:YAPLParser.IntExprContext):
+        pass
+
+    # Exit a parse tree produced by YAPLParser#intExpr.
+    def exitIntExpr(self, ctx:YAPLParser.IntExprContext):
         pass
 
 
@@ -266,6 +266,15 @@ class YAPLListener(ParseTreeListener):
 
     # Exit a parse tree produced by YAPLParser#equalExpr.
     def exitEqualExpr(self, ctx:YAPLParser.EqualExprContext):
+        pass
+
+
+    # Enter a parse tree produced by YAPLParser#call.
+    def enterCall(self, ctx:YAPLParser.CallContext):
+        pass
+
+    # Exit a parse tree produced by YAPLParser#call.
+    def exitCall(self, ctx:YAPLParser.CallContext):
         pass
 
 

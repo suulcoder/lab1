@@ -44,13 +44,13 @@ class YAPLVisitor(ParseTreeVisitor):
         return self.visitChildren(ctx)
 
 
-    # Visit a parse tree produced by YAPLParser#intExpr.
-    def visitIntExpr(self, ctx:YAPLParser.IntExprContext):
+    # Visit a parse tree produced by YAPLParser#FunctionExpr.
+    def visitFunctionExpr(self, ctx:YAPLParser.FunctionExprContext):
         return self.visitChildren(ctx)
 
 
-    # Visit a parse tree produced by YAPLParser#FunctionExpr.
-    def visitFunctionExpr(self, ctx:YAPLParser.FunctionExprContext):
+    # Visit a parse tree produced by YAPLParser#intExpr.
+    def visitIntExpr(self, ctx:YAPLParser.IntExprContext):
         return self.visitChildren(ctx)
 
 
@@ -151,6 +151,11 @@ class YAPLVisitor(ParseTreeVisitor):
 
     # Visit a parse tree produced by YAPLParser#equalExpr.
     def visitEqualExpr(self, ctx:YAPLParser.EqualExprContext):
+        return self.visitChildren(ctx)
+
+
+    # Visit a parse tree produced by YAPLParser#call.
+    def visitCall(self, ctx:YAPLParser.CallContext):
         return self.visitChildren(ctx)
 
 

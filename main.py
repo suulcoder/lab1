@@ -11,8 +11,8 @@ from tabulate import tabulate
 #Error Listener when error is detected
 class MyErrorListener(ErrorListener):
     def syntaxError(self, recognizer, offendingSymbol, line, column, msg, e):
-        print("ERROR: when parsing line %d column %d: %s\n" % \
-                        (line, column, msg))
+        print("\nSinxtax Error: %s (at line %d:%d)\n" % \
+                        (msg, line, column))
     
 def testGrammar(test_file):
     

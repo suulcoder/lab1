@@ -1,6 +1,7 @@
 class A {
 
    var : Int <- 0;
+   me : A <- new A
    value() : Int { var };
 
    set_var(num : Int) : SELF_TYPE {
@@ -15,7 +16,7 @@ class A {
    };
 
    method2(num1 : Int, num2 : String) : B {  -- plus
-      (let x : String in
+      (let x : Int in
 	 {
             x <- num1 + new Int;
 	    (new B).set_var(x);
@@ -140,7 +141,6 @@ class Main {
    flag : Bool <- true;
 
 
-
    is_even(num : Int) : Bool {
       (let x : Int <- num in
             if x < char then is_even(~x) else
@@ -153,9 +153,10 @@ class Main {
 
    main() : Object {
       {
-         avar <- (new A);
+         avar <- (new B);
+         avar.var <- 0;
+         avar.me.var <- avar.var;
          avar.set_var(2);
-
       }
    };
 };
