@@ -12,7 +12,7 @@ symbolTable = SymbolsTable()
 # This class defines a complete generic visitor for a parse tree produced by YAPLParser.
 
 def areSameType(type1, type2, checkBoth=True):
-    if(str(type1) in basic_types or str(type2) in basic_types):
+    if(str(type1) in basic_types or str(type2) in basic_types + ['Error']):
         return str(type1) == str(type2)
     types1 = symbolTable.GetTypeInheritance(type1)
     types2 = symbolTable.GetTypeInheritance(type2)
@@ -146,29 +146,52 @@ class Visitor(YAPLVisitor):
         # ==============================================================
         # Important to return class_name in order to check that there
         # is a Main Class
+        current_class = ''
         return class_name                                       
         # ==============================================================
                                                                 
 
     # Visit a parse tree produced by YAPLParser#MethodFeature.
     def visitMethodFeature(self, ctx):
-        name = ctx.ID()
+        
         global current_method
-        current_method = str(name)
+        name = ctx.ID()
         type = ctx.TYPE()
+        
+        current_method = str(name)
+        
+        parameters = []
+        
+        formal = ctx.formal()
+        for parameter in formal:
+            parameters.append(self.visit(parameter)) 
+
+        current_method = ''    
+        
         symbolTable.AddSymbol(
-            str(name),                     #Name
-            str(type),                     #Type
-            current_class + '-Global',     #Scope     
-            'Method',                      #Context
-            ctx.formal(),                  #Signature,
+            str(name),                                      #Name
+            str(type),                                      #Type
+            current_class + '-' + current_method,           #Scope     
+            'Method',                                       #Context
+            parameters,                                   #Signature,
             line=ctx.ID().getPayload().line
         )
-        self.visitChildren(ctx)
+        
+        current_method = str(name)
+        
+        expr = ctx.expr()
+        expr = self.visit(expr)
+        
+        type = str(type)
+        if(type=='SELF_TYPE'):
+            type = current_class
+        if(expr and expr.get('type')!=str(type)):
+            printError('Method type (' + str(type) + ') should be the same as returned type (' + expr.get('type') +')', ctx.start.line)
         
         # ==============================================================
         # Important to return ('method',name,len(ctx.formal())) 
         # in order to check Main.main() structure
+        current_method = ''
         return ('method',str(name),ctx.formal(), str(type))
         # ==============================================================
 
@@ -178,10 +201,10 @@ class Visitor(YAPLVisitor):
         name = ctx.ID()
         type = ctx.TYPE()
         symbolTable.AddSymbol(
-            str(name),                     #Name
-            str(type),                     #Type
-            current_class + '-Global',     #Scope     
-            'Atribute',                    #Context
+            str(name),                                      #Name
+            str(type),                                      #Type
+            current_class + '-' + current_method,           #Scope     
+            'Atribute',                                     #Context
             line=name.getPayload().line
         )
         self.visitChildren(ctx)
@@ -200,15 +223,29 @@ class Visitor(YAPLVisitor):
         symbolTable.AddSymbol(
             str(var_name),                                   #Name
             str(type),                                       #Type
-            current_class + '-Local-' + current_method,      #Scope     
+            current_class + '-' + current_method,            #Scope     
             'Method Parameter',                              #Context
             line=var_name.getPayload().line
         )
-        return self.visitChildren(ctx)
+        self.visitChildren(ctx)
+        return {'type' : str(type)}
 
     # Visit a parse tree produced by YAPLParser#FunctionExpr.
     def visitFunctionExpr(self, ctx):
-        return self.visitChildren(ctx)
+        name = ctx.call()
+        type = 'Error'
+        signature = self.visit(name)
+        type = signature.get('type')
+        if(type=='SELF_TYPE'):
+            type = signature.get('symbol')[2].split('-')[0]
+        
+        index = 0
+        for parameter in [self.visit(parameter) for parameter in ctx.parameter()]:
+            if(parameter.get('type')!= signature.get('symbol')[4][index].get('type')):
+                printError("Method signature does not match", ctx.start.line)
+            index += 1
+            
+        return {'type': type}
     
     # Visit a parse tree produced by YAPLParser#MethodExpr.
     def visitMethodExpr(self, ctx):
@@ -222,16 +259,29 @@ class Visitor(YAPLVisitor):
             symbolTable.AddSymbol(
                 str(ids[index]),                                                               #Name
                 str(types[index]),                                                             #Type
-                current_class + '-Local-' + current_method,                                    #Scope     
+                current_class + '-' +current_method,                                    #Scope     
                 'Let Declaration Variable' if index == 0  else 'Let Declaration parameter',    #Context
                 line=ctx.ID()[0].getPayload().line
             )
-        self.visitChildren(ctx)
-        return {'type': types[0]}
+        expressions = ctx.expr()
+        expressions_count = len(expressions)
+        for expression in expressions:
+            expressions_count -= 1
+            expr = self.visit(expression)
+            if(expressions_count==0):
+                return expr
+        return {'type': 'Object'}
+        
 
     # Visit a parse tree produced by YAPLParser#BracketsExpr.
     def visitBracketsExpr(self, ctx):
-        self.visitChildren(ctx)
+        expressions = ctx.expr()
+        expressions_count = len(expressions)
+        for expression in expressions:
+            expressions_count -= 1
+            expr = self.visit(expression)
+            if(expressions_count==0):
+                return expr
         return {'type': 'Object'}
 
     # Visit a parse tree produced by YAPLParser#DeclarationExpr.
@@ -262,12 +312,8 @@ class Visitor(YAPLVisitor):
         if(conditional.get('type') != 'Bool' and conditional.get('type') != 'Int'):
             printError("Control structure data type should be a Bool not " + conditional.get('type'))
             return {'type': 'Error'}
-        
-        if(block.get('type') != 'Object'):
-            printError("Blocks of a while expression should be an Object")
-            return {'type': 'Error'}
             
-        return {'type': block.get('type')}
+        return {'type': 'Object'}
     
     # Visit a parse tree produced by YAPLParser#ifelseExpr.
     def visitIfelseExpr(self, ctx):
@@ -282,10 +328,6 @@ class Visitor(YAPLVisitor):
             return {'type': 'Error'}
         
         if(block1==None or block2 == None):
-            return {'type': 'Error'}
-        
-        if(not areSameType(block1.get('type'), block2.get('type'))):
-            printError("Blocks of an if-else expresssion should be the same type", ctx.start.line)
             return {'type': 'Error'}
             
         return {'type': block1.get('type')}
@@ -310,7 +352,7 @@ class Visitor(YAPLVisitor):
             child2['type'] = 'Bool'
         
         if (not areSameType(child1.get('type'),child2.get('type'))):
-            printError('Cannot use operant "<" between ' + child1.get('type') + ' and ' + child2.get('type'), ctx.start.line)
+            printError('Cannot use operant "<=" between ' + child1.get('type') + ' and ' + child2.get('type'), ctx.start.line)
             return {'type': 'Error'}
         return {'type':'Bool'}
     
@@ -319,6 +361,9 @@ class Visitor(YAPLVisitor):
         node1, node2 = ctx.expr()
         child1 = self.visit(node1)
         child2 = self.visit(node2)
+        
+        initial1 = child1.get('type')
+        initial2 = child2.get('type')
             
         #Impicit cast from Int to Bool
         if(child1.get('type')=='Int'):
@@ -329,7 +374,7 @@ class Visitor(YAPLVisitor):
             child2['type'] = 'Bool'
         
         if (not areSameType(child1.get('type'),child2.get('type'))):
-            printError('Cannot use operant "<=" between ' + child1.get('type') + ' and ' + child2.get('type'), ctx.start.line)
+            printError('Cannot use operant "<" between ' + initial1 + ' and ' + initial2, ctx.start.line)
             return {'type': 'Error'}
         return {'type':'Bool'}
     
@@ -444,13 +489,8 @@ class Visitor(YAPLVisitor):
 
     # Visit a parse tree produced by YAPLParser#idExpr.
     def visitIdExpr(self, ctx):
-        symbol = symbolTable.FindSymbol(ctx.getText())
-        if(ctx.getText()=='self'):
-            return {'type':'self', 'value': ctx.getText()}
-        elif(symbol==Symbol_not_found):
-            printError(ctx.getText() + ' has not been declared.')
-            return {'type': 'Error'}
-        return {'type':symbol[1]}
+        id = ctx.call()
+        return self.visit(id)
     
     # Visit a parse tree produced by YAPLParser#InstanceExpr.
     def visitInstanceExpr(self, ctx):
@@ -481,6 +521,16 @@ class Visitor(YAPLVisitor):
         ids = ctx.ID()
         index = 0
         symbol = None
+        if(len(ids)==1):
+            symbol = symbolTable.FindSymbol(ctx.getText(), scope=current_class + '-' +current_method)
+            if(symbol==Symbol_not_found):
+                symbol = symbolTable.FindSymbol(ctx.getText(), scope=current_class + '-')
+            if(ctx.getText()=='self'):
+                return {'type':current_class}
+            elif(symbol==Symbol_not_found):
+                printError(ctx.getText() + ' has not been declared.', ctx.start.line)
+                return {'type': 'Error'}
+            return {'type':symbol[1], 'symbol': symbol}
         for node in ids:
             child = node.getText()
             if(index==0):
@@ -489,9 +539,13 @@ class Visitor(YAPLVisitor):
                     printError(child + ' has not been declared', ctx.start.line)
                     return {'type': 'Error'}
             else:
-                symbol = symbolTable.FindSymbol(str(child), scope=symbol[1] + '-Global')
+                symbol = symbolTable.FindSymbol(str(child), scope=symbol[1]+'-')
                 if(symbol==Symbol_not_found):
                     printError(child + ' has not been declared in ' + symbol[1], ctx.start.line)
                     return {'type': 'Error'}
             index += 1
-        return {'type': symbol[1], 'name': symbol[0]}
+        return {'type': symbol[1], 'symbol': symbol}
+    
+    # Visit a parse tree produced by YAPLParser#parameter.
+    def visitParameter(self, ctx):
+        return self.visitChildren(ctx)

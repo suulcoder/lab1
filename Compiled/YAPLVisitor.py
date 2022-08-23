@@ -64,11 +64,6 @@ class YAPLVisitor(ParseTreeVisitor):
         return self.visitChildren(ctx)
 
 
-    # Visit a parse tree produced by YAPLParser#MethodExpr.
-    def visitMethodExpr(self, ctx:YAPLParser.MethodExprContext):
-        return self.visitChildren(ctx)
-
-
     # Visit a parse tree produced by YAPLParser#LetExpr.
     def visitLetExpr(self, ctx:YAPLParser.LetExprContext):
         return self.visitChildren(ctx)
@@ -156,6 +151,11 @@ class YAPLVisitor(ParseTreeVisitor):
 
     # Visit a parse tree produced by YAPLParser#call.
     def visitCall(self, ctx:YAPLParser.CallContext):
+        return self.visitChildren(ctx)
+
+
+    # Visit a parse tree produced by YAPLParser#parameter.
+    def visitParameter(self, ctx:YAPLParser.ParameterContext):
         return self.visitChildren(ctx)
 
 

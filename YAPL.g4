@@ -16,8 +16,7 @@ feature             : (ID '(' ( formal ','? )* ')' ':' TYPE '{' expr '}')       
 formal              : ID ':' TYPE ;
 
 expr                : call '<-' (expr | call)                                                   # DeclarationExpr
-                    | call '(' ((expr | call) ','?)+ ')'                                        # FunctionExpr
-                    | expr  ('@' TYPE)?  '.' ID ('(' expr? (',' expr)* ')')                     # MethodExpr
+                    | call '(' (parameter ','?)+ ')'                                        # FunctionExpr
                     | 'if' expr 'then' expr 'else' expr 'fi'                                    # ifelseExpr
                     | 'while' expr 'loop' expr 'pool'                                           # whileExpr
                     | '{' (expr ';')+ '}'                                                       # BracketsExpr
@@ -34,7 +33,7 @@ expr                : call '<-' (expr | call)                                   
                     | expr '=' expr                                                             # equalExpr
                     | 'not' expr                                                                # notExpr
                     | '(' expr ')'                                                              # parensExpr
-                    | ID                                                                        # idExpr
+                    | call                                                                      # idExpr
                     | INT                                                                       # intExpr
                     | STRING                                                                    # stringExpr
                     | 'true'                                                                    # trueExpr
@@ -42,6 +41,8 @@ expr                : call '<-' (expr | call)                                   
                     ;
 
 call                : ID ('.' ID)* ;
+
+parameter           : expr | call ;
 
 /*
  * Lexer Rules

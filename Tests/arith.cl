@@ -1,7 +1,7 @@
 class A {
 
    var : Int <- 0;
-   me : A <- new A
+   me : A <- new A;
    value() : Int { var };
 
    set_var(num : Int) : SELF_TYPE {
@@ -15,54 +15,50 @@ class A {
       self
    };
 
-   method2(num1 : Int, num2 : String) : B {  -- plus
+   method2(num1 : Int, num2 : String) : Int {  -- plus
       (let x : Int in
 	 {
-            x <- num1 + new Int;
-	    (new B).set_var(x);
+      x <- num1 + new Int;
 	 }
       )
    };
 
-   method3(num : Int) : C {  -- negate
+   method3(num : Int) : Int {  -- negate
       (let x : Int in
 	 {
-            x <- ~num;
-	    (new C).set_var(x);
+      x <- ~num;
 	 }
       )
    };
 
-   method4(num1 : Int, num2 : Int) : D {  -- diff
+   method4(num1 : Int, num2 : Int) : Int {  -- diff
             if num2 < num1 then
                (let x : Int in
 		  {
                      x <- num1 - num2;
-	             (new D).set_var(x);
 	          }
                )
             else
                (let y : Int in
 		  {
 	             y <- num2 - num1;
-	             (new D).set_var(y);
 		  }
                )
             fi
    };
 
-   method5(num : Int) : E {  -- factorial
+   method5(num : Int) : Int {  -- factorial
       (let x : Int <- 1 in
 	 {
 	    (let y : Int <- 1 in
 	       while y <= num loop
 	          {
-                     x <- x * y;
+                x <- x * y;
 	             y <- y - 1;
 	          }
 	       pool
 	    );
-	    (new E).set_var(x);
+	    0;
 	 }
       )
    };
@@ -71,11 +67,11 @@ class A {
 
 class B inherits A {  -- B is a number squared
 
-   method5(num : Int) : E { -- square
+   method5(num : Int) : A { -- square
       (let x : Int in
 	 {
             x <- num * num;
-	    (new E).set_var(x);
+	    new A;
 	 }
       )
    };
@@ -88,7 +84,7 @@ class C inherits B {
       (let x : Int in
          {
             x <- ~num;
-	    (new A).set_var(x);
+	    new A;
          }
       )
    };
@@ -97,7 +93,7 @@ class C inherits B {
       (let x : Int in
 	 {
             x <- num * num * num;
-	    (new E).set_var(x);
+	    new E;
 	 }
       )
    };
@@ -121,11 +117,10 @@ class D inherits B {
 
 class E inherits D {
 
-   method6(num : Int) : A {  -- division
+   method6(num : Int) : Int {  -- division
       (let x : Int in
          {
             x <- num / 8;
-	    (new A).set_var(x);
          }
       )
    };
@@ -143,7 +138,7 @@ class Main {
 
    is_even(num : Int) : Bool {
       (let x : Int <- num in
-            if x < char then is_even(~x) else
+            if x < avar.var then is_even(~x) else
             if avar = a_var then true else
 	    if 1 = 0 then false else
 	          is_even(x - 2)
@@ -151,7 +146,7 @@ class Main {
       )
    };
 
-   main() : Object {
+   main() : A {
       {
          avar <- (new B);
          avar.var <- 0;

@@ -107,15 +107,6 @@ class YAPLListener(ParseTreeListener):
         pass
 
 
-    # Enter a parse tree produced by YAPLParser#MethodExpr.
-    def enterMethodExpr(self, ctx:YAPLParser.MethodExprContext):
-        pass
-
-    # Exit a parse tree produced by YAPLParser#MethodExpr.
-    def exitMethodExpr(self, ctx:YAPLParser.MethodExprContext):
-        pass
-
-
     # Enter a parse tree produced by YAPLParser#LetExpr.
     def enterLetExpr(self, ctx:YAPLParser.LetExprContext):
         pass
@@ -275,6 +266,15 @@ class YAPLListener(ParseTreeListener):
 
     # Exit a parse tree produced by YAPLParser#call.
     def exitCall(self, ctx:YAPLParser.CallContext):
+        pass
+
+
+    # Enter a parse tree produced by YAPLParser#parameter.
+    def enterParameter(self, ctx:YAPLParser.ParameterContext):
+        pass
+
+    # Exit a parse tree produced by YAPLParser#parameter.
+    def exitParameter(self, ctx:YAPLParser.ParameterContext):
         pass
 
 

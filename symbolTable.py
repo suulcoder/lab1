@@ -24,7 +24,7 @@ class SymbolsTable:
             
     def GetTypeInheritance(self, type):
         inheritance_types = []
-        while (type!=''):
+        while (str(type)!=''):
             inheritance_types.append(str(type))
             for symbol in self.symbols_table:
                 if(str(type) == symbol[0]):
