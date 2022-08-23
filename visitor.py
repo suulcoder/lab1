@@ -81,6 +81,13 @@ class Visitor(YAPLVisitor):
         # ==============================================================
         elif(len(ctx.TYPE())==2):
             
+            #if father class is int string or bool: error 
+            if(str(ctx.TYPE()[1]) in basic_types):
+                printError(
+                    'Inheritance with a basic type is not possible.',
+                    ctx.TYPE()[1].getPayload().line,
+                )
+            
             #Recursive inheritance
             if(str(class_name) == str(ctx.TYPE()[1])):
                 printError(
