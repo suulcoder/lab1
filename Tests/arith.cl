@@ -146,12 +146,14 @@ class Main {
       )
    };
 
-   main() : A {
+   main() : Int {
       {
          avar <- (new B);
-         avar.var <- 0;
+         avar.var <- in_int();
          avar.me.var <- avar.var;
          avar.set_var(2);
+         out_int(avar);
+         in_int();
       }
    };
 };

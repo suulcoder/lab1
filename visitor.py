@@ -556,3 +556,25 @@ class Visitor(YAPLVisitor):
     # Visit a parse tree produced by YAPLParser#parameter.
     def visitParameter(self, ctx):
         return self.visitChildren(ctx)
+
+    def visitInBoolExpr(self, ctx):
+        return {'type': 'Bool'}
+
+    def visitOutBoolExpr(self, ctx):
+        context = self.visit(ctx.call())
+        if context.get('type') != 'Int':
+            printError('The out_bool method should return Bool', ctx.start.line)
+            return {'type': 'Error'}
+        return {'type': current_class}
+
+    def visitInIntExpr(self, ctx):
+        return {'type': 'Int'}
+
+    def visitOutIntExpr(self, ctx):
+        context = self.visit(ctx.call())
+        if context.get('type') != 'Int':
+            printError('The out_int method should return Int', ctx.start.line)
+            return {'type': 'Error'}
+        return {'type': current_class}
+
+    
