@@ -447,9 +447,11 @@ class Visitor(YAPLVisitor):
             if(child.get('type')=='Bool'):
                 child['type'] = 'Int'
                     
-            if(child.get('type')!='Int'):
+            if(child.get('type')!='Int' and child.get('type')!='String'):
                 printError(child.get('type') + ' not valid with operant "+"',ctx.start.line)
                 return {'type': 'Error'}
+        if(child.get('type')!='String'):
+            return {'type':'String'}
         return {'type':'Int'}
     
     # Visit a parse tree produced by YAPLParser#minusExpr.
