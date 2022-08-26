@@ -14,7 +14,14 @@ Symbol_not_available = 'Symbol not available'
 
 class SymbolsTable:
     def __init__(self):
-        self.symbols_table = []
+        self.symbols_table = [
+            # name, type, scope, context, signature=None, value=None
+            ("Object", "", "", "", "", ""),
+            ("Int", "Object", "", "var type", "", ""),
+            ("String", "Object", "", "var type", "", ""),
+            ("Bool", "Object", "", "var type", "", ""),
+            # IO
+        ]
 
     def AddSymbol(self, name, type, scope, context, signature=None, line=None, value=None):
         if(self.FindSymbol(name, type, scope, context)==Symbol_not_found):
