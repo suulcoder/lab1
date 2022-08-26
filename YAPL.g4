@@ -38,6 +38,12 @@ expr                : call '<-' (expr | call)                                   
                     | STRING                                                                    # stringExpr
                     | 'true'                                                                    # trueExpr
                     | 'false'                                                                   # falseExpr
+                    | 'in_string()'                                                             # inStringExpr
+                    | 'in_int()'                                                                # inIntExpr
+                    | 'in_bool()'                                                               # inBoolExpr
+                    | 'out_string(' call ')'                                                    # outStringExpr
+                    | 'out_int(' call ')'                                                       # outIntExpr
+                    | 'out_bool(' call ')'                                                      # outBoolExpr
                     ;
 
 call                : ID ('.' ID)* ;

@@ -10,7 +10,7 @@ else:
 
 def serializedATN():
     return [
-        4,1,39,190,2,0,7,0,2,1,7,1,2,2,7,2,2,3,7,3,2,4,7,4,2,5,7,5,2,6,7,
+        4,1,45,205,2,0,7,0,2,1,7,1,2,2,7,2,2,3,7,3,2,4,7,4,2,5,7,5,2,6,7,
         6,1,0,1,0,1,0,4,0,18,8,0,11,0,12,0,19,1,1,1,1,1,1,1,1,3,1,26,8,1,
         1,1,1,1,1,1,1,1,4,1,32,8,1,11,1,12,1,33,1,1,1,1,1,2,1,2,1,2,1,2,
         3,2,42,8,2,5,2,44,8,2,10,2,12,2,47,9,2,1,2,1,2,1,2,1,2,1,2,1,2,1,
@@ -20,63 +20,70 @@ def serializedATN():
         1,4,1,4,1,4,1,4,1,4,1,4,1,4,4,4,106,8,4,11,4,12,4,107,1,4,1,4,1,
         4,1,4,1,4,1,4,1,4,1,4,3,4,118,8,4,1,4,1,4,1,4,1,4,1,4,1,4,5,4,126,
         8,4,10,4,12,4,129,9,4,1,4,1,4,1,4,1,4,1,4,1,4,1,4,1,4,1,4,1,4,1,
-        4,1,4,1,4,1,4,1,4,1,4,1,4,1,4,1,4,3,4,150,8,4,1,4,1,4,1,4,1,4,1,
         4,1,4,1,4,1,4,1,4,1,4,1,4,1,4,1,4,1,4,1,4,1,4,1,4,1,4,1,4,1,4,1,
-        4,5,4,173,8,4,10,4,12,4,176,9,4,1,5,1,5,1,5,5,5,181,8,5,10,5,12,
-        5,184,9,5,1,6,1,6,3,6,188,8,6,1,6,0,1,8,7,0,2,4,6,8,10,12,0,0,219,
-        0,17,1,0,0,0,2,21,1,0,0,0,4,62,1,0,0,0,6,64,1,0,0,0,8,149,1,0,0,
-        0,10,177,1,0,0,0,12,187,1,0,0,0,14,15,3,2,1,0,15,16,5,1,0,0,16,18,
-        1,0,0,0,17,14,1,0,0,0,18,19,1,0,0,0,19,17,1,0,0,0,19,20,1,0,0,0,
-        20,1,1,0,0,0,21,22,5,2,0,0,22,25,5,35,0,0,23,24,5,3,0,0,24,26,5,
-        35,0,0,25,23,1,0,0,0,25,26,1,0,0,0,26,27,1,0,0,0,27,31,5,4,0,0,28,
-        29,3,4,2,0,29,30,5,1,0,0,30,32,1,0,0,0,31,28,1,0,0,0,32,33,1,0,0,
-        0,33,31,1,0,0,0,33,34,1,0,0,0,34,35,1,0,0,0,35,36,5,5,0,0,36,3,1,
-        0,0,0,37,38,5,36,0,0,38,45,5,6,0,0,39,41,3,6,3,0,40,42,5,7,0,0,41,
+        4,1,4,1,4,1,4,1,4,1,4,1,4,1,4,3,4,165,8,4,1,4,1,4,1,4,1,4,1,4,1,
+        4,1,4,1,4,1,4,1,4,1,4,1,4,1,4,1,4,1,4,1,4,1,4,1,4,1,4,1,4,1,4,5,
+        4,188,8,4,10,4,12,4,191,9,4,1,5,1,5,1,5,5,5,196,8,5,10,5,12,5,199,
+        9,5,1,6,1,6,3,6,203,8,6,1,6,0,1,8,7,0,2,4,6,8,10,12,0,0,240,0,17,
+        1,0,0,0,2,21,1,0,0,0,4,62,1,0,0,0,6,64,1,0,0,0,8,164,1,0,0,0,10,
+        192,1,0,0,0,12,202,1,0,0,0,14,15,3,2,1,0,15,16,5,1,0,0,16,18,1,0,
+        0,0,17,14,1,0,0,0,18,19,1,0,0,0,19,17,1,0,0,0,19,20,1,0,0,0,20,1,
+        1,0,0,0,21,22,5,2,0,0,22,25,5,41,0,0,23,24,5,3,0,0,24,26,5,41,0,
+        0,25,23,1,0,0,0,25,26,1,0,0,0,26,27,1,0,0,0,27,31,5,4,0,0,28,29,
+        3,4,2,0,29,30,5,1,0,0,30,32,1,0,0,0,31,28,1,0,0,0,32,33,1,0,0,0,
+        33,31,1,0,0,0,33,34,1,0,0,0,34,35,1,0,0,0,35,36,5,5,0,0,36,3,1,0,
+        0,0,37,38,5,42,0,0,38,45,5,6,0,0,39,41,3,6,3,0,40,42,5,7,0,0,41,
         40,1,0,0,0,41,42,1,0,0,0,42,44,1,0,0,0,43,39,1,0,0,0,44,47,1,0,0,
         0,45,43,1,0,0,0,45,46,1,0,0,0,46,48,1,0,0,0,47,45,1,0,0,0,48,49,
-        5,8,0,0,49,50,5,9,0,0,50,51,5,35,0,0,51,52,5,4,0,0,52,53,3,8,4,0,
-        53,54,5,5,0,0,54,63,1,0,0,0,55,56,5,36,0,0,56,57,5,9,0,0,57,60,5,
-        35,0,0,58,59,5,10,0,0,59,61,3,8,4,0,60,58,1,0,0,0,60,61,1,0,0,0,
-        61,63,1,0,0,0,62,37,1,0,0,0,62,55,1,0,0,0,63,5,1,0,0,0,64,65,5,36,
-        0,0,65,66,5,9,0,0,66,67,5,35,0,0,67,7,1,0,0,0,68,69,6,4,-1,0,69,
+        5,8,0,0,49,50,5,9,0,0,50,51,5,41,0,0,51,52,5,4,0,0,52,53,3,8,4,0,
+        53,54,5,5,0,0,54,63,1,0,0,0,55,56,5,42,0,0,56,57,5,9,0,0,57,60,5,
+        41,0,0,58,59,5,10,0,0,59,61,3,8,4,0,60,58,1,0,0,0,60,61,1,0,0,0,
+        61,63,1,0,0,0,62,37,1,0,0,0,62,55,1,0,0,0,63,5,1,0,0,0,64,65,5,42,
+        0,0,65,66,5,9,0,0,66,67,5,41,0,0,67,7,1,0,0,0,68,69,6,4,-1,0,69,
         70,3,10,5,0,70,73,5,10,0,0,71,74,3,8,4,0,72,74,3,10,5,0,73,71,1,
-        0,0,0,73,72,1,0,0,0,74,150,1,0,0,0,75,76,3,10,5,0,76,81,5,6,0,0,
+        0,0,0,73,72,1,0,0,0,74,165,1,0,0,0,75,76,3,10,5,0,76,81,5,6,0,0,
         77,79,3,12,6,0,78,80,5,7,0,0,79,78,1,0,0,0,79,80,1,0,0,0,80,82,1,
         0,0,0,81,77,1,0,0,0,82,83,1,0,0,0,83,81,1,0,0,0,83,84,1,0,0,0,84,
-        85,1,0,0,0,85,86,5,8,0,0,86,150,1,0,0,0,87,88,5,11,0,0,88,89,3,8,
+        85,1,0,0,0,85,86,5,8,0,0,86,165,1,0,0,0,87,88,5,11,0,0,88,89,3,8,
         4,0,89,90,5,12,0,0,90,91,3,8,4,0,91,92,5,13,0,0,92,93,3,8,4,0,93,
-        94,5,14,0,0,94,150,1,0,0,0,95,96,5,15,0,0,96,97,3,8,4,0,97,98,5,
-        16,0,0,98,99,3,8,4,0,99,100,5,17,0,0,100,150,1,0,0,0,101,105,5,4,
+        94,5,14,0,0,94,165,1,0,0,0,95,96,5,15,0,0,96,97,3,8,4,0,97,98,5,
+        16,0,0,98,99,3,8,4,0,99,100,5,17,0,0,100,165,1,0,0,0,101,105,5,4,
         0,0,102,103,3,8,4,0,103,104,5,1,0,0,104,106,1,0,0,0,105,102,1,0,
         0,0,106,107,1,0,0,0,107,105,1,0,0,0,107,108,1,0,0,0,108,109,1,0,
-        0,0,109,110,5,5,0,0,110,150,1,0,0,0,111,112,5,18,0,0,112,113,5,36,
-        0,0,113,114,5,9,0,0,114,117,5,35,0,0,115,116,5,10,0,0,116,118,3,
+        0,0,109,110,5,5,0,0,110,165,1,0,0,0,111,112,5,18,0,0,112,113,5,42,
+        0,0,113,114,5,9,0,0,114,117,5,41,0,0,115,116,5,10,0,0,116,118,3,
         8,4,0,117,115,1,0,0,0,117,118,1,0,0,0,118,127,1,0,0,0,119,120,5,
-        7,0,0,120,121,5,36,0,0,121,122,5,9,0,0,122,123,5,35,0,0,123,124,
+        7,0,0,120,121,5,42,0,0,121,122,5,9,0,0,122,123,5,41,0,0,123,124,
         5,10,0,0,124,126,3,8,4,0,125,119,1,0,0,0,126,129,1,0,0,0,127,125,
         1,0,0,0,127,128,1,0,0,0,128,130,1,0,0,0,129,127,1,0,0,0,130,131,
-        5,19,0,0,131,150,3,8,4,18,132,133,5,20,0,0,133,150,5,35,0,0,134,
-        135,5,21,0,0,135,150,3,8,4,16,136,137,5,26,0,0,137,150,3,8,4,11,
-        138,139,5,30,0,0,139,150,3,8,4,7,140,141,5,6,0,0,141,142,3,8,4,0,
-        142,143,5,8,0,0,143,150,1,0,0,0,144,150,3,10,5,0,145,150,5,34,0,
-        0,146,150,5,33,0,0,147,150,5,31,0,0,148,150,5,32,0,0,149,68,1,0,
-        0,0,149,75,1,0,0,0,149,87,1,0,0,0,149,95,1,0,0,0,149,101,1,0,0,0,
-        149,111,1,0,0,0,149,132,1,0,0,0,149,134,1,0,0,0,149,136,1,0,0,0,
-        149,138,1,0,0,0,149,140,1,0,0,0,149,144,1,0,0,0,149,145,1,0,0,0,
-        149,146,1,0,0,0,149,147,1,0,0,0,149,148,1,0,0,0,150,174,1,0,0,0,
-        151,152,10,15,0,0,152,153,5,22,0,0,153,173,3,8,4,16,154,155,10,14,
-        0,0,155,156,5,23,0,0,156,173,3,8,4,15,157,158,10,13,0,0,158,159,
-        5,24,0,0,159,173,3,8,4,14,160,161,10,12,0,0,161,162,5,25,0,0,162,
-        173,3,8,4,13,163,164,10,10,0,0,164,165,5,27,0,0,165,173,3,8,4,11,
-        166,167,10,9,0,0,167,168,5,28,0,0,168,173,3,8,4,10,169,170,10,8,
-        0,0,170,171,5,29,0,0,171,173,3,8,4,9,172,151,1,0,0,0,172,154,1,0,
-        0,0,172,157,1,0,0,0,172,160,1,0,0,0,172,163,1,0,0,0,172,166,1,0,
-        0,0,172,169,1,0,0,0,173,176,1,0,0,0,174,172,1,0,0,0,174,175,1,0,
-        0,0,175,9,1,0,0,0,176,174,1,0,0,0,177,182,5,36,0,0,178,179,5,37,
-        0,0,179,181,5,36,0,0,180,178,1,0,0,0,181,184,1,0,0,0,182,180,1,0,
-        0,0,182,183,1,0,0,0,183,11,1,0,0,0,184,182,1,0,0,0,185,188,3,8,4,
-        0,186,188,3,10,5,0,187,185,1,0,0,0,187,186,1,0,0,0,188,13,1,0,0,
-        0,18,19,25,33,41,45,60,62,73,79,83,107,117,127,149,172,174,182,187
+        5,19,0,0,131,165,3,8,4,24,132,133,5,20,0,0,133,165,5,41,0,0,134,
+        135,5,21,0,0,135,165,3,8,4,22,136,137,5,26,0,0,137,165,3,8,4,17,
+        138,139,5,30,0,0,139,165,3,8,4,13,140,141,5,6,0,0,141,142,3,8,4,
+        0,142,143,5,8,0,0,143,165,1,0,0,0,144,165,3,10,5,0,145,165,5,40,
+        0,0,146,165,5,39,0,0,147,165,5,31,0,0,148,165,5,32,0,0,149,165,5,
+        33,0,0,150,165,5,34,0,0,151,165,5,35,0,0,152,153,5,36,0,0,153,154,
+        3,10,5,0,154,155,5,8,0,0,155,165,1,0,0,0,156,157,5,37,0,0,157,158,
+        3,10,5,0,158,159,5,8,0,0,159,165,1,0,0,0,160,161,5,38,0,0,161,162,
+        3,10,5,0,162,163,5,8,0,0,163,165,1,0,0,0,164,68,1,0,0,0,164,75,1,
+        0,0,0,164,87,1,0,0,0,164,95,1,0,0,0,164,101,1,0,0,0,164,111,1,0,
+        0,0,164,132,1,0,0,0,164,134,1,0,0,0,164,136,1,0,0,0,164,138,1,0,
+        0,0,164,140,1,0,0,0,164,144,1,0,0,0,164,145,1,0,0,0,164,146,1,0,
+        0,0,164,147,1,0,0,0,164,148,1,0,0,0,164,149,1,0,0,0,164,150,1,0,
+        0,0,164,151,1,0,0,0,164,152,1,0,0,0,164,156,1,0,0,0,164,160,1,0,
+        0,0,165,189,1,0,0,0,166,167,10,21,0,0,167,168,5,22,0,0,168,188,3,
+        8,4,22,169,170,10,20,0,0,170,171,5,23,0,0,171,188,3,8,4,21,172,173,
+        10,19,0,0,173,174,5,24,0,0,174,188,3,8,4,20,175,176,10,18,0,0,176,
+        177,5,25,0,0,177,188,3,8,4,19,178,179,10,16,0,0,179,180,5,27,0,0,
+        180,188,3,8,4,17,181,182,10,15,0,0,182,183,5,28,0,0,183,188,3,8,
+        4,16,184,185,10,14,0,0,185,186,5,29,0,0,186,188,3,8,4,15,187,166,
+        1,0,0,0,187,169,1,0,0,0,187,172,1,0,0,0,187,175,1,0,0,0,187,178,
+        1,0,0,0,187,181,1,0,0,0,187,184,1,0,0,0,188,191,1,0,0,0,189,187,
+        1,0,0,0,189,190,1,0,0,0,190,9,1,0,0,0,191,189,1,0,0,0,192,197,5,
+        42,0,0,193,194,5,43,0,0,194,196,5,42,0,0,195,193,1,0,0,0,196,199,
+        1,0,0,0,197,195,1,0,0,0,197,198,1,0,0,0,198,11,1,0,0,0,199,197,1,
+        0,0,0,200,203,3,8,4,0,201,203,3,10,5,0,202,200,1,0,0,0,202,201,1,
+        0,0,0,203,13,1,0,0,0,18,19,25,33,41,45,60,62,73,79,83,107,117,127,
+        164,187,189,197,202
     ]
 
 class YAPLParser ( Parser ):
@@ -94,8 +101,10 @@ class YAPLParser ( Parser ):
                      "'then'", "'else'", "'fi'", "'while'", "'loop'", "'pool'", 
                      "'let'", "'in'", "'new'", "'isvoid'", "'+'", "'-'", 
                      "'*'", "'/'", "'~'", "'<'", "'<='", "'='", "'not'", 
-                     "'true'", "'false'", "<INVALID>", "<INVALID>", "<INVALID>", 
-                     "<INVALID>", "'.'" ]
+                     "'true'", "'false'", "'in_string()'", "'in_int()'", 
+                     "'in_bool()'", "'out_string('", "'out_int('", "'out_bool('", 
+                     "<INVALID>", "<INVALID>", "<INVALID>", "<INVALID>", 
+                     "'.'" ]
 
     symbolicNames = [ "<INVALID>", "<INVALID>", "<INVALID>", "<INVALID>", 
                       "<INVALID>", "<INVALID>", "<INVALID>", "<INVALID>", 
@@ -105,8 +114,9 @@ class YAPLParser ( Parser ):
                       "<INVALID>", "<INVALID>", "<INVALID>", "<INVALID>", 
                       "<INVALID>", "<INVALID>", "<INVALID>", "<INVALID>", 
                       "<INVALID>", "<INVALID>", "<INVALID>", "<INVALID>", 
-                      "<INVALID>", "STRING", "INT", "TYPE", "ID", "POINT", 
-                      "UNKNOWN", "LINE_COMMENT" ]
+                      "<INVALID>", "<INVALID>", "<INVALID>", "<INVALID>", 
+                      "<INVALID>", "<INVALID>", "<INVALID>", "STRING", "INT", 
+                      "TYPE", "ID", "POINT", "UNKNOWN", "LINE_COMMENT" ]
 
     RULE_program = 0
     RULE_my_class = 1
@@ -152,13 +162,19 @@ class YAPLParser ( Parser ):
     T__29=30
     T__30=31
     T__31=32
-    STRING=33
-    INT=34
-    TYPE=35
-    ID=36
-    POINT=37
-    UNKNOWN=38
-    LINE_COMMENT=39
+    T__32=33
+    T__33=34
+    T__34=35
+    T__35=36
+    T__36=37
+    T__37=38
+    STRING=39
+    INT=40
+    TYPE=41
+    ID=42
+    POINT=43
+    UNKNOWN=44
+    LINE_COMMENT=45
 
     def __init__(self, input:TokenStream, output:TextIO = sys.stdout):
         super().__init__(input, output)
@@ -580,6 +596,301 @@ class YAPLParser ( Parser ):
                 return visitor.visitChildren(self)
 
 
+    class InStringExprContext(ExprContext):
+
+        def __init__(self, parser, ctx:ParserRuleContext): # actually a YAPLParser.ExprContext
+            super().__init__(parser)
+            self.copyFrom(ctx)
+
+
+        def enterRule(self, listener:ParseTreeListener):
+            if hasattr( listener, "enterInStringExpr" ):
+                listener.enterInStringExpr(self)
+
+        def exitRule(self, listener:ParseTreeListener):
+            if hasattr( listener, "exitInStringExpr" ):
+                listener.exitInStringExpr(self)
+
+        def accept(self, visitor:ParseTreeVisitor):
+            if hasattr( visitor, "visitInStringExpr" ):
+                return visitor.visitInStringExpr(self)
+            else:
+                return visitor.visitChildren(self)
+
+
+    class VoidExprContext(ExprContext):
+
+        def __init__(self, parser, ctx:ParserRuleContext): # actually a YAPLParser.ExprContext
+            super().__init__(parser)
+            self.copyFrom(ctx)
+
+        def expr(self):
+            return self.getTypedRuleContext(YAPLParser.ExprContext,0)
+
+
+        def enterRule(self, listener:ParseTreeListener):
+            if hasattr( listener, "enterVoidExpr" ):
+                listener.enterVoidExpr(self)
+
+        def exitRule(self, listener:ParseTreeListener):
+            if hasattr( listener, "exitVoidExpr" ):
+                listener.exitVoidExpr(self)
+
+        def accept(self, visitor:ParseTreeVisitor):
+            if hasattr( visitor, "visitVoidExpr" ):
+                return visitor.visitVoidExpr(self)
+            else:
+                return visitor.visitChildren(self)
+
+
+    class TrueExprContext(ExprContext):
+
+        def __init__(self, parser, ctx:ParserRuleContext): # actually a YAPLParser.ExprContext
+            super().__init__(parser)
+            self.copyFrom(ctx)
+
+
+        def enterRule(self, listener:ParseTreeListener):
+            if hasattr( listener, "enterTrueExpr" ):
+                listener.enterTrueExpr(self)
+
+        def exitRule(self, listener:ParseTreeListener):
+            if hasattr( listener, "exitTrueExpr" ):
+                listener.exitTrueExpr(self)
+
+        def accept(self, visitor:ParseTreeVisitor):
+            if hasattr( visitor, "visitTrueExpr" ):
+                return visitor.visitTrueExpr(self)
+            else:
+                return visitor.visitChildren(self)
+
+
+    class InstanceExprContext(ExprContext):
+
+        def __init__(self, parser, ctx:ParserRuleContext): # actually a YAPLParser.ExprContext
+            super().__init__(parser)
+            self.copyFrom(ctx)
+
+        def TYPE(self):
+            return self.getToken(YAPLParser.TYPE, 0)
+
+        def enterRule(self, listener:ParseTreeListener):
+            if hasattr( listener, "enterInstanceExpr" ):
+                listener.enterInstanceExpr(self)
+
+        def exitRule(self, listener:ParseTreeListener):
+            if hasattr( listener, "exitInstanceExpr" ):
+                listener.exitInstanceExpr(self)
+
+        def accept(self, visitor:ParseTreeVisitor):
+            if hasattr( visitor, "visitInstanceExpr" ):
+                return visitor.visitInstanceExpr(self)
+            else:
+                return visitor.visitChildren(self)
+
+
+    class BracketsExprContext(ExprContext):
+
+        def __init__(self, parser, ctx:ParserRuleContext): # actually a YAPLParser.ExprContext
+            super().__init__(parser)
+            self.copyFrom(ctx)
+
+        def expr(self, i:int=None):
+            if i is None:
+                return self.getTypedRuleContexts(YAPLParser.ExprContext)
+            else:
+                return self.getTypedRuleContext(YAPLParser.ExprContext,i)
+
+
+        def enterRule(self, listener:ParseTreeListener):
+            if hasattr( listener, "enterBracketsExpr" ):
+                listener.enterBracketsExpr(self)
+
+        def exitRule(self, listener:ParseTreeListener):
+            if hasattr( listener, "exitBracketsExpr" ):
+                listener.exitBracketsExpr(self)
+
+        def accept(self, visitor:ParseTreeVisitor):
+            if hasattr( visitor, "visitBracketsExpr" ):
+                return visitor.visitBracketsExpr(self)
+            else:
+                return visitor.visitChildren(self)
+
+
+    class MinusExprContext(ExprContext):
+
+        def __init__(self, parser, ctx:ParserRuleContext): # actually a YAPLParser.ExprContext
+            super().__init__(parser)
+            self.copyFrom(ctx)
+
+        def expr(self, i:int=None):
+            if i is None:
+                return self.getTypedRuleContexts(YAPLParser.ExprContext)
+            else:
+                return self.getTypedRuleContext(YAPLParser.ExprContext,i)
+
+
+        def enterRule(self, listener:ParseTreeListener):
+            if hasattr( listener, "enterMinusExpr" ):
+                listener.enterMinusExpr(self)
+
+        def exitRule(self, listener:ParseTreeListener):
+            if hasattr( listener, "exitMinusExpr" ):
+                listener.exitMinusExpr(self)
+
+        def accept(self, visitor:ParseTreeVisitor):
+            if hasattr( visitor, "visitMinusExpr" ):
+                return visitor.visitMinusExpr(self)
+            else:
+                return visitor.visitChildren(self)
+
+
+    class StringExprContext(ExprContext):
+
+        def __init__(self, parser, ctx:ParserRuleContext): # actually a YAPLParser.ExprContext
+            super().__init__(parser)
+            self.copyFrom(ctx)
+
+        def STRING(self):
+            return self.getToken(YAPLParser.STRING, 0)
+
+        def enterRule(self, listener:ParseTreeListener):
+            if hasattr( listener, "enterStringExpr" ):
+                listener.enterStringExpr(self)
+
+        def exitRule(self, listener:ParseTreeListener):
+            if hasattr( listener, "exitStringExpr" ):
+                listener.exitStringExpr(self)
+
+        def accept(self, visitor:ParseTreeVisitor):
+            if hasattr( visitor, "visitStringExpr" ):
+                return visitor.visitStringExpr(self)
+            else:
+                return visitor.visitChildren(self)
+
+
+    class OutIntExprContext(ExprContext):
+
+        def __init__(self, parser, ctx:ParserRuleContext): # actually a YAPLParser.ExprContext
+            super().__init__(parser)
+            self.copyFrom(ctx)
+
+        def call(self):
+            return self.getTypedRuleContext(YAPLParser.CallContext,0)
+
+
+        def enterRule(self, listener:ParseTreeListener):
+            if hasattr( listener, "enterOutIntExpr" ):
+                listener.enterOutIntExpr(self)
+
+        def exitRule(self, listener:ParseTreeListener):
+            if hasattr( listener, "exitOutIntExpr" ):
+                listener.exitOutIntExpr(self)
+
+        def accept(self, visitor:ParseTreeVisitor):
+            if hasattr( visitor, "visitOutIntExpr" ):
+                return visitor.visitOutIntExpr(self)
+            else:
+                return visitor.visitChildren(self)
+
+
+    class UnaryExprContext(ExprContext):
+
+        def __init__(self, parser, ctx:ParserRuleContext): # actually a YAPLParser.ExprContext
+            super().__init__(parser)
+            self.copyFrom(ctx)
+
+        def expr(self):
+            return self.getTypedRuleContext(YAPLParser.ExprContext,0)
+
+
+        def enterRule(self, listener:ParseTreeListener):
+            if hasattr( listener, "enterUnaryExpr" ):
+                listener.enterUnaryExpr(self)
+
+        def exitRule(self, listener:ParseTreeListener):
+            if hasattr( listener, "exitUnaryExpr" ):
+                listener.exitUnaryExpr(self)
+
+        def accept(self, visitor:ParseTreeVisitor):
+            if hasattr( visitor, "visitUnaryExpr" ):
+                return visitor.visitUnaryExpr(self)
+            else:
+                return visitor.visitChildren(self)
+
+
+    class SumExprContext(ExprContext):
+
+        def __init__(self, parser, ctx:ParserRuleContext): # actually a YAPLParser.ExprContext
+            super().__init__(parser)
+            self.copyFrom(ctx)
+
+        def expr(self, i:int=None):
+            if i is None:
+                return self.getTypedRuleContexts(YAPLParser.ExprContext)
+            else:
+                return self.getTypedRuleContext(YAPLParser.ExprContext,i)
+
+
+        def enterRule(self, listener:ParseTreeListener):
+            if hasattr( listener, "enterSumExpr" ):
+                listener.enterSumExpr(self)
+
+        def exitRule(self, listener:ParseTreeListener):
+            if hasattr( listener, "exitSumExpr" ):
+                listener.exitSumExpr(self)
+
+        def accept(self, visitor:ParseTreeVisitor):
+            if hasattr( visitor, "visitSumExpr" ):
+                return visitor.visitSumExpr(self)
+            else:
+                return visitor.visitChildren(self)
+
+
+    class FalseExprContext(ExprContext):
+
+        def __init__(self, parser, ctx:ParserRuleContext): # actually a YAPLParser.ExprContext
+            super().__init__(parser)
+            self.copyFrom(ctx)
+
+
+        def enterRule(self, listener:ParseTreeListener):
+            if hasattr( listener, "enterFalseExpr" ):
+                listener.enterFalseExpr(self)
+
+        def exitRule(self, listener:ParseTreeListener):
+            if hasattr( listener, "exitFalseExpr" ):
+                listener.exitFalseExpr(self)
+
+        def accept(self, visitor:ParseTreeVisitor):
+            if hasattr( visitor, "visitFalseExpr" ):
+                return visitor.visitFalseExpr(self)
+            else:
+                return visitor.visitChildren(self)
+
+
+    class InBoolExprContext(ExprContext):
+
+        def __init__(self, parser, ctx:ParserRuleContext): # actually a YAPLParser.ExprContext
+            super().__init__(parser)
+            self.copyFrom(ctx)
+
+
+        def enterRule(self, listener:ParseTreeListener):
+            if hasattr( listener, "enterInBoolExpr" ):
+                listener.enterInBoolExpr(self)
+
+        def exitRule(self, listener:ParseTreeListener):
+            if hasattr( listener, "exitInBoolExpr" ):
+                listener.exitInBoolExpr(self)
+
+        def accept(self, visitor:ParseTreeVisitor):
+            if hasattr( visitor, "visitInBoolExpr" ):
+                return visitor.visitInBoolExpr(self)
+            else:
+                return visitor.visitChildren(self)
+
+
     class IfelseExprContext(ExprContext):
 
         def __init__(self, parser, ctx:ParserRuleContext): # actually a YAPLParser.ExprContext
@@ -663,53 +974,6 @@ class YAPLParser ( Parser ):
                 return visitor.visitChildren(self)
 
 
-    class VoidExprContext(ExprContext):
-
-        def __init__(self, parser, ctx:ParserRuleContext): # actually a YAPLParser.ExprContext
-            super().__init__(parser)
-            self.copyFrom(ctx)
-
-        def expr(self):
-            return self.getTypedRuleContext(YAPLParser.ExprContext,0)
-
-
-        def enterRule(self, listener:ParseTreeListener):
-            if hasattr( listener, "enterVoidExpr" ):
-                listener.enterVoidExpr(self)
-
-        def exitRule(self, listener:ParseTreeListener):
-            if hasattr( listener, "exitVoidExpr" ):
-                listener.exitVoidExpr(self)
-
-        def accept(self, visitor:ParseTreeVisitor):
-            if hasattr( visitor, "visitVoidExpr" ):
-                return visitor.visitVoidExpr(self)
-            else:
-                return visitor.visitChildren(self)
-
-
-    class TrueExprContext(ExprContext):
-
-        def __init__(self, parser, ctx:ParserRuleContext): # actually a YAPLParser.ExprContext
-            super().__init__(parser)
-            self.copyFrom(ctx)
-
-
-        def enterRule(self, listener:ParseTreeListener):
-            if hasattr( listener, "enterTrueExpr" ):
-                listener.enterTrueExpr(self)
-
-        def exitRule(self, listener:ParseTreeListener):
-            if hasattr( listener, "exitTrueExpr" ):
-                listener.exitTrueExpr(self)
-
-        def accept(self, visitor:ParseTreeVisitor):
-            if hasattr( visitor, "visitTrueExpr" ):
-                return visitor.visitTrueExpr(self)
-            else:
-                return visitor.visitChildren(self)
-
-
     class LetExprContext(ExprContext):
 
         def __init__(self, parser, ctx:ParserRuleContext): # actually a YAPLParser.ExprContext
@@ -748,30 +1012,6 @@ class YAPLParser ( Parser ):
                 return visitor.visitChildren(self)
 
 
-    class InstanceExprContext(ExprContext):
-
-        def __init__(self, parser, ctx:ParserRuleContext): # actually a YAPLParser.ExprContext
-            super().__init__(parser)
-            self.copyFrom(ctx)
-
-        def TYPE(self):
-            return self.getToken(YAPLParser.TYPE, 0)
-
-        def enterRule(self, listener:ParseTreeListener):
-            if hasattr( listener, "enterInstanceExpr" ):
-                listener.enterInstanceExpr(self)
-
-        def exitRule(self, listener:ParseTreeListener):
-            if hasattr( listener, "exitInstanceExpr" ):
-                listener.exitInstanceExpr(self)
-
-        def accept(self, visitor:ParseTreeVisitor):
-            if hasattr( visitor, "visitInstanceExpr" ):
-                return visitor.visitInstanceExpr(self)
-            else:
-                return visitor.visitChildren(self)
-
-
     class LessThanExprContext(ExprContext):
 
         def __init__(self, parser, ctx:ParserRuleContext): # actually a YAPLParser.ExprContext
@@ -796,34 +1036,6 @@ class YAPLParser ( Parser ):
         def accept(self, visitor:ParseTreeVisitor):
             if hasattr( visitor, "visitLessThanExpr" ):
                 return visitor.visitLessThanExpr(self)
-            else:
-                return visitor.visitChildren(self)
-
-
-    class BracketsExprContext(ExprContext):
-
-        def __init__(self, parser, ctx:ParserRuleContext): # actually a YAPLParser.ExprContext
-            super().__init__(parser)
-            self.copyFrom(ctx)
-
-        def expr(self, i:int=None):
-            if i is None:
-                return self.getTypedRuleContexts(YAPLParser.ExprContext)
-            else:
-                return self.getTypedRuleContext(YAPLParser.ExprContext,i)
-
-
-        def enterRule(self, listener:ParseTreeListener):
-            if hasattr( listener, "enterBracketsExpr" ):
-                listener.enterBracketsExpr(self)
-
-        def exitRule(self, listener:ParseTreeListener):
-            if hasattr( listener, "exitBracketsExpr" ):
-                listener.exitBracketsExpr(self)
-
-        def accept(self, visitor:ParseTreeVisitor):
-            if hasattr( visitor, "visitBracketsExpr" ):
-                return visitor.visitBracketsExpr(self)
             else:
                 return visitor.visitChildren(self)
 
@@ -853,30 +1065,24 @@ class YAPLParser ( Parser ):
                 return visitor.visitChildren(self)
 
 
-    class MinusExprContext(ExprContext):
+    class InIntExprContext(ExprContext):
 
         def __init__(self, parser, ctx:ParserRuleContext): # actually a YAPLParser.ExprContext
             super().__init__(parser)
             self.copyFrom(ctx)
 
-        def expr(self, i:int=None):
-            if i is None:
-                return self.getTypedRuleContexts(YAPLParser.ExprContext)
-            else:
-                return self.getTypedRuleContext(YAPLParser.ExprContext,i)
-
 
         def enterRule(self, listener:ParseTreeListener):
-            if hasattr( listener, "enterMinusExpr" ):
-                listener.enterMinusExpr(self)
+            if hasattr( listener, "enterInIntExpr" ):
+                listener.enterInIntExpr(self)
 
         def exitRule(self, listener:ParseTreeListener):
-            if hasattr( listener, "exitMinusExpr" ):
-                listener.exitMinusExpr(self)
+            if hasattr( listener, "exitInIntExpr" ):
+                listener.exitInIntExpr(self)
 
         def accept(self, visitor:ParseTreeVisitor):
-            if hasattr( visitor, "visitMinusExpr" ):
-                return visitor.visitMinusExpr(self)
+            if hasattr( visitor, "visitInIntExpr" ):
+                return visitor.visitInIntExpr(self)
             else:
                 return visitor.visitChildren(self)
 
@@ -940,55 +1146,6 @@ class YAPLParser ( Parser ):
                 return visitor.visitChildren(self)
 
 
-    class StringExprContext(ExprContext):
-
-        def __init__(self, parser, ctx:ParserRuleContext): # actually a YAPLParser.ExprContext
-            super().__init__(parser)
-            self.copyFrom(ctx)
-
-        def STRING(self):
-            return self.getToken(YAPLParser.STRING, 0)
-
-        def enterRule(self, listener:ParseTreeListener):
-            if hasattr( listener, "enterStringExpr" ):
-                listener.enterStringExpr(self)
-
-        def exitRule(self, listener:ParseTreeListener):
-            if hasattr( listener, "exitStringExpr" ):
-                listener.exitStringExpr(self)
-
-        def accept(self, visitor:ParseTreeVisitor):
-            if hasattr( visitor, "visitStringExpr" ):
-                return visitor.visitStringExpr(self)
-            else:
-                return visitor.visitChildren(self)
-
-
-    class UnaryExprContext(ExprContext):
-
-        def __init__(self, parser, ctx:ParserRuleContext): # actually a YAPLParser.ExprContext
-            super().__init__(parser)
-            self.copyFrom(ctx)
-
-        def expr(self):
-            return self.getTypedRuleContext(YAPLParser.ExprContext,0)
-
-
-        def enterRule(self, listener:ParseTreeListener):
-            if hasattr( listener, "enterUnaryExpr" ):
-                listener.enterUnaryExpr(self)
-
-        def exitRule(self, listener:ParseTreeListener):
-            if hasattr( listener, "exitUnaryExpr" ):
-                listener.exitUnaryExpr(self)
-
-        def accept(self, visitor:ParseTreeVisitor):
-            if hasattr( visitor, "visitUnaryExpr" ):
-                return visitor.visitUnaryExpr(self)
-            else:
-                return visitor.visitChildren(self)
-
-
     class NotExprContext(ExprContext):
 
         def __init__(self, parser, ctx:ParserRuleContext): # actually a YAPLParser.ExprContext
@@ -1010,34 +1167,6 @@ class YAPLParser ( Parser ):
         def accept(self, visitor:ParseTreeVisitor):
             if hasattr( visitor, "visitNotExpr" ):
                 return visitor.visitNotExpr(self)
-            else:
-                return visitor.visitChildren(self)
-
-
-    class SumExprContext(ExprContext):
-
-        def __init__(self, parser, ctx:ParserRuleContext): # actually a YAPLParser.ExprContext
-            super().__init__(parser)
-            self.copyFrom(ctx)
-
-        def expr(self, i:int=None):
-            if i is None:
-                return self.getTypedRuleContexts(YAPLParser.ExprContext)
-            else:
-                return self.getTypedRuleContext(YAPLParser.ExprContext,i)
-
-
-        def enterRule(self, listener:ParseTreeListener):
-            if hasattr( listener, "enterSumExpr" ):
-                listener.enterSumExpr(self)
-
-        def exitRule(self, listener:ParseTreeListener):
-            if hasattr( listener, "exitSumExpr" ):
-                listener.exitSumExpr(self)
-
-        def accept(self, visitor:ParseTreeVisitor):
-            if hasattr( visitor, "visitSumExpr" ):
-                return visitor.visitSumExpr(self)
             else:
                 return visitor.visitChildren(self)
 
@@ -1070,24 +1199,52 @@ class YAPLParser ( Parser ):
                 return visitor.visitChildren(self)
 
 
-    class FalseExprContext(ExprContext):
+    class OutBoolExprContext(ExprContext):
 
         def __init__(self, parser, ctx:ParserRuleContext): # actually a YAPLParser.ExprContext
             super().__init__(parser)
             self.copyFrom(ctx)
 
+        def call(self):
+            return self.getTypedRuleContext(YAPLParser.CallContext,0)
+
 
         def enterRule(self, listener:ParseTreeListener):
-            if hasattr( listener, "enterFalseExpr" ):
-                listener.enterFalseExpr(self)
+            if hasattr( listener, "enterOutBoolExpr" ):
+                listener.enterOutBoolExpr(self)
 
         def exitRule(self, listener:ParseTreeListener):
-            if hasattr( listener, "exitFalseExpr" ):
-                listener.exitFalseExpr(self)
+            if hasattr( listener, "exitOutBoolExpr" ):
+                listener.exitOutBoolExpr(self)
 
         def accept(self, visitor:ParseTreeVisitor):
-            if hasattr( visitor, "visitFalseExpr" ):
-                return visitor.visitFalseExpr(self)
+            if hasattr( visitor, "visitOutBoolExpr" ):
+                return visitor.visitOutBoolExpr(self)
+            else:
+                return visitor.visitChildren(self)
+
+
+    class OutStringExprContext(ExprContext):
+
+        def __init__(self, parser, ctx:ParserRuleContext): # actually a YAPLParser.ExprContext
+            super().__init__(parser)
+            self.copyFrom(ctx)
+
+        def call(self):
+            return self.getTypedRuleContext(YAPLParser.CallContext,0)
+
+
+        def enterRule(self, listener:ParseTreeListener):
+            if hasattr( listener, "enterOutStringExpr" ):
+                listener.enterOutStringExpr(self)
+
+        def exitRule(self, listener:ParseTreeListener):
+            if hasattr( listener, "exitOutStringExpr" ):
+                listener.exitOutStringExpr(self)
+
+        def accept(self, visitor:ParseTreeVisitor):
+            if hasattr( visitor, "visitOutStringExpr" ):
+                return visitor.visitOutStringExpr(self)
             else:
                 return visitor.visitChildren(self)
 
@@ -1184,7 +1341,7 @@ class YAPLParser ( Parser ):
         self._la = 0 # Token type
         try:
             self.enterOuterAlt(localctx, 1)
-            self.state = 149
+            self.state = 164
             self._errHandler.sync(self)
             la_ = self._interp.adaptivePredict(self._input,13,self._ctx)
             if la_ == 1:
@@ -1237,7 +1394,7 @@ class YAPLParser ( Parser ):
                     self.state = 83 
                     self._errHandler.sync(self)
                     _la = self._input.LA(1)
-                    if not ((((_la) & ~0x3f) == 0 and ((1 << _la) & ((1 << YAPLParser.T__3) | (1 << YAPLParser.T__5) | (1 << YAPLParser.T__10) | (1 << YAPLParser.T__14) | (1 << YAPLParser.T__17) | (1 << YAPLParser.T__19) | (1 << YAPLParser.T__20) | (1 << YAPLParser.T__25) | (1 << YAPLParser.T__29) | (1 << YAPLParser.T__30) | (1 << YAPLParser.T__31) | (1 << YAPLParser.STRING) | (1 << YAPLParser.INT) | (1 << YAPLParser.ID))) != 0)):
+                    if not ((((_la) & ~0x3f) == 0 and ((1 << _la) & ((1 << YAPLParser.T__3) | (1 << YAPLParser.T__5) | (1 << YAPLParser.T__10) | (1 << YAPLParser.T__14) | (1 << YAPLParser.T__17) | (1 << YAPLParser.T__19) | (1 << YAPLParser.T__20) | (1 << YAPLParser.T__25) | (1 << YAPLParser.T__29) | (1 << YAPLParser.T__30) | (1 << YAPLParser.T__31) | (1 << YAPLParser.T__32) | (1 << YAPLParser.T__33) | (1 << YAPLParser.T__34) | (1 << YAPLParser.T__35) | (1 << YAPLParser.T__36) | (1 << YAPLParser.T__37) | (1 << YAPLParser.STRING) | (1 << YAPLParser.INT) | (1 << YAPLParser.ID))) != 0)):
                         break
 
                 self.state = 85
@@ -1297,7 +1454,7 @@ class YAPLParser ( Parser ):
                     self.state = 107 
                     self._errHandler.sync(self)
                     _la = self._input.LA(1)
-                    if not ((((_la) & ~0x3f) == 0 and ((1 << _la) & ((1 << YAPLParser.T__3) | (1 << YAPLParser.T__5) | (1 << YAPLParser.T__10) | (1 << YAPLParser.T__14) | (1 << YAPLParser.T__17) | (1 << YAPLParser.T__19) | (1 << YAPLParser.T__20) | (1 << YAPLParser.T__25) | (1 << YAPLParser.T__29) | (1 << YAPLParser.T__30) | (1 << YAPLParser.T__31) | (1 << YAPLParser.STRING) | (1 << YAPLParser.INT) | (1 << YAPLParser.ID))) != 0)):
+                    if not ((((_la) & ~0x3f) == 0 and ((1 << _la) & ((1 << YAPLParser.T__3) | (1 << YAPLParser.T__5) | (1 << YAPLParser.T__10) | (1 << YAPLParser.T__14) | (1 << YAPLParser.T__17) | (1 << YAPLParser.T__19) | (1 << YAPLParser.T__20) | (1 << YAPLParser.T__25) | (1 << YAPLParser.T__29) | (1 << YAPLParser.T__30) | (1 << YAPLParser.T__31) | (1 << YAPLParser.T__32) | (1 << YAPLParser.T__33) | (1 << YAPLParser.T__34) | (1 << YAPLParser.T__35) | (1 << YAPLParser.T__36) | (1 << YAPLParser.T__37) | (1 << YAPLParser.STRING) | (1 << YAPLParser.INT) | (1 << YAPLParser.ID))) != 0)):
                         break
 
                 self.state = 109
@@ -1349,7 +1506,7 @@ class YAPLParser ( Parser ):
                 self.state = 130
                 self.match(YAPLParser.T__18)
                 self.state = 131
-                self.expr(18)
+                self.expr(24)
                 pass
 
             elif la_ == 7:
@@ -1369,7 +1526,7 @@ class YAPLParser ( Parser ):
                 self.state = 134
                 self.match(YAPLParser.T__20)
                 self.state = 135
-                self.expr(16)
+                self.expr(22)
                 pass
 
             elif la_ == 9:
@@ -1379,7 +1536,7 @@ class YAPLParser ( Parser ):
                 self.state = 136
                 self.match(YAPLParser.T__25)
                 self.state = 137
-                self.expr(11)
+                self.expr(17)
                 pass
 
             elif la_ == 10:
@@ -1389,7 +1546,7 @@ class YAPLParser ( Parser ):
                 self.state = 138
                 self.match(YAPLParser.T__29)
                 self.state = 139
-                self.expr(7)
+                self.expr(13)
                 pass
 
             elif la_ == 11:
@@ -1444,9 +1601,69 @@ class YAPLParser ( Parser ):
                 self.match(YAPLParser.T__31)
                 pass
 
+            elif la_ == 17:
+                localctx = YAPLParser.InStringExprContext(self, localctx)
+                self._ctx = localctx
+                _prevctx = localctx
+                self.state = 149
+                self.match(YAPLParser.T__32)
+                pass
+
+            elif la_ == 18:
+                localctx = YAPLParser.InIntExprContext(self, localctx)
+                self._ctx = localctx
+                _prevctx = localctx
+                self.state = 150
+                self.match(YAPLParser.T__33)
+                pass
+
+            elif la_ == 19:
+                localctx = YAPLParser.InBoolExprContext(self, localctx)
+                self._ctx = localctx
+                _prevctx = localctx
+                self.state = 151
+                self.match(YAPLParser.T__34)
+                pass
+
+            elif la_ == 20:
+                localctx = YAPLParser.OutStringExprContext(self, localctx)
+                self._ctx = localctx
+                _prevctx = localctx
+                self.state = 152
+                self.match(YAPLParser.T__35)
+                self.state = 153
+                self.call()
+                self.state = 154
+                self.match(YAPLParser.T__7)
+                pass
+
+            elif la_ == 21:
+                localctx = YAPLParser.OutIntExprContext(self, localctx)
+                self._ctx = localctx
+                _prevctx = localctx
+                self.state = 156
+                self.match(YAPLParser.T__36)
+                self.state = 157
+                self.call()
+                self.state = 158
+                self.match(YAPLParser.T__7)
+                pass
+
+            elif la_ == 22:
+                localctx = YAPLParser.OutBoolExprContext(self, localctx)
+                self._ctx = localctx
+                _prevctx = localctx
+                self.state = 160
+                self.match(YAPLParser.T__37)
+                self.state = 161
+                self.call()
+                self.state = 162
+                self.match(YAPLParser.T__7)
+                pass
+
 
             self._ctx.stop = self._input.LT(-1)
-            self.state = 174
+            self.state = 189
             self._errHandler.sync(self)
             _alt = self._interp.adaptivePredict(self._input,15,self._ctx)
             while _alt!=2 and _alt!=ATN.INVALID_ALT_NUMBER:
@@ -1454,102 +1671,102 @@ class YAPLParser ( Parser ):
                     if self._parseListeners is not None:
                         self.triggerExitRuleEvent()
                     _prevctx = localctx
-                    self.state = 172
+                    self.state = 187
                     self._errHandler.sync(self)
                     la_ = self._interp.adaptivePredict(self._input,14,self._ctx)
                     if la_ == 1:
                         localctx = YAPLParser.SumExprContext(self, YAPLParser.ExprContext(self, _parentctx, _parentState))
                         self.pushNewRecursionContext(localctx, _startState, self.RULE_expr)
-                        self.state = 151
-                        if not self.precpred(self._ctx, 15):
+                        self.state = 166
+                        if not self.precpred(self._ctx, 21):
                             from antlr4.error.Errors import FailedPredicateException
-                            raise FailedPredicateException(self, "self.precpred(self._ctx, 15)")
-                        self.state = 152
+                            raise FailedPredicateException(self, "self.precpred(self._ctx, 21)")
+                        self.state = 167
                         self.match(YAPLParser.T__21)
-                        self.state = 153
-                        self.expr(16)
+                        self.state = 168
+                        self.expr(22)
                         pass
 
                     elif la_ == 2:
                         localctx = YAPLParser.MinusExprContext(self, YAPLParser.ExprContext(self, _parentctx, _parentState))
                         self.pushNewRecursionContext(localctx, _startState, self.RULE_expr)
-                        self.state = 154
-                        if not self.precpred(self._ctx, 14):
+                        self.state = 169
+                        if not self.precpred(self._ctx, 20):
                             from antlr4.error.Errors import FailedPredicateException
-                            raise FailedPredicateException(self, "self.precpred(self._ctx, 14)")
-                        self.state = 155
+                            raise FailedPredicateException(self, "self.precpred(self._ctx, 20)")
+                        self.state = 170
                         self.match(YAPLParser.T__22)
-                        self.state = 156
-                        self.expr(15)
+                        self.state = 171
+                        self.expr(21)
                         pass
 
                     elif la_ == 3:
                         localctx = YAPLParser.TimesExprContext(self, YAPLParser.ExprContext(self, _parentctx, _parentState))
                         self.pushNewRecursionContext(localctx, _startState, self.RULE_expr)
-                        self.state = 157
-                        if not self.precpred(self._ctx, 13):
+                        self.state = 172
+                        if not self.precpred(self._ctx, 19):
                             from antlr4.error.Errors import FailedPredicateException
-                            raise FailedPredicateException(self, "self.precpred(self._ctx, 13)")
-                        self.state = 158
+                            raise FailedPredicateException(self, "self.precpred(self._ctx, 19)")
+                        self.state = 173
                         self.match(YAPLParser.T__23)
-                        self.state = 159
-                        self.expr(14)
+                        self.state = 174
+                        self.expr(20)
                         pass
 
                     elif la_ == 4:
                         localctx = YAPLParser.DivideExprContext(self, YAPLParser.ExprContext(self, _parentctx, _parentState))
                         self.pushNewRecursionContext(localctx, _startState, self.RULE_expr)
-                        self.state = 160
-                        if not self.precpred(self._ctx, 12):
+                        self.state = 175
+                        if not self.precpred(self._ctx, 18):
                             from antlr4.error.Errors import FailedPredicateException
-                            raise FailedPredicateException(self, "self.precpred(self._ctx, 12)")
-                        self.state = 161
+                            raise FailedPredicateException(self, "self.precpred(self._ctx, 18)")
+                        self.state = 176
                         self.match(YAPLParser.T__24)
-                        self.state = 162
-                        self.expr(13)
+                        self.state = 177
+                        self.expr(19)
                         pass
 
                     elif la_ == 5:
                         localctx = YAPLParser.LessThanExprContext(self, YAPLParser.ExprContext(self, _parentctx, _parentState))
                         self.pushNewRecursionContext(localctx, _startState, self.RULE_expr)
-                        self.state = 163
-                        if not self.precpred(self._ctx, 10):
+                        self.state = 178
+                        if not self.precpred(self._ctx, 16):
                             from antlr4.error.Errors import FailedPredicateException
-                            raise FailedPredicateException(self, "self.precpred(self._ctx, 10)")
-                        self.state = 164
+                            raise FailedPredicateException(self, "self.precpred(self._ctx, 16)")
+                        self.state = 179
                         self.match(YAPLParser.T__26)
-                        self.state = 165
-                        self.expr(11)
+                        self.state = 180
+                        self.expr(17)
                         pass
 
                     elif la_ == 6:
                         localctx = YAPLParser.LessThanEqualExprContext(self, YAPLParser.ExprContext(self, _parentctx, _parentState))
                         self.pushNewRecursionContext(localctx, _startState, self.RULE_expr)
-                        self.state = 166
-                        if not self.precpred(self._ctx, 9):
+                        self.state = 181
+                        if not self.precpred(self._ctx, 15):
                             from antlr4.error.Errors import FailedPredicateException
-                            raise FailedPredicateException(self, "self.precpred(self._ctx, 9)")
-                        self.state = 167
+                            raise FailedPredicateException(self, "self.precpred(self._ctx, 15)")
+                        self.state = 182
                         self.match(YAPLParser.T__27)
-                        self.state = 168
-                        self.expr(10)
+                        self.state = 183
+                        self.expr(16)
                         pass
 
                     elif la_ == 7:
                         localctx = YAPLParser.EqualExprContext(self, YAPLParser.ExprContext(self, _parentctx, _parentState))
                         self.pushNewRecursionContext(localctx, _startState, self.RULE_expr)
-                        self.state = 169
-                        if not self.precpred(self._ctx, 8):
+                        self.state = 184
+                        if not self.precpred(self._ctx, 14):
                             from antlr4.error.Errors import FailedPredicateException
-                            raise FailedPredicateException(self, "self.precpred(self._ctx, 8)")
-                        self.state = 170
+                            raise FailedPredicateException(self, "self.precpred(self._ctx, 14)")
+                        self.state = 185
                         self.match(YAPLParser.T__28)
-                        self.state = 171
-                        self.expr(9)
+                        self.state = 186
+                        self.expr(15)
                         pass
 
              
-                self.state = 176
+                self.state = 191
                 self._errHandler.sync(self)
                 _alt = self._interp.adaptivePredict(self._input,15,self._ctx)
 
@@ -1607,18 +1824,18 @@ class YAPLParser ( Parser ):
         self.enterRule(localctx, 10, self.RULE_call)
         try:
             self.enterOuterAlt(localctx, 1)
-            self.state = 177
+            self.state = 192
             self.match(YAPLParser.ID)
-            self.state = 182
+            self.state = 197
             self._errHandler.sync(self)
             _alt = self._interp.adaptivePredict(self._input,16,self._ctx)
             while _alt!=2 and _alt!=ATN.INVALID_ALT_NUMBER:
                 if _alt==1:
-                    self.state = 178
+                    self.state = 193
                     self.match(YAPLParser.POINT)
-                    self.state = 179
+                    self.state = 194
                     self.match(YAPLParser.ID) 
-                self.state = 184
+                self.state = 199
                 self._errHandler.sync(self)
                 _alt = self._interp.adaptivePredict(self._input,16,self._ctx)
 
@@ -1671,18 +1888,18 @@ class YAPLParser ( Parser ):
         localctx = YAPLParser.ParameterContext(self, self._ctx, self.state)
         self.enterRule(localctx, 12, self.RULE_parameter)
         try:
-            self.state = 187
+            self.state = 202
             self._errHandler.sync(self)
             la_ = self._interp.adaptivePredict(self._input,17,self._ctx)
             if la_ == 1:
                 self.enterOuterAlt(localctx, 1)
-                self.state = 185
+                self.state = 200
                 self.expr(0)
                 pass
 
             elif la_ == 2:
                 self.enterOuterAlt(localctx, 2)
-                self.state = 186
+                self.state = 201
                 self.call()
                 pass
 
@@ -1709,31 +1926,31 @@ class YAPLParser ( Parser ):
 
     def expr_sempred(self, localctx:ExprContext, predIndex:int):
             if predIndex == 0:
-                return self.precpred(self._ctx, 15)
+                return self.precpred(self._ctx, 21)
          
 
             if predIndex == 1:
-                return self.precpred(self._ctx, 14)
+                return self.precpred(self._ctx, 20)
          
 
             if predIndex == 2:
-                return self.precpred(self._ctx, 13)
+                return self.precpred(self._ctx, 19)
          
 
             if predIndex == 3:
-                return self.precpred(self._ctx, 12)
+                return self.precpred(self._ctx, 18)
          
 
             if predIndex == 4:
-                return self.precpred(self._ctx, 10)
+                return self.precpred(self._ctx, 16)
          
 
             if predIndex == 5:
-                return self.precpred(self._ctx, 9)
+                return self.precpred(self._ctx, 15)
          
 
             if predIndex == 6:
-                return self.precpred(self._ctx, 8)
+                return self.precpred(self._ctx, 14)
          
 
 

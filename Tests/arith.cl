@@ -152,7 +152,7 @@ class Main {
          avar.var <- in_int();
          avar.me.var <- avar.var;
          avar.set_var(2);
-         out_int(avar);
+         out_int(avar.var);
          in_int();
       }
    };

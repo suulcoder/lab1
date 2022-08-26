@@ -1,5 +1,5 @@
 GRAMMAR = YAPL
-TEST = arith.cl
+TEST = programa3.cl
 
 %: all
 

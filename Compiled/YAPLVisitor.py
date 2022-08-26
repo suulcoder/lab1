@@ -39,6 +39,66 @@ class YAPLVisitor(ParseTreeVisitor):
         return self.visitChildren(ctx)
 
 
+    # Visit a parse tree produced by YAPLParser#inStringExpr.
+    def visitInStringExpr(self, ctx:YAPLParser.InStringExprContext):
+        return self.visitChildren(ctx)
+
+
+    # Visit a parse tree produced by YAPLParser#voidExpr.
+    def visitVoidExpr(self, ctx:YAPLParser.VoidExprContext):
+        return self.visitChildren(ctx)
+
+
+    # Visit a parse tree produced by YAPLParser#trueExpr.
+    def visitTrueExpr(self, ctx:YAPLParser.TrueExprContext):
+        return self.visitChildren(ctx)
+
+
+    # Visit a parse tree produced by YAPLParser#InstanceExpr.
+    def visitInstanceExpr(self, ctx:YAPLParser.InstanceExprContext):
+        return self.visitChildren(ctx)
+
+
+    # Visit a parse tree produced by YAPLParser#BracketsExpr.
+    def visitBracketsExpr(self, ctx:YAPLParser.BracketsExprContext):
+        return self.visitChildren(ctx)
+
+
+    # Visit a parse tree produced by YAPLParser#minusExpr.
+    def visitMinusExpr(self, ctx:YAPLParser.MinusExprContext):
+        return self.visitChildren(ctx)
+
+
+    # Visit a parse tree produced by YAPLParser#stringExpr.
+    def visitStringExpr(self, ctx:YAPLParser.StringExprContext):
+        return self.visitChildren(ctx)
+
+
+    # Visit a parse tree produced by YAPLParser#outIntExpr.
+    def visitOutIntExpr(self, ctx:YAPLParser.OutIntExprContext):
+        return self.visitChildren(ctx)
+
+
+    # Visit a parse tree produced by YAPLParser#unaryExpr.
+    def visitUnaryExpr(self, ctx:YAPLParser.UnaryExprContext):
+        return self.visitChildren(ctx)
+
+
+    # Visit a parse tree produced by YAPLParser#sumExpr.
+    def visitSumExpr(self, ctx:YAPLParser.SumExprContext):
+        return self.visitChildren(ctx)
+
+
+    # Visit a parse tree produced by YAPLParser#falseExpr.
+    def visitFalseExpr(self, ctx:YAPLParser.FalseExprContext):
+        return self.visitChildren(ctx)
+
+
+    # Visit a parse tree produced by YAPLParser#inBoolExpr.
+    def visitInBoolExpr(self, ctx:YAPLParser.InBoolExprContext):
+        return self.visitChildren(ctx)
+
+
     # Visit a parse tree produced by YAPLParser#ifelseExpr.
     def visitIfelseExpr(self, ctx:YAPLParser.IfelseExprContext):
         return self.visitChildren(ctx)
@@ -54,23 +114,8 @@ class YAPLVisitor(ParseTreeVisitor):
         return self.visitChildren(ctx)
 
 
-    # Visit a parse tree produced by YAPLParser#voidExpr.
-    def visitVoidExpr(self, ctx:YAPLParser.VoidExprContext):
-        return self.visitChildren(ctx)
-
-
-    # Visit a parse tree produced by YAPLParser#trueExpr.
-    def visitTrueExpr(self, ctx:YAPLParser.TrueExprContext):
-        return self.visitChildren(ctx)
-
-
     # Visit a parse tree produced by YAPLParser#LetExpr.
     def visitLetExpr(self, ctx:YAPLParser.LetExprContext):
-        return self.visitChildren(ctx)
-
-
-    # Visit a parse tree produced by YAPLParser#InstanceExpr.
-    def visitInstanceExpr(self, ctx:YAPLParser.InstanceExprContext):
         return self.visitChildren(ctx)
 
 
@@ -79,18 +124,13 @@ class YAPLVisitor(ParseTreeVisitor):
         return self.visitChildren(ctx)
 
 
-    # Visit a parse tree produced by YAPLParser#BracketsExpr.
-    def visitBracketsExpr(self, ctx:YAPLParser.BracketsExprContext):
-        return self.visitChildren(ctx)
-
-
     # Visit a parse tree produced by YAPLParser#parensExpr.
     def visitParensExpr(self, ctx:YAPLParser.ParensExprContext):
         return self.visitChildren(ctx)
 
 
-    # Visit a parse tree produced by YAPLParser#minusExpr.
-    def visitMinusExpr(self, ctx:YAPLParser.MinusExprContext):
+    # Visit a parse tree produced by YAPLParser#inIntExpr.
+    def visitInIntExpr(self, ctx:YAPLParser.InIntExprContext):
         return self.visitChildren(ctx)
 
 
@@ -104,23 +144,8 @@ class YAPLVisitor(ParseTreeVisitor):
         return self.visitChildren(ctx)
 
 
-    # Visit a parse tree produced by YAPLParser#stringExpr.
-    def visitStringExpr(self, ctx:YAPLParser.StringExprContext):
-        return self.visitChildren(ctx)
-
-
-    # Visit a parse tree produced by YAPLParser#unaryExpr.
-    def visitUnaryExpr(self, ctx:YAPLParser.UnaryExprContext):
-        return self.visitChildren(ctx)
-
-
     # Visit a parse tree produced by YAPLParser#notExpr.
     def visitNotExpr(self, ctx:YAPLParser.NotExprContext):
-        return self.visitChildren(ctx)
-
-
-    # Visit a parse tree produced by YAPLParser#sumExpr.
-    def visitSumExpr(self, ctx:YAPLParser.SumExprContext):
         return self.visitChildren(ctx)
 
 
@@ -129,8 +154,13 @@ class YAPLVisitor(ParseTreeVisitor):
         return self.visitChildren(ctx)
 
 
-    # Visit a parse tree produced by YAPLParser#falseExpr.
-    def visitFalseExpr(self, ctx:YAPLParser.FalseExprContext):
+    # Visit a parse tree produced by YAPLParser#outBoolExpr.
+    def visitOutBoolExpr(self, ctx:YAPLParser.OutBoolExprContext):
+        return self.visitChildren(ctx)
+
+
+    # Visit a parse tree produced by YAPLParser#outStringExpr.
+    def visitOutStringExpr(self, ctx:YAPLParser.OutStringExprContext):
         return self.visitChildren(ctx)
 
 

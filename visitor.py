@@ -450,7 +450,7 @@ class Visitor(YAPLVisitor):
             if(child.get('type')!='Int' and child.get('type')!='String'):
                 printError(child.get('type') + ' not valid with operant "+"',ctx.start.line)
                 return {'type': 'Error'}
-        if(child.get('type')!='String'):
+        if(child.get('type')=='String'):
             return {'type':'String'}
         return {'type':'Int'}
     
@@ -559,23 +559,39 @@ class Visitor(YAPLVisitor):
     def visitParameter(self, ctx):
         return self.visitChildren(ctx)
 
+    # Visit a parse tree produced by YAPLParser#visitInBoolExpr.
     def visitInBoolExpr(self, ctx):
         return {'type': 'Bool'}
 
+    # Visit a parse tree produced by YAPLParser#visitOutBoolExpr.
     def visitOutBoolExpr(self, ctx):
         context = self.visit(ctx.call())
         if context.get('type') != 'Int':
-            printError('The out_bool method should return Bool', ctx.start.line)
+            printError('The out_bool parameter should be a Bool', ctx.start.line)
             return {'type': 'Error'}
         return {'type': current_class}
 
+    # Visit a parse tree produced by YAPLParser#visitInIntExpr.
     def visitInIntExpr(self, ctx):
         return {'type': 'Int'}
 
+    # Visit a parse tree produced by YAPLParser#visitOutIntExpr.
     def visitOutIntExpr(self, ctx):
         context = self.visit(ctx.call())
         if context.get('type') != 'Int':
-            printError('The out_int method should return Int', ctx.start.line)
+            printError('The out_int parameter should be an Int', ctx.start.line)
+            return {'type': 'Error'}
+        return {'type': current_class}
+    
+    # Visit a parse tree produced by YAPLParser#visitInStringExpr.
+    def visitInStringExpr(self, ctx):
+        return {'type': 'String'}
+
+    # Visit a parse tree produced by YAPLParser#visitOutStringExpr.
+    def visitOutStringExpr(self, ctx):
+        context = self.visit(ctx.call())
+        if context.get('type') != 'String':
+            printError('The out_string parameter should be a String', ctx.start.line)
             return {'type': 'Error'}
         return {'type': current_class}
 
