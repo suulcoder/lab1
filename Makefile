@@ -1,5 +1,5 @@
 GRAMMAR = YAPL
-TEST = programa3.cl
+TEST = executable.cl
 
 %: all
 
@@ -14,7 +14,7 @@ run:
 	@echo run Main...
 	find 'main.py' -exec sed -i '' s/__my__/$(GRAMMAR)/g {} +
 	find 'visitor.py' -exec sed -i '' s/__my__/$(GRAMMAR)/g {} +
-	python3 main.py Tests/$(TEST)
+	python3 main.py ./$(TEST)
 
 clean:
 	rm -rf Compiled

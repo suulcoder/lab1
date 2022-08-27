@@ -1,65 +1,46 @@
-import os
-import wx
+import tkinter as tk
+from tkinter.filedialog import askopenfilename, asksaveasfilename
 
-class MyPanel(wx.Panel):
+def open_file():
+    """Open a file for editing."""
+    filepath = askopenfilename(
+        filetypes=[("Text Files", "*.cl"), ("All Files", "*.*")]
+    )
+    if not filepath:
+        return
+    txt_edit.delete(1.0, tk.END)
+    with open(filepath, "r") as input_file:
+        text = input_file.read()
+        txt_edit.insert(tk.END, text)
+    window.title(f"Text Editor Application - {filepath}")
 
-    def __init__(self, parent):
-        wx.Panel.__init__(self, parent)
+def save_file():
+    """Save the current file as a new file."""
+    filepath = asksaveasfilename(
+        defaultextension="cl",
+        filetypes=[("Text Files", "*.cl"), ("All Files", "*.*")],
+    )
+    if not filepath:
+        return
+    with open(filepath, "w") as output_file:
+        text = txt_edit.get(1.0, tk.END)
+        output_file.write(text)
+    window.title(f"Text Editor Application - {filepath}")
 
-        self.my_text = wx.TextCtrl(self, style=wx.TE_MULTILINE)
-        btn0 = wx.Button(self, label='Open File')
-        btn0.Bind(wx.EVT_BUTTON, self.onOpen)
-        btn1 = wx.Button(self, label='Save File')
-        btn1.Bind(wx.EVT_BUTTON, self.OnSaveAs)
+window = tk.Tk()
+window.title("Text Editor Application")
+window.rowconfigure(0, minsize=800, weight=1)
+window.columnconfigure(1, minsize=800, weight=1)
 
-        sizer = wx.BoxSizer(wx.VERTICAL)
-        sizer.Add(self.my_text, 1, wx.ALL|wx.EXPAND)
-        sizer.Add(btn0, 0, wx.ALL|wx.CENTER, 5)
-        sizer.Add(btn1, 0, wx.ALL|wx.CENTER, 5)
+txt_edit = tk.Text(window)
+fr_buttons = tk.Frame(window, relief=tk.RAISED, bd=2)
+btn_open = tk.Button(fr_buttons, text="Open", command=open_file)
+btn_save = tk.Button(fr_buttons, text="Save As...", command=save_file)
 
-        self.SetSizer(sizer)
+btn_open.grid(row=0, column=0, sticky="ew", padx=5, pady=5)
+btn_save.grid(row=1, column=0, sticky="ew", padx=5)
 
-    def onOpen(self, event):
-        wildcard = "All files (*.*)|*.*"
-        dialog = wx.FileDialog(self, "Open File", wildcard=wildcard,
-                               style=wx.FD_OPEN | wx.FD_FILE_MUST_EXIST)
+fr_buttons.grid(row=0, column=0, sticky="ns")
+txt_edit.grid(row=0, column=1, sticky="nsew")
 
-        if dialog.ShowModal() == wx.ID_CANCEL:
-            return
-
-        path = dialog.GetPath()
-
-        if os.path.exists(path):
-            with open(path) as fobj:
-                for line in fobj:
-                    self.my_text.WriteText(line)
-
-    def OnSaveAs(self, event):
-        with wx.FileDialog(self, "Save my file", wildcard="All files (*.*)|*.cl",
-                        style=wx.FD_SAVE | wx.FD_OVERWRITE_PROMPT) as fileDialog:
-
-            if fileDialog.ShowModal() == wx.ID_CANCEL:
-                return     # the user changed their mind
-
-            # save the current contents in the file
-            pathname = fileDialog.GetPath()
-            try:
-                with open(pathname, 'w') as file:
-                    file.write(self.my_text.GetValue())
-                    file.close()
-            except IOError:
-                wx.LogError("Cannot save current data in file '%s'." % pathname)
-
-class MyFrame(wx.Frame):
-
-    def __init__(self):
-        wx.Frame.__init__(self, None, title='Proyecto#1 de Compiladores')
-
-        panel = MyPanel(self)
-
-        self.Show()
-
-if __name__ == '__main__':
-    app = wx.App(False)
-    frame = MyFrame()
-    app.MainLoop()
+window.mainloop()

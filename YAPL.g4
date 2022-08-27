@@ -41,9 +41,9 @@ expr                : call '<-' (expr | call)                                   
                     | 'in_string()'                                                             # inStringExpr
                     | 'in_int()'                                                                # inIntExpr
                     | 'in_bool()'                                                               # inBoolExpr
-                    | 'out_string(' call ')'                                                    # outStringExpr
-                    | 'out_int(' call ')'                                                       # outIntExpr
-                    | 'out_bool(' call ')'                                                      # outBoolExpr
+                    | 'out_string(' (call | STRING) ')'                                           # outStringExpr
+                    | 'out_int(' (call | INT) ')'                                                 # outIntExpr
+                    | 'out_bool(' (call | 'true' | 'false') ')'                                    # outBoolExpr
                     ;
 
 call                : ID ('.' ID)* ;

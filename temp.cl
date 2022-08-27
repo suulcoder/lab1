@@ -8,7 +8,7 @@ class Main {
       {
          nombre <- in_string();
          nombre <- myString1 + nombre + myString2;
-         out_string(nombre33);
+         out_string(nombre);
          nombre;
       }
    };

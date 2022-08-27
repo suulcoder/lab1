@@ -10,7 +10,7 @@ class Person {
    };
 };
 
-class Main {
+class Main inherits Person {
    
    my_person : Person  <- (new Person);
 
