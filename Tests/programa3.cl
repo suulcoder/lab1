@@ -2,21 +2,23 @@ class Person {
    name : String;
    energy : Int <- 100;
    
-   walk(steps : Int) : SELF_TYPE {
+   walk(steps : Int) : Int {
       {
          energy <- energy - steps;
-         self;
+         energy;
       }
    };
 };
 
-class Main inherits Person {
+class Main {
    
    my_person : Person  <- (new Person);
+   new_energy : Int;
 
-   print(my_string: String) : SELF_TYPE {
+   print(my_string: String) : String {
       {
          out_string(my_string);
+         my_string;
       }
    };
 
@@ -25,9 +27,9 @@ class Main inherits Person {
          print("Type the name of your character: ");
          my_person.name <- in_string();
          print("Type the number of steps you want it to walk: ");
-         my_person <- my_person.walk(in_int());
+         new_energy <- my_person.walk(2);
          print("The energy of your character is: ");
-         out_int(my_person.energy);
+         out_int(new_energy);
          my_person;
       }
    };

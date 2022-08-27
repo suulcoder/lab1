@@ -9,14 +9,15 @@ Symbol_not_available = 'Symbol not available'
 # here we need to define a protocol: The scope
 # must be a string with the following structure>
 # 
-# <Class name> - <Global>
-# <Class name> - <Local> - <Method name>
+# <Class name> - 
+# <Class name> - <Method name>
 
 class SymbolsTable:
     def __init__(self):
         self.symbols_table = [
             # name, type, scope, context, signature=None, value=None
             ("Object", "", "", "", "", ""),
+            ("IO", "", "", "", "Class", ""),
             ("Int", "Object", "", "var type", "", ""),
             ("String", "Object", "", "var type", "", ""),
             ("Bool", "Object", "", "var type", "", ""),

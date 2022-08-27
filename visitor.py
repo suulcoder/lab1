@@ -266,7 +266,7 @@ class Visitor(__my__Visitor):
             symbolTable.AddSymbol(
                 str(ids[index]),                                                               #Name
                 str(types[index]),                                                             #Type
-                current_class + '-' +current_method,                                    #Scope     
+                current_class + '-' + current_method,                                          #Scope     
                 'Let Declaration Variable' if index == 0  else 'Let Declaration parameter',    #Context
                 line=ctx.ID()[0].getPayload().line
             )

@@ -12,7 +12,7 @@ class A {
    };
 
    method1(num : Int) : SELF_TYPE {  -- same
-      self
+      self;
    };
 
    method2(num1 : Int, num2 : String) : Int {  -- plus

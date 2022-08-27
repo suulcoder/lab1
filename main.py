@@ -41,11 +41,16 @@ def testGrammar(test_file):
     tree = parser.program()
     
     #Pretty print of parse tree
-    #print(Trees.toStringTree(tree, None, parser))
+    print("\n\n\n##############################  Parse Tree  ##############################\n")
+    print(Trees.toStringTree(tree, None, parser))
     
     # evaluator
     visitor = Visitor()
-    output = visitor.visit(tree)
+    
+    try:
+        visitor.visit(tree)
+    except:
+        pass
     
     # #Print Table
     names = []
@@ -61,13 +66,13 @@ def testGrammar(test_file):
         contexts.append(symbol[3])
         signatures.append(symbol[4])
     print(tabulate({'Symbol Name:': names, 'Type:': types,  'Scope:':scopes, 'Context': contexts}, headers="keys", tablefmt='fancy_grid'))
-    window = tk.Tk()
-    window.title('Tabla de Simbolos')
-    window.geometry('800x800')
-    text_area_symboltable = tk.Text(window, width=300, height=30, font=("Calibri", 15), foreground="black")
-    text_area_symboltable.grid(column=1, row=1, columnspan=10, rowspan=50)
-    text_area_symboltable.insert(tk.INSERT,{'Symbol Name:': names, 'Type:': types,  'Scope:':scopes, 'Context': contexts})
-    window.mainloop()
+    # window = tk.Tk()
+    # window.title('Tabla de Simbolos')
+    # window.geometry('800x800')
+    # text_area_symboltable = tk.Text(window, width=300, height=30, font=("Calibri", 15), foreground="black")
+    # text_area_symboltable.grid(column=1, row=1, columnspan=10, rowspan=50)
+    # text_area_symboltable.insert(tk.INSERT,{'Symbol Name:': names, 'Type:': types,  'Scope:':scopes, 'Context': contexts})
+    # window.mainloop()
 def main(argv):
     test_file = argv[1]
     testGrammar(test_file)

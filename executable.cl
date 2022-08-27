@@ -1,15 +1,36 @@
+class Person {
+   name : String;
+   energy : Int <- 100;
+   
+   walk(steps : Int) : Int {
+      {
+         energy <- energy - steps;
+         energy;
+      }
+   };
+};
+
 class Main {
    
-   myString1 : String  <- "Hola ";
-   myString2 : String  <- " un gusto!";
-   nombre : String;
+   my_person : Person  <- (new Person);
+   new_energy : Int;
 
-   main() : String {
+   print(my_string: String) : String {
       {
-         nombre <- in_string();
-         nombre <- myString1 + nombre + myString2;
-         out_string(nombre33);
-         nombre;
+         out_string(my_string);
+         my_string;
+      }
+   };
+
+   main() : Person {
+      {
+         print("Type the name of your character: ");
+         my_person.name <- in_string();
+         print("Type the number of steps you want it to walk: ");
+         new_energy <- my_person.walk(2);
+         print("The energy of your character is: ");
+         out_int(new_energy);
+         my_person;
       }
    };
 };
