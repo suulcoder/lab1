@@ -1,5 +1,5 @@
-# Generated from __my__.g4 by ANTLR 4.10
-from Compiled.__my__Visitor import __my__Visitor
+# Generated from YAPL.g4 by ANTLR 4.10
+from Compiled.YAPLVisitor import YAPLVisitor
 from symbolTable import SymbolsTable, Symbol_not_found
 from expresion import Expresion
 from error import printError
@@ -9,7 +9,7 @@ current_method = ''
 basic_types = ['Int','String','Bool']
 
 symbolTable = SymbolsTable()
-# This class defines a complete generic visitor for a parse tree produced by __my__Parser.
+# This class defines a complete generic visitor for a parse tree produced by YAPLParser.
 
 def areSameType(type1, type2, checkBoth=True):
     if(str(type1) in basic_types or str(type2) in basic_types + ['Error']):
@@ -26,12 +26,12 @@ def areSameType(type1, type2, checkBoth=True):
         return False
         
 
-class Visitor(__my__Visitor):
+class Visitor(YAPLVisitor):
     
-    # Visit a parse tree produced by __my__Parser#program.
+    # Visit a parse tree produced by YAPLParser#program.
     def visitProgram(self, ctx):
         
-        # Every __my__ program must contain a Main class.
+        # Every YAPL program must contain a Main class.
         # ==============================================================
         count_main_class = 0
         for node in ctx.my_class():
@@ -39,10 +39,10 @@ class Visitor(__my__Visitor):
             if(str(child)=='Main'):
                 count_main_class += 1
         if(count_main_class!=1):
-            printError('Every __my__ program must contain a Main class')
+            printError('Every YAPL program must contain a Main class')
         # ==============================================================
 
-    # Visit a parse tree produced by __my__Parser#my_class.
+    # Visit a parse tree produced by YAPLParser#my_class.
     def visitMy_class(self, ctx):
         
         class_name = ctx.TYPE()[0]
@@ -158,7 +158,7 @@ class Visitor(__my__Visitor):
         # ==============================================================
                                                                 
 
-    # Visit a parse tree produced by __my__Parser#MethodFeature.
+    # Visit a parse tree produced by YAPLParser#MethodFeature.
     def visitMethodFeature(self, ctx):
         
         global current_method
@@ -203,7 +203,7 @@ class Visitor(__my__Visitor):
         # ==============================================================
 
 
-    # Visit a parse tree produced by __my__Parser#AtributeFeature.
+    # Visit a parse tree produced by YAPLParser#AtributeFeature.
     def visitAtributeFeature(self, ctx):
         name = ctx.ID()
         type = ctx.TYPE()
@@ -223,7 +223,7 @@ class Visitor(__my__Visitor):
         # ==============================================================
 
 
-    # Visit a parse tree produced by __my__Parser#formal.
+    # Visit a parse tree produced by YAPLParser#formal.
     def visitFormal(self, ctx):
         var_name = ctx.ID()
         type = ctx.TYPE()
@@ -237,7 +237,7 @@ class Visitor(__my__Visitor):
         self.visitChildren(ctx)
         return {'type' : str(type)}
 
-    # Visit a parse tree produced by __my__Parser#FunctionExpr.
+    # Visit a parse tree produced by YAPLParser#FunctionExpr.
     def visitFunctionExpr(self, ctx):
         name = ctx.call()
         type = 'Error'
@@ -254,11 +254,11 @@ class Visitor(__my__Visitor):
             
         return {'type': type}
     
-    # Visit a parse tree produced by __my__Parser#MethodExpr.
+    # Visit a parse tree produced by YAPLParser#MethodExpr.
     def visitMethodExpr(self, ctx):
         return self.visitChildren(ctx)
 
-    # Visit a parse tree produced by __my__Parser#LetExpr.
+    # Visit a parse tree produced by YAPLParser#LetExpr.
     def visitLetExpr(self, ctx):
         ids = ctx.ID()
         types = ctx.TYPE()
@@ -280,7 +280,7 @@ class Visitor(__my__Visitor):
         return {'type': 'Object'}
         
 
-    # Visit a parse tree produced by __my__Parser#BracketsExpr.
+    # Visit a parse tree produced by YAPLParser#BracketsExpr.
     def visitBracketsExpr(self, ctx):
         expressions = ctx.expr()
         expressions_count = len(expressions)
@@ -291,7 +291,7 @@ class Visitor(__my__Visitor):
                 return expr
         return {'type': 'Object'}
 
-    # Visit a parse tree produced by __my__Parser#DeclarationExpr.
+    # Visit a parse tree produced by YAPLParser#DeclarationExpr.
     def visitDeclarationExpr(self, ctx):
         ids = ctx.call()
         right = None
@@ -310,7 +310,7 @@ class Visitor(__my__Visitor):
                 return {'type': 'Error'}
         return {'type': right.get('type')}
         
-    # Visit a parse tree produced by __my__Parser#whileExpr.
+    # Visit a parse tree produced by YAPLParser#whileExpr.
     def visitWhileExpr(self, ctx):
         node1, node2 = ctx.expr()
         conditional = self.visit(node1)
@@ -322,7 +322,7 @@ class Visitor(__my__Visitor):
             
         return {'type': 'Object'}
     
-    # Visit a parse tree produced by __my__Parser#ifelseExpr.
+    # Visit a parse tree produced by YAPLParser#ifelseExpr.
     def visitIfelseExpr(self, ctx):
         node1, node2, node3 = ctx.expr()
         conditional = self.visit(node1)
@@ -340,11 +340,11 @@ class Visitor(__my__Visitor):
         return {'type': block1.get('type')}
     
     
-    # Visit a parse tree produced by __my__Parser#voidExpr.
+    # Visit a parse tree produced by YAPLParser#voidExpr.
     def visitVoidExpr(self, ctx):
         return {'type': 'Bool'}
 
-    # Visit a parse tree produced by __my__Parser#lessThanEqualExpr.
+    # Visit a parse tree produced by YAPLParser#lessThanEqualExpr.
     def visitLessThanEqualExpr(self, ctx):
         node1, node2 = ctx.expr()
         child1 = self.visit(node1)
@@ -363,7 +363,7 @@ class Visitor(__my__Visitor):
             return {'type': 'Error'}
         return {'type':'Bool'}
     
-    # Visit a parse tree produced by __my__Parser#lessThanExpr.
+    # Visit a parse tree produced by YAPLParser#lessThanExpr.
     def visitLessThanExpr(self, ctx):
         node1, node2 = ctx.expr()
         child1 = self.visit(node1)
@@ -385,7 +385,7 @@ class Visitor(__my__Visitor):
             return {'type': 'Error'}
         return {'type':'Bool'}
     
-    # Visit a parse tree produced by __my__Parser#equalExpr.
+    # Visit a parse tree produced by YAPLParser#equalExpr.
     def visitEqualExpr(self, ctx):
         node1, node2 = ctx.expr()
         child1 = self.visit(node1)
@@ -404,13 +404,13 @@ class Visitor(__my__Visitor):
             return {'type': 'Error'}
         return {'type':'Bool'}
     
-    # Visit a parse tree produced by __my__Parser#parensExpr.
+    # Visit a parse tree produced by YAPLParser#parensExpr.
     def visitParensExpr(self, ctx):
         expr = ctx.expr()
         child = self.visit(expr)
         return {'type':child.get('type')}
     
-    # Visit a parse tree produced by __my__Parser#notExpr.
+    # Visit a parse tree produced by YAPLParser#notExpr.
     def visitNotExpr(self, ctx):
         expr = ctx.expr()
         child = self.visit(expr)
@@ -424,7 +424,7 @@ class Visitor(__my__Visitor):
         printError("Not expression cannot be aplied on a " + child.get('type'), ctx.start.line)
         return {'type': 'Error'}
     
-    # Visit a parse tree produced by __my__Parser#unaryExpr.
+    # Visit a parse tree produced by YAPLParser#unaryExpr.
     def visitUnaryExpr(self, ctx):
         expr = ctx.expr()
         child = self.visit(expr)
@@ -438,7 +438,7 @@ class Visitor(__my__Visitor):
         printError("Unary expression cannot be aplied on a " + child.get('type'), ctx.start.line)
         return {'type': 'Error'}
     
-    # Visit a parse tree produced by __my__Parser#sumExpr.
+    # Visit a parse tree produced by YAPLParser#sumExpr.
     def visitSumExpr(self, ctx):
         for node in ctx.expr():
             child = self.visit(node)
@@ -454,7 +454,7 @@ class Visitor(__my__Visitor):
             return {'type':'String'}
         return {'type':'Int'}
     
-    # Visit a parse tree produced by __my__Parser#minusExpr.
+    # Visit a parse tree produced by YAPLParser#minusExpr.
     def visitMinusExpr(self, ctx):
         for node in ctx.expr():
             child = self.visit(node)
@@ -468,7 +468,7 @@ class Visitor(__my__Visitor):
                 return {'type': 'Error'}
         return {'type':'Int'}
     
-    # Visit a parse tree produced by __my__Parser#timesExpr.
+    # Visit a parse tree produced by YAPLParser#timesExpr.
     def visitTimesExpr(self, ctx):
         for node in ctx.expr():
             child = self.visit(node)
@@ -482,7 +482,7 @@ class Visitor(__my__Visitor):
                 return {'type': 'Error'}
         return {'type':'Int'}
     
-    # Visit a parse tree produced by __my__Parser#divideExpr.
+    # Visit a parse tree produced by YAPLParser#divideExpr.
     def visitDivideExpr(self, ctx):
         for node in ctx.expr():
             child = self.visit(node)
@@ -496,36 +496,36 @@ class Visitor(__my__Visitor):
                 return {'type': 'Error'}
         return {'type':'Int'}
 
-    # Visit a parse tree produced by __my__Parser#idExpr.
+    # Visit a parse tree produced by YAPLParser#idExpr.
     def visitIdExpr(self, ctx):
         id = ctx.call()
         return self.visit(id)
     
-    # Visit a parse tree produced by __my__Parser#InstanceExpr.
+    # Visit a parse tree produced by YAPLParser#InstanceExpr.
     def visitInstanceExpr(self, ctx):
         type = ctx.TYPE()
         self.visitChildren(ctx)
         return {'type':str(type)}
     
-    # Visit a parse tree produced by __my__Parser#intExpr.
+    # Visit a parse tree produced by YAPLParser#intExpr.
     def visitIntExpr(self, ctx):
         return {'type':'Int'}
     
-    # Visit a parse tree produced by __my__Parser#stringExpr.
+    # Visit a parse tree produced by YAPLParser#stringExpr.
     def visitStringExpr(self, ctx):
         #return self.visitChildren(ctx)
         return {'type':'String'}
     
-     # Visit a parse tree produced by __my__Parser#trueExpr.
+     # Visit a parse tree produced by YAPLParser#trueExpr.
     def visitTrueExpr(self, ctx):
         return {'type':'Bool'}
     
-     # Visit a parse tree produced by __my__Parser#falseExpr.
+     # Visit a parse tree produced by YAPLParser#falseExpr.
     def visitFalseExpr(self, ctx):
         #return self.visitChildren(ctx)
         return {'type':'Bool'}
     
-    # Visit a parse tree produced by __my__Parser#call.
+    # Visit a parse tree produced by YAPLParser#call.
     def visitCall(self, ctx):
         ids = ctx.ID()
         index = 0
@@ -555,15 +555,15 @@ class Visitor(__my__Visitor):
             index += 1
         return {'type': symbol[1], 'symbol': symbol}
     
-    # Visit a parse tree produced by __my__Parser#parameter.
+    # Visit a parse tree produced by YAPLParser#parameter.
     def visitParameter(self, ctx):
         return self.visitChildren(ctx)
 
-    # Visit a parse tree produced by __my__Parser#visitInBoolExpr.
+    # Visit a parse tree produced by YAPLParser#visitInBoolExpr.
     def visitInBoolExpr(self, ctx):
         return {'type': 'Bool'}
 
-    # Visit a parse tree produced by __my__Parser#visitOutBoolExpr.
+    # Visit a parse tree produced by YAPLParser#visitOutBoolExpr.
     def visitOutBoolExpr(self, ctx):
         node = ctx.call()
         if node == None:
@@ -575,11 +575,11 @@ class Visitor(__my__Visitor):
         
         return {'type': current_class}
 
-    # Visit a parse tree produced by __my__Parser#visitInIntExpr.
+    # Visit a parse tree produced by YAPLParser#visitInIntExpr.
     def visitInIntExpr(self, ctx):
         return {'type': 'Int'}
 
-    # Visit a parse tree produced by __my__Parser#visitOutIntExpr.
+    # Visit a parse tree produced by YAPLParser#visitOutIntExpr.
     def visitOutIntExpr(self, ctx):
         if(ctx.INT()!=None):
             return {'type': current_class}
@@ -589,11 +589,11 @@ class Visitor(__my__Visitor):
             return {'type': 'Error'}
         return {'type': current_class}
     
-    # Visit a parse tree produced by __my__Parser#visitInStringExpr.
+    # Visit a parse tree produced by YAPLParser#visitInStringExpr.
     def visitInStringExpr(self, ctx):
         return {'type': 'String'}
 
-    # Visit a parse tree produced by __my__Parser#visitOutStringExpr.
+    # Visit a parse tree produced by YAPLParser#visitOutStringExpr.
     def visitOutStringExpr(self, ctx):
         if(ctx.STRING()!=None):
             return {'type': current_class}

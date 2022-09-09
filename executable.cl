@@ -1,6 +1,7 @@
 class Person {
    name : String;
    energy : Int <- 100;
+   energy_bool : Bool <- false;
    
    walk(steps : Int) : Int {
       {

@@ -1,3 +1,4 @@
+from cmath import exp
 from inspect import signature
 import sys
 from visitor import Visitor, symbolTable
@@ -5,8 +6,8 @@ from visitor import Visitor, symbolTable
 from antlr4 import *
 from antlr4.error.ErrorListener import ErrorListener
 from antlr4.tree.Trees import Trees
-from Compiled.__my__Lexer import __my__Lexer
-from Compiled.__my__Parser import __my__Parser
+from Compiled.YAPLLexer import YAPLLexer
+from Compiled.YAPLParser import YAPLParser
 from tabulate import tabulate
 from main_ui import *
 from error import *
@@ -27,13 +28,13 @@ def testGrammar(test_file):
     input_stream = FileStream(test_file)
     
     #Lexer actions
-    lexer = __my__Lexer(input_stream)
+    lexer = YAPLLexer(input_stream)
     lexer.removeErrorListeners()
     lexer.addErrorListener(error_listener)
     stream = CommonTokenStream(lexer)
     
     #Parser actions
-    parser = __my__Parser(stream)
+    parser = YAPLParser(stream)
     parser.removeErrorListeners()
     parser.addErrorListener(error_listener)
     
@@ -47,10 +48,7 @@ def testGrammar(test_file):
     # evaluator
     visitor = Visitor()
     
-    try:
-        visitor.visit(tree)
-    except:
-        pass
+    visitor.visit(tree)
     
     # #Print Table
     names = []
@@ -58,6 +56,9 @@ def testGrammar(test_file):
     scopes = []
     contexts = []
     signatures = []
+    sizes = []
+    displacement = []
+    memory = []
     print("\n\n\n##############################  Symbol Table  ##############################\n")
     for symbol in symbolTable.symbols_table:
         names.append(symbol[0])
@@ -65,7 +66,10 @@ def testGrammar(test_file):
         scopes.append(symbol[2])
         contexts.append(symbol[3])
         signatures.append(symbol[4])
-    print(tabulate({'Symbol Name:': names, 'Type:': types,  'Scope:':scopes, 'Context': contexts}, headers="keys", tablefmt='fancy_grid'))
+        sizes.append(symbol[6])
+        displacement.append(symbol[7])
+        memory.append(symbol[8])
+    print(tabulate({'Symbol Name:': names, 'Type:': types,  'Scope:':scopes, 'Context': contexts, 'Size (bytes)' : sizes, 'Displacement (bytes)': displacement, 'Memory': memory}, headers="keys", tablefmt='fancy_grid'))
     # window = tk.Tk()
     # window.title('Tabla de Simbolos')
     # window.geometry('800x800')

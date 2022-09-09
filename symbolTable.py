@@ -12,21 +12,49 @@ Symbol_not_available = 'Symbol not available'
 # <Class name> - 
 # <Class name> - <Method name>
 
+count_global = 0
+count_local = 0
+
 class SymbolsTable:
     def __init__(self):
         self.symbols_table = [
             # name, type, scope, context, signature=None, value=None
-            ("Object", "", "", "", "", ""),
-            ("IO", "", "", "", "Class", ""),
-            ("Int", "Object", "", "var type", "", ""),
-            ("String", "Object", "", "var type", "", ""),
-            ("Bool", "Object", "", "var type", "", ""),
+            ("Object", "", "", "", "", "", "", "", ""),
+            ("IO", "", "", "", "Class", "", "", "", ""),
+            ("Int", "Object", "", "var type", "", "", "", "", ""),
+            ("String", "Object", "", "var type", "", "",  "", "", ""),
+            ("Bool", "Object", "", "var type", "", "",  "", "", ""),
             # IO
         ]
 
     def AddSymbol(self, name, type, scope, context, signature=None, line=None, value=None):
+        size = 0
+        bytes_values = False
+        if('String'==type):
+            size = 8
+            bytes_values = True
+        elif('Int'==type):
+            size = 4
+            bytes_values = True
+        elif('Bool'==type):
+            size = 1
+            bytes_values = True
+            
+            
         if(self.FindSymbol(name, type, scope, context)==Symbol_not_found):
-            return self.symbols_table.append((name, type, scope, context, signature, value))
+            global count_global
+            global count_local
+            displacement = 0
+            memory = ""
+            if(scope!= "" and scope[-1]!='-'):
+                memory = "Stack"
+                displacement = count_local
+                count_local += size
+            elif(scope!= "" and scope[-1]=='-'):
+                memory = "Global"
+                displacement = count_global*8
+                count_global += 1
+            return self.symbols_table.append((name, type, scope, context, signature, value, size if bytes_values else "", displacement if bytes_values else "", memory))
         else:
             printError(name + ' has already been declared in current scope.', line)
             
