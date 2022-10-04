@@ -1,7 +1,7 @@
 from cmath import exp
 from inspect import signature
 import sys
-from visitor import Visitor, symbolTable
+from semanticVisitor import SemanticVisitor, symbolTable
 
 from antlr4 import *
 from antlr4.error.ErrorListener import ErrorListener
@@ -46,7 +46,7 @@ def testGrammar(test_file):
     print(Trees.toStringTree(tree, None, parser))
     
     # evaluator
-    visitor = Visitor()
+    visitor = SemanticVisitor()
     
     visitor.visit(tree)
     
