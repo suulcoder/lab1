@@ -59,12 +59,16 @@ fragment ESC        : '\\' (["\\/bfnrt] | UNICODE) ;
 fragment UNICODE    : 'u' HEX HEX HEX HEX ;
 fragment HEX        : [0-9a-fA-F] ;
 INT                 : '0' | [1-9] [0-9]* ;
-TYPE                : [A-Z] ([a-zA-Z0-9_])* ;
+TYPE                  : [A-Z] ([a-zA-Z0-9_])* ;
 ID                  : [a-zA-Z] ([a-zA-Z0-9_])* ;
 POINT               : '.' ;
 UNKNOWN             : . -> skip ;
 
 LINE_COMMENT
                     :   '--' ~[\r\n]* -> skip
+                    ;
+
+MULTILINE_COMMENT
+                    : '-*' .*? '*-' -> skip
                     ;
 
