@@ -11,6 +11,11 @@ basic_types = ['Int','String','Bool']
 symbolTable = SymbolsTable()
 # This class defines a complete generic visitor for a parse tree produced by YAPLParser.
 
+def addLineToIntermidiateCode(line):
+    file = open('./intermediate_code.txt', 'a')
+    file.write(line)
+    file.truncate()
+
 def areSameType(type1, type2, checkBoth=True):
     if(str(type1) in basic_types or str(type2) in basic_types + ['Error']):
         return str(type1) == str(type2)
@@ -440,61 +445,71 @@ class Visitor(YAPLVisitor):
     
     # Visit a parse tree produced by YAPLParser#sumExpr.
     def visitSumExpr(self, ctx):
+        types = []
         for node in ctx.expr():
             child = self.visit(node)
             
             #Impicit cast from bool to int
             if(child.get('type')=='Bool'):
                 child['type'] = 'Int'
+            
+            types.append(child.get('type'))
                     
-            if(child.get('type')!='Int' and child.get('type')!='String'):
-                printError(child.get('type') + ' not valid with operant "+"',ctx.start.line)
-                return {'type': 'Error'}
-        if(child.get('type')=='String'):
-            return {'type':'String'}
-        return {'type':'Int'}
+        if(not areSameType(types[0],types[1])):
+            printError(types[0] + ' and ' + types[1] + ' not valid with operant "+"',ctx.start.line)
+            return {'type': 'Error'}
+        return {'type': types[0]}
     
     # Visit a parse tree produced by YAPLParser#minusExpr.
     def visitMinusExpr(self, ctx):
+        types = []
         for node in ctx.expr():
             child = self.visit(node)
             
             #Impicit cast from bool to int
             if(child.get('type')=='Bool'):
                 child['type'] = 'Int'
+            
+            types.append(child.get('type'))
                     
-            if(child.get('type')!='Int'):
-                printError(child.get('type') + ' not valid with operant "-"',ctx.start.line)
-                return {'type': 'Error'}
-        return {'type':'Int'}
+        if(not areSameType(types[0],types[1])):
+            printError(types[0] + ' and ' + types[1] + ' not valid with operant "-"',ctx.start.line)
+            return {'type': 'Error'}
+        return {'type': types[0]}
     
     # Visit a parse tree produced by YAPLParser#timesExpr.
     def visitTimesExpr(self, ctx):
+        types = []
         for node in ctx.expr():
             child = self.visit(node)
             
             #Impicit cast from bool to int
             if(child.get('type')=='Bool'):
                 child['type'] = 'Int'
+            
+            types.append(child.get('type'))
                     
-            if(child.get('type')!='Int'):
-                printError(child.get('type') + ' not valid with operant "*"',ctx.start.line)
-                return {'type': 'Error'}
-        return {'type':'Int'}
+        if(not areSameType(types[0],types[1])):
+            printError(types[0] + ' and ' + types[1] + ' not valid with operant "*"',ctx.start.line)
+            return {'type': 'Error'}
+        return {'type': types[0]}
     
     # Visit a parse tree produced by YAPLParser#divideExpr.
     def visitDivideExpr(self, ctx):
+        types = []
         for node in ctx.expr():
             child = self.visit(node)
             
             #Impicit cast from bool to int
             if(child.get('type')=='Bool'):
                 child['type'] = 'Int'
+            
+            types.append(child.get('type'))
                     
-            if(child.get('type')!='Int'):
-                printError(child.get('type') + ' not valid with operant "/"',ctx.start.line)
-                return {'type': 'Error'}
-        return {'type':'Int'}
+        if(not areSameType(types[0],types[1])):
+            printError(types[0] + ' and ' + types[1] + ' not valid with operant "/"',ctx.start.line)
+            return {'type': 'Error'}
+        return {'type': types[0]}
 
     # Visit a parse tree produced by YAPLParser#idExpr.
     def visitIdExpr(self, ctx):
