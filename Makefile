@@ -14,9 +14,11 @@ run:
 	@echo run Main...
 	find 'main.py' -exec sed -i '' s/__my__/$(GRAMMAR)/g {} +
 	find 'visitor.py' -exec sed -i '' s/__my__/$(GRAMMAR)/g {} +
+	find 'semanticVisitor.py' -exec sed -i '' s/__my__/$(GRAMMAR)/g {} +
 	python3 main.py ./$(TEST)
 
 clean:
 	rm -rf Compiled
 	find 'main.py' -exec sed -i '' s/$(GRAMMAR)/__my__/g {} +
 	find 'visitor.py' -exec sed -i '' s/$(GRAMMAR)/__my__/g {} +
+	find 'semanticVisitor.py' -exec sed -i '' s/$(GRAMMAR)/__my__/g {} +

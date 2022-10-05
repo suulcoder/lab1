@@ -23,16 +23,16 @@ expr                : call '<-' (expr | call)                                   
                     | 'let' ID ':' TYPE ('<-' expr)? (',' ID ':' TYPE  '<-' expr )* 'in' expr   # LetExpr
                     | 'new' TYPE                                                                # InstanceExpr
                     | 'isvoid' expr                                                             # voidExpr
-                    | expr '+' expr                                                             # sumExpr
-                    | expr '-' expr                                                             # minusExpr
+                    | '(' expr ')'                                                              # parensExpr
                     | expr '*' expr                                                             # timesExpr
                     | expr '/' expr                                                             # divideExpr
+                    | expr '+' expr                                                             # sumExpr
+                    | expr '-' expr                                                             # minusExpr
                     | '~' expr                                                                  # unaryExpr
                     | expr '<' expr                                                             # lessThanExpr
                     | expr '<=' expr                                                            # lessThanEqualExpr
                     | expr '=' expr                                                             # equalExpr
                     | 'not' expr                                                                # notExpr
-                    | '(' expr ')'                                                              # parensExpr
                     | call                                                                      # idExpr
                     | INT                                                                       # intExpr
                     | STRING                                                                    # stringExpr
@@ -41,9 +41,9 @@ expr                : call '<-' (expr | call)                                   
                     | 'in_string()'                                                             # inStringExpr
                     | 'in_int()'                                                                # inIntExpr
                     | 'in_bool()'                                                               # inBoolExpr
-                    | 'out_string(' (call | STRING) ')'                                           # outStringExpr
-                    | 'out_int(' (call | INT) ')'                                                 # outIntExpr
-                    | 'out_bool(' (call | 'true' | 'false') ')'                                    # outBoolExpr
+                    | 'out_string(' (call | STRING) ')'                                         # outStringExpr
+                    | 'out_int(' (call | INT) ')'                                               # outIntExpr
+                    | 'out_bool(' (call | 'true' | 'false') ')'                                 # outBoolExpr
                     ;
 
 call                : ID ('.' ID)* ;

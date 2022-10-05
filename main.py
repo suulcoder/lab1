@@ -2,6 +2,7 @@ from cmath import exp
 from inspect import signature
 import sys
 from semanticVisitor import SemanticVisitor, symbolTable
+from visitor import Visitor
 
 from antlr4 import *
 from antlr4.error.ErrorListener import ErrorListener
@@ -45,10 +46,10 @@ def testGrammar(test_file):
     print("\n\n\n##############################  Parse Tree  ##############################\n")
     print(Trees.toStringTree(tree, None, parser))
     
-    # evaluator
+    # Semantic evaluation
     visitor = SemanticVisitor()
-    
     visitor.visit(tree)
+    
     
     # #Print Table
     names = []
@@ -77,6 +78,12 @@ def testGrammar(test_file):
     # text_area_symboltable.grid(column=1, row=1, columnspan=10, rowspan=50)
     # text_area_symboltable.insert(tk.INSERT,{'Symbol Name:': names, 'Type:': types,  'Scope:':scopes, 'Context': contexts})
     # window.mainloop()
+    
+    #Intermidiate Code
+    print("\n\n\n##############################  Intermidiate Code ##############################\n")
+    intermidate_code_visitor = Visitor()
+    intermidate_code_visitor.visit(tree)
+    
 def main(argv):
     test_file = argv[1]
     testGrammar(test_file)

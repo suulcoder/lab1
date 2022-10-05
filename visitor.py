@@ -1,28 +1,38 @@
 # Generated from YAPL.g4 by ANTLR 4.10
 from Compiled.YAPLVisitor import YAPLVisitor
-from symbolTable import SymbolsTable, Symbol_not_found
+from symbolTable import Symbol_not_found
 from expresion import Expresion
 from error import printError
+
+from semanticVisitor import symbolTable
+
+class TemporalVar(object):
+    counter = 0
+    
+    def __init__(self):
+        self.id = TemporalVar.counter
+        TemporalVar.counter += 1
+    
+    def __str__(self):
+        return 'T' + str(self.id)        
 
 current_class = ''
 current_method = ''
 basic_types = ['Int','String','Bool']
 
-symbolTable = SymbolsTable()
-# This class defines a complete generic visitor for a parse tree produced by YAPLParser.
-
 def addLineToIntermidiateCode(line):
     file = open('./intermediate_code.txt', 'a')
     file.write(line)
     file.truncate()
+
+# This class defines a complete generic visitor for a parse tree produced by YAPLParser.
     
     
-class YAPLVisitor(YAPLVisitor):
+class Visitor(YAPLVisitor):
     
     # Visit a parse tree produced by YAPLParser#program.
     def visitProgram(self, ctx):
         return self.visitChildren(ctx)
-
 
     # Visit a parse tree produced by YAPLParser#my_class.
     def visitMy_class(self, ctx):
@@ -44,11 +54,6 @@ class YAPLVisitor(YAPLVisitor):
         return self.visitChildren(ctx)
 
 
-    # Visit a parse tree produced by YAPLParser#divideExpr.
-    def visitDivideExpr(self, ctx):
-        return self.visitChildren(ctx)
-
-
     # Visit a parse tree produced by YAPLParser#inStringExpr.
     def visitInStringExpr(self, ctx):
         return self.visitChildren(ctx)
@@ -56,11 +61,6 @@ class YAPLVisitor(YAPLVisitor):
 
     # Visit a parse tree produced by YAPLParser#voidExpr.
     def visitVoidExpr(self, ctx):
-        return self.visitChildren(ctx)
-
-
-    # Visit a parse tree produced by YAPLParser#trueExpr.
-    def visitTrueExpr(self, ctx):
         return self.visitChildren(ctx)
 
 
@@ -74,35 +74,9 @@ class YAPLVisitor(YAPLVisitor):
         return self.visitChildren(ctx)
 
 
-    # Visit a parse tree produced by YAPLParser#minusExpr.
-    def visitMinusExpr(self, ctx):
-        return self.visitChildren(ctx)
-
-
-    # Visit a parse tree produced by YAPLParser#stringExpr.
-    def visitStringExpr(self, ctx):
-        return self.visitChildren(ctx)
-
-
     # Visit a parse tree produced by YAPLParser#outIntExpr.
     def visitOutIntExpr(self, ctx):
         return self.visitChildren(ctx)
-
-
-    # Visit a parse tree produced by YAPLParser#unaryExpr.
-    def visitUnaryExpr(self, ctx):
-        return self.visitChildren(ctx)
-
-
-    # Visit a parse tree produced by YAPLParser#sumExpr.
-    def visitSumExpr(self, ctx):
-        return self.visitChildren(ctx)
-
-
-    # Visit a parse tree produced by YAPLParser#falseExpr.
-    def visitFalseExpr(self, ctx):
-        return self.visitChildren(ctx)
-
 
     # Visit a parse tree produced by YAPLParser#inBoolExpr.
     def visitInBoolExpr(self, ctx):
@@ -119,43 +93,13 @@ class YAPLVisitor(YAPLVisitor):
         return self.visitChildren(ctx)
 
 
-    # Visit a parse tree produced by YAPLParser#intExpr.
-    def visitIntExpr(self, ctx):
-        return self.visitChildren(ctx)
-
-
     # Visit a parse tree produced by YAPLParser#LetExpr.
     def visitLetExpr(self, ctx):
         return self.visitChildren(ctx)
 
 
-    # Visit a parse tree produced by YAPLParser#lessThanExpr.
-    def visitLessThanExpr(self, ctx):
-        return self.visitChildren(ctx)
-
-
-    # Visit a parse tree produced by YAPLParser#parensExpr.
-    def visitParensExpr(self, ctx):
-        return self.visitChildren(ctx)
-
-
-    # Visit a parse tree produced by YAPLParser#inIntExpr.
-    def visitInIntExpr(self, ctx):
-        return self.visitChildren(ctx)
-
-
     # Visit a parse tree produced by YAPLParser#DeclarationExpr.
     def visitDeclarationExpr(self, ctx):
-        return self.visitChildren(ctx)
-
-
-    # Visit a parse tree produced by YAPLParser#timesExpr.
-    def visitTimesExpr(self, ctx):
-        return self.visitChildren(ctx)
-
-
-    # Visit a parse tree produced by YAPLParser#notExpr.
-    def visitNotExpr(self, ctx):
         return self.visitChildren(ctx)
 
 
@@ -174,18 +118,8 @@ class YAPLVisitor(YAPLVisitor):
         return self.visitChildren(ctx)
 
 
-    # Visit a parse tree produced by YAPLParser#lessThanEqualExpr.
-    def visitLessThanEqualExpr(self, ctx):
-        return self.visitChildren(ctx)
-
-
     # Visit a parse tree produced by YAPLParser#idExpr.
     def visitIdExpr(self, ctx):
-        return self.visitChildren(ctx)
-
-
-    # Visit a parse tree produced by YAPLParser#equalExpr.
-    def visitEqualExpr(self, ctx):
         return self.visitChildren(ctx)
 
 
@@ -193,9 +127,113 @@ class YAPLVisitor(YAPLVisitor):
     def visitCall(self, ctx):
         return self.visitChildren(ctx)
 
-
     # Visit a parse tree produced by YAPLParser#parameter.
     def visitParameter(self, ctx):
         return self.visitChildren(ctx)
 
+    # Visit a parse tree produced by YAPLParser#inIntExpr.
+    def visitInIntExpr(self, ctx):
+        return self.visitChildren(ctx)
+    
+    
+    #------------------------------------------------------------
+    
+    # Visit a parse tree produced by YAPLParser#sumExpr.
+    def visitSumExpr(self, ctx):
+        expressions = []
+        temporal = TemporalVar()
+        for node in ctx.expr():
+            expressions.append(self.visit(node))
+        print(str(temporal) + ' = ' + expressions[0] + ' + ' + expressions[1])
+        return str(temporal)
+    
+    # Visit a parse tree produced by YAPLParser#minusExpr.
+    def visitMinusExpr(self, ctx):
+        expressions = []
+        temporal = TemporalVar()
+        for node in ctx.expr():
+            expressions.append(self.visit(node))
+        print(str(temporal) + ' = ' + expressions[0] + ' - ' + expressions[1])
+        return str(temporal)
+    
+    # Visit a parse tree produced by YAPLParser#timesExpr.
+    def visitTimesExpr(self, ctx):
+        expressions = []
+        temporal = TemporalVar()
+        for node in ctx.expr():
+            expressions.append(self.visit(node))
+        print(str(temporal) + ' = ' + expressions[0] + ' * ' + expressions[1])
+        return str(temporal)
+    
+    # Visit a parse tree produced by YAPLParser#divideExpr.
+    def visitDivideExpr(self, ctx):
+        expressions = []
+        temporal = TemporalVar()
+        for node in ctx.expr():
+            expressions.append(self.visit(node))
+        print(str(temporal) + ' = ' + expressions[0] + ' / ' + expressions[1])
+        return str(temporal)
+    
+    # Visit a parse tree produced by YAPLParser#unaryExpr.
+    def visitUnaryExpr(self, ctx):
+        temporal = TemporalVar()
+        print(str(temporal) + ' = -' + self.visit(ctx.expr()))
+        return str(temporal)
+
+    # Visit a parse tree produced by YAPLParser#lessThanExpr.
+    def visitLessThanExpr(self, ctx):
+        expressions = []
+        temporal = TemporalVar()
+        for node in ctx.expr():
+            expressions.append(self.visit(node))
+        print(str(temporal) + ' = ' + expressions[0] + ' < ' + expressions[1])
+        return str(temporal)
+
+    # Visit a parse tree produced by YAPLParser#parensExpr.
+    def visitParensExpr(self, ctx):
+        temporal = TemporalVar()
+        print(str(temporal) + ' = ' + self.visit(ctx.expr()))
+        return str(temporal)
+    
+    # Visit a parse tree produced by YAPLParser#lessThanEqualExpr.
+    def visitLessThanEqualExpr(self, ctx):
+        expressions = []
+        temporal = TemporalVar()
+        for node in ctx.expr():
+            expressions.append(self.visit(node))
+        print(str(temporal) + ' = ' + expressions[0] + ' <= ' + expressions[1])
+        return str(temporal)
+    
+    # Visit a parse tree produced by YAPLParser#equalExpr.
+    def visitEqualExpr(self, ctx):
+        expressions = []
+        temporal = TemporalVar()
+        for node in ctx.expr():
+            expressions.append(self.visit(node))
+        print(str(temporal) + ' = ' + expressions[0] + ' == ' + expressions[1])
+        return str(temporal)
+    
+    # Visit a parse tree produced by YAPLParser#notExpr.
+    def visitNotExpr(self, ctx):
+        temporal = TemporalVar()
+        print(str(temporal) + ' =  NOT' + self.visit(ctx.expr()))
+        return str(temporal)
+    
+    #------------------------------------------------------------
+    
+    # Visit a parse tree produced by YAPLParser#stringExpr.
+    def visitStringExpr(self, ctx):
+        return ctx.getText()
+    
+    # Visit a parse tree produced by YAPLParser#intExpr.
+    def visitIntExpr(self, ctx):
+        return ctx.getText()
+    
+    # Visit a parse tree produced by YAPLParser#trueExpr.
+    def visitTrueExpr(self, ctx):
+        return 'true'
+    
+    # Visit a parse tree produced by YAPLParser#falseExpr.
+    def visitFalseExpr(self, ctx):
+        return 'false'
 
