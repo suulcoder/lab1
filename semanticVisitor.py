@@ -260,24 +260,18 @@ class SemanticVisitor(YAPLVisitor):
 
     # Visit a parse tree produced by YAPLParser#LetExpr.
     def visitLetExpr(self, ctx):
-        ids = ctx.ID()
-        types = ctx.TYPE()
-        for index in range(0, len(ids)):
-            symbolTable.AddSymbol(
-                str(ids[index]),                                                               #Name
-                str(types[index]),                                                             #Type
-                current_class + '-' + current_method,                                          #Scope     
-                'Let Declaration Variable' if index == 0  else 'Let Declaration parameter',    #Context
-                line=ctx.ID()[0].getPayload().line
-            )
-        expressions = ctx.expr()
-        expressions_count = len(expressions)
-        for expression in expressions:
-            expressions_count -= 1
-            expr = self.visit(expression)
-            if(expressions_count==0):
-                return expr
-        return {'type': 'Object'}
+        id = ctx.ID()
+        type = ctx.TYPE()
+        symbolTable.AddSymbol(
+            str(id),                                                               #Name
+            str(type),                                                             #Type
+            current_class + '-' + current_method,                                  #Scope     
+            'Let Declaration Variable',                                            #Context
+            line=ctx.ID().getPayload().line
+        )
+        expression = ctx.expr()
+        expr = self.visit(expression)
+        return expr
         
 
     # Visit a parse tree produced by YAPLParser#BracketsExpr.

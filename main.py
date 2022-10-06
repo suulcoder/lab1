@@ -70,7 +70,7 @@ def testGrammar(test_file):
         sizes.append(symbol[6])
         displacement.append(symbol[7])
         memory.append(symbol[8])
-    print(tabulate({'Symbol Name:': names, 'Type:': types,  'Scope:':scopes, 'Context': contexts, 'Size (bytes)' : sizes, 'Displacement (bytes)': displacement, 'Memory': memory}, headers="keys", tablefmt='fancy_grid'))
+    print(tabulate({'Symbol Name:': names, 'Type:': types,  'Scope:':scopes, 'Context': contexts, 'Size (bytes)' : sizes, 'Displacement (bytes)': displacement, 'Memory type': memory}, headers="keys", tablefmt='fancy_grid'))
     # window = tk.Tk()
     # window.title('Tabla de Simbolos')
     # window.geometry('800x800')

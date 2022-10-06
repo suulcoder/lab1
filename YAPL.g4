@@ -20,7 +20,7 @@ expr                : call '<-' (expr | call)                                   
                     | 'if' expr 'then' expr 'else' expr 'fi'                                    # ifelseExpr
                     | 'while' expr 'loop' expr 'pool'                                           # whileExpr
                     | '{' (expr ';')+ '}'                                                       # BracketsExpr
-                    | 'let' ID ':' TYPE ('<-' expr)? (',' ID ':' TYPE  '<-' expr )* 'in' expr   # LetExpr
+                    | 'let' ID ':' TYPE 'in' expr                                               # LetExpr
                     | 'new' TYPE                                                                # InstanceExpr
                     | 'isvoid' expr                                                             # voidExpr
                     | '(' expr ')'                                                              # parensExpr

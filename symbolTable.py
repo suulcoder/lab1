@@ -1,3 +1,4 @@
+from sympy import limit
 from error import printError
 
 
@@ -12,8 +13,12 @@ Symbol_not_available = 'Symbol not available'
 # <Class name> - 
 # <Class name> - <Method name>
 
-count_global = 0
-count_local = 0
+
+displacements = {
+    "String": 8,
+    "Int": 4,
+    "Bool": 1
+}
 
 class SymbolsTable:
     def __init__(self):
@@ -22,39 +27,32 @@ class SymbolsTable:
             ("Object", "", "", "", "", "", "", "", ""),
             ("IO", "", "", "", "Class", "", "", "", ""),
             ("Int", "Object", "", "var type", "", "", "", "", ""),
-            ("String", "Object", "", "var type", "", "",  "", "", ""),
-            ("Bool", "Object", "", "var type", "", "",  "", "", ""),
+            ("String", "Object", "", "var type", "",  "", "", "", ""),
+            ("Bool", "Object", "", "var type", "",  "", "", "", ""),
             # IO
         ]
 
     def AddSymbol(self, name, type, scope, context, signature=None, line=None, value=None):
         size = 0
-        bytes_values = False
-        if('String'==type):
-            size = 8
-            bytes_values = True
-        elif('Int'==type):
-            size = 4
-            bytes_values = True
-        elif('Bool'==type):
-            size = 1
-            bytes_values = True
+        if(context!="Method"):
+            size = displacements.get(type)
             
             
         if(self.FindSymbol(name, type, scope, context)==Symbol_not_found):
-            global count_global
-            global count_local
-            displacement = 0
             memory = ""
+            displacement = 0
             if(scope!= "" and scope[-1]!='-'):
                 memory = "Stack"
-                displacement = count_local
-                count_local += size
-            elif(scope!= "" and scope[-1]=='-'):
-                memory = "Global"
-                displacement = count_global*8
-                count_global += 1
-            return self.symbols_table.append((name, type, scope, context, signature, value, size if bytes_values else "", displacement if bytes_values else "", memory))
+            elif(scope!= "" and scope[-1]=='-' and context!="Method"):
+                memory = "Heap"
+                current_object = scope.split('-')[0]
+                if current_object in displacements:
+                    displacement = displacements.get(current_object)
+                    displacements[current_object] = displacement + size
+                else:
+                    displacements[current_object] = size
+                    
+            return self.symbols_table.append((name, type, scope, context, signature, value, size if size!=0 else "", displacement if displacement else "", memory))
         else:
             printError(name + ' has already been declared in current scope.', line)
             
