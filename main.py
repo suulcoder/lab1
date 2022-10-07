@@ -1,8 +1,9 @@
 from cmath import exp
 from inspect import signature
 import sys
+
 from semanticVisitor import SemanticVisitor, symbolTable
-from visitor import Visitor
+from visitor import Visitor, executables, TemporalVar, executables_functions, executables_atributes
 
 from antlr4 import *
 from antlr4.error.ErrorListener import ErrorListener
@@ -83,6 +84,21 @@ def testGrammar(test_file):
     print("\n\n\n##############################  Intermidiate Code ##############################\n")
     intermidate_code_visitor = Visitor()
     intermidate_code_visitor.visit(tree)
+    
+    _executables = list(filter(lambda node: type(node) == TemporalVar, executables))
+    _executables = [str(node) for  node in _executables]
+    
+    _executables_functions = {}
+    for node in executables_functions:
+        _executables_functions[node] = [str(node) for  node in list(filter(lambda node: type(node) == TemporalVar, executables_functions[node]))]
+    
+    _executables_atributes = {}
+    for node in executables_atributes:
+        _executables_atributes[node] = [str(node) for  node in list(filter(lambda node: type(node) == TemporalVar, executables_atributes[node]))]
+    
+    print("Executable lines", _executables)
+    print("Executable functions", _executables_functions)
+    print("Executable atributes", _executables_atributes)
     
 def main(argv):
     test_file = argv[1]

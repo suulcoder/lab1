@@ -1,4 +1,5 @@
 # Generated from YAPL.g4 by ANTLR 4.10
+import symbol
 from Compiled.YAPLVisitor import YAPLVisitor
 from symbolTable import Symbol_not_found
 from expresion import Expresion
@@ -28,6 +29,9 @@ limit_heap = 0
 current_class = ''
 current_method = ''
 basic_types = ['Int','String','Bool']
+executables = []
+executables_functions = {}
+executables_atributes = {}
 
 def addLineToIntermidiateCode(line):
     file = open('./intermediate_code.txt', 'a')
@@ -35,7 +39,6 @@ def addLineToIntermidiateCode(line):
     file.truncate()
 
 # This class defines a complete generic visitor for a parse tree produced by YAPLParser.
-    
     
 class Visitor(YAPLVisitor):
     
@@ -55,19 +58,61 @@ class Visitor(YAPLVisitor):
         global current_method
         name = ctx.ID()
         current_method = str(name)
-        return self.visitChildren(ctx)
+        expr = self.visit(ctx.expr())
+        if(current_class == "Main" and current_method=='main'):
+            executables.append(expr)
+        else:
+            if current_class + "." + current_method not in executables_functions:
+                executables_functions[current_class + "." + current_method] = [expr]
+            else:
+                executables_functions[current_class + "." + current_method] += [expr] 
+    
+     #------------------------------------------------------------
 
     # Visit a parse tree produced by YAPLParser#BracketsExpr.
     def visitBracketsExpr(self, ctx):
-        return self.visitChildren(ctx)
+        temporal = TemporalVar()
+        expr = None
+        for expression in ctx.expr():
+            expr = self.visit(expression)
+            if(current_class == "Main"):
+                executables.append(expr)
+            else:
+                if current_class + "." + current_method not in executables_functions:
+                    executables_functions[current_class + "." + current_method] = [expr]
+                else:
+                    executables_functions[current_class + "." + current_method] += [expr]
+        temporal.setCode('return ' + expr)
+        return temporal
+            
+    
+    #------------------------------------------------------------
 
     # Visit a parse tree produced by YAPLParser#FunctionExpr.
     def visitFunctionExpr(self, ctx):
-        return self.visitChildren(ctx)
+        function_name = ctx.call().getText()
+        if('.' in function_name):
+            ids = function_name.split('.')
+            func_name = ids[-1]
+            symbol = symbolTable.FindSymbol(name=ids[-2], scope=current_class + '-')
+            type = symbol[1]
+            function_name = type + "." + func_name
+        temporal = TemporalVar()
+        parameters = ctx.parameter()
+        code = ""
+        for parameter in parameters:
+            param = self.visit(parameter)
+            code += "\nparam " + str(param)
+        code += "\n" + str(temporal) + " = call " + function_name + ", " + str(len(parameters))
+        temporal.setCode(code)
+        return temporal
 
     # Visit a parse tree produced by YAPLParser#parameter.
     def visitParameter(self, ctx):
-        return self.visitChildren(ctx)
+        temporal = TemporalVar()
+        var = self.visitChildren(ctx)
+        temporal.setCode(str(temporal) + " = " + var)
+        return temporal
     
     #------------------------------------------------------------
     
@@ -188,7 +233,15 @@ class Visitor(YAPLVisitor):
             
             code = id + " : " + address
             if ctx.expr():
-                code += "\n" + id + " = " + self.visit(ctx.expr())
+                expr = self.visit(ctx.expr())
+                if(current_class == "Main"):
+                    executables.append(expr)
+                else:
+                    if current_class + "." + current_method not in executables_atributes:
+                        executables_atributes[current_class] = [expr]
+                    else:
+                        executables_atributes[current_class] += [expr] 
+                code += "\n" + id + " = " + expr
             temporal.setCode(code)
             
     # Visit a parse tree produced by YAPLParser#idExpr.
@@ -206,12 +259,7 @@ class Visitor(YAPLVisitor):
             return ids[0]
         else:
             code = ids[0]
-            symbol_base = symbolTable.FindSymbol(name=ids[0], scope=current_class + "-")
-            
-            # if symbol_base[3] == 'Method':
-            #     return ''.join([ids[-2], ids[-1]],'.')
-            
-            base = symbol_base[1]
+            base = symbolTable.FindSymbol(name=ids[0], scope=current_class + '-' +current_method)[1]
             for i in range(1, len(ids)):
                 id = ids[i]
                 symbol = symbolTable.FindSymbol(name=id, scope=base + "-")
