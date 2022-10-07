@@ -1,12 +1,42 @@
 # Generated from YAPL.g4 by ANTLR 4.10
 import symbol
 from Compiled.YAPLVisitor import YAPLVisitor
-from symbolTable import Symbol_not_found
-from expresion import Expresion
-from error import printError
-
+import re
 from semanticVisitor import symbolTable
 from symbolTable import displacements
+
+intermidiate_code = {}
+
+def clean_intermidiate_code():
+    _executables_functions = {}
+    for node in executables_functions:
+        _executables_functions[node] = [str(node) for  node in list(filter(lambda node: type(node) == TemporalVar, executables_functions[node]))]
+    
+    _executables_atributes = {}
+    for node in executables_atributes:
+        _executables_atributes[node] = [str(node) for  node in list(filter(lambda node: type(node) == TemporalVar, executables_atributes[node]))]
+    
+    return (_executables_functions, _executables_atributes)
+
+def print_line(line):
+    print(re.findall('_\(\d\)_', intermidiate_code[line]))
+    print("\n" + line + " : \n" + intermidiate_code[line])
+
+def get_intermidiate_code():
+    executables_functions, executables_atributes = clean_intermidiate_code()
+    
+    #Code should initialize Main function and its atributes:
+    
+    print("\n\nAtributes of Main\n")
+    for line in executables_atributes.get('Main'):
+        print_line(line)
+        
+    #Code should start with Main.main()
+    print("\n\nExucatbles at Main.main\n")
+    for line in executables_functions.get('Main.main'):
+        
+        print_line(line)
+    
 
 class TemporalVar(object):
     counter = 0
@@ -18,18 +48,18 @@ class TemporalVar(object):
         self.code = ''
         
     def setCode(self, code):
-        print(str(self.id) + ' : \n' + code + '\n')
+        intermidiate_code['_(' + str(self.id) + ')_'] = code
         self.code = code
     
     def __str__(self):
-        return '(' + str(self.id) + ')'       
+        return '_(' + str(self.id) + ')_'       
 
 limit_stack = 1e9
 limit_heap = 0
 current_class = ''
 current_method = ''
+gen_bracket_counter = 0
 basic_types = ['Int','String','Bool']
-executables = []
 executables_functions = {}
 executables_atributes = {}
 
@@ -59,30 +89,30 @@ class Visitor(YAPLVisitor):
         name = ctx.ID()
         current_method = str(name)
         expr = self.visit(ctx.expr())
-        if(current_class == "Main" and current_method=='main'):
-            executables.append(expr)
+        if current_class + "." + current_method not in executables_functions:
+            executables_functions[current_class + "." + current_method] = [expr]
         else:
-            if current_class + "." + current_method not in executables_functions:
-                executables_functions[current_class + "." + current_method] = [expr]
-            else:
-                executables_functions[current_class + "." + current_method] += [expr] 
+            executables_functions[current_class + "." + current_method].append(expr) 
     
      #------------------------------------------------------------
 
     # Visit a parse tree produced by YAPLParser#BracketsExpr.
     def visitBracketsExpr(self, ctx):
+        global gen_bracket_counter
+        gen_bracket_counter += 1
         temporal = TemporalVar()
         expr = None
         for expression in ctx.expr():
             expr = self.visit(expression)
-            if(current_class == "Main"):
-                executables.append(expr)
+            if current_class + "." + current_method + "." + str(gen_bracket_counter) not in executables_functions:
+                executables_functions[current_class + "." + current_method + "." + str(gen_bracket_counter)] = [expr]
             else:
-                if current_class + "." + current_method not in executables_functions:
-                    executables_functions[current_class + "." + current_method] = [expr]
-                else:
-                    executables_functions[current_class + "." + current_method] += [expr]
-        temporal.setCode('return ' + expr)
+                executables_functions[current_class + "." + current_method + "." + str(gen_bracket_counter)] += [expr]
+        temporal_return = TemporalVar()
+        temporal_return.setCode("return " + str(expr))
+        executables_functions[current_class + "." + current_method + "." + str(gen_bracket_counter)] += [temporal_return]
+        temporal.setCode('execute ' + current_class + "." + current_method + "." + str(gen_bracket_counter))
+        gen_bracket_counter -= 1
         return temporal
             
     
@@ -173,7 +203,7 @@ class Visitor(YAPLVisitor):
             temporal_param.setCode(str(temporal_param) + " = true")
         elif 'false' in ctx.getText():
             temporal_param.setCode(str(temporal_param) + " = false")  
-        temporal.setCode(temporal_param.code + "\nparam " + str(temporal_param) + "\n" + str(temporal) + " = call out_bool, 1")
+        temporal.setCode("\nparam " + str(temporal_param) + "\n" + str(temporal) + " = call out_bool, 1")
         return temporal
 
     # Visit a parse tree produced by YAPLParser#outStringExpr.
@@ -185,7 +215,7 @@ class Visitor(YAPLVisitor):
                 temporal_param.setCode(str(temporal_param) + " = " + self.visit(ctx.call()))
         else:
             temporal_param.setCode(str(temporal_param) + " = " + ctx.getText().split("(")[-1].split(")")[0])
-        temporal.setCode(temporal_param.code + "\nparam " + str(temporal_param) + "\n" + str(temporal) + " = call out_string, 1")
+        temporal.setCode("\nparam " + str(temporal_param) + "\n" + str(temporal) + " = call out_string, 1")
         return temporal
     
     # Visit a parse tree produced by YAPLParser#outIntExpr.
@@ -197,7 +227,7 @@ class Visitor(YAPLVisitor):
                 temporal_param.setCode(str(temporal_param) + " = " + self.visit(ctx.call()))
         else:
             temporal_param.setCode(str(temporal_param) + " = " + ctx.getText().split("(")[-1].split(")")[0])
-        temporal.setCode(temporal_param.code + "\nparam " + str(temporal_param) + "\n" + str(temporal) + " = call out_string, 1")
+        temporal.setCode("\nparam " + str(temporal_param) + "\n" + str(temporal) + " = call out_string, 1")
         return temporal
     
     #------------------------------------------------------------
@@ -214,35 +244,33 @@ class Visitor(YAPLVisitor):
         
         code = id + " : " + address
         if ctx.expr():
-            if self.visit(ctx.expr()):
-                code += "\n" + id + " = " + self.visit(ctx.expr())
+            expr = self.visit(ctx.expr())
+            if expr:
+                code += "\n" + id + " = " + str(expr)
         temporal.setCode(code)
         
         limit_stack += displacements.get(type)
-        
+        return temporal
     
     # Visit a parse tree produced by YAPLParser#AtributeFeature.
     def visitAtributeFeature(self, ctx):
         global limit_heap
-        if(current_class=='Main'):
-            temporal = TemporalVar()
-            id = str(ctx.ID())
-            type = str(ctx.TYPE())
-            address = hex(int(limit_heap))
-            limit_heap += displacements.get(type)
-            
-            code = id + " : " + address
-            if ctx.expr():
-                expr = self.visit(ctx.expr())
-                if(current_class == "Main"):
-                    executables.append(expr)
-                else:
-                    if current_class + "." + current_method not in executables_atributes:
-                        executables_atributes[current_class] = [expr]
-                    else:
-                        executables_atributes[current_class] += [expr] 
-                code += "\n" + id + " = " + expr
-            temporal.setCode(code)
+        temporal = TemporalVar()
+        id = str(ctx.ID())
+        type = str(ctx.TYPE())
+        address = hex(int(limit_heap))
+        limit_heap += displacements.get(type)
+        
+        code = id + " : " + address
+        if ctx.expr():
+            expr = self.visit(ctx.expr())
+            code += "\n" + id + " = " + str(expr)
+        temporal.setCode(code)
+        
+        if current_class not in executables_atributes:
+            executables_atributes[current_class] = [temporal]
+        else:
+            executables_atributes[current_class].append(temporal) 
             
     # Visit a parse tree produced by YAPLParser#idExpr.
     def visitIdExpr(self, ctx):

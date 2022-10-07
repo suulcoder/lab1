@@ -10,7 +10,7 @@ class Main {
       {
          n <- in_int();
          out_int(current_number);
-         (let y : Int <- 1 in
+         (let y : Int in
             while(control) loop {
                back_up_number <- current_number;
                current_number <- current_number + last_number;

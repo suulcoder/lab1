@@ -11,28 +11,27 @@ class Person {
 };
 
 class Main {
+   
+   my_person : Person  <- (new Person);
+   new_energy : Int;
 
-   a : Int <- 0;
-   b : Int <- 1;
-   c : Int;
-   d : Person;
-
-   main() : Int {
+   print(my_string: String) : String {
       {
-         c <- in_int();
-         d <- new Person;
-         a <- d.energy;
-         d.walk(0);
-         while isvoid b loop if a<c then  a + a * (b - c) + (b -c) * 4 else a * a fi pool;
-         out_int(b);
-         out_int(2);
-         0;
+         out_string(my_string);
+         my_string;
       }
    };
 
-   hello(here: Int) : Int {
+   main() : Person {
       {
-         0;
+         print("Type the name of your character: ");
+         my_person.name <- in_string();
+         print("Type the number of steps you want it to walk: ");
+         new_energy <- my_person.walk(2);
+         print("The energy of your character is: ");
+         out_int(new_energy);
+         my_person;
       }
    };
 };
+
