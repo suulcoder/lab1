@@ -1,11 +1,28 @@
 # Generated from YAPL.g4 by ANTLR 4.10
 import symbol
+from tkinter import NONE
 from Compiled.YAPLVisitor import YAPLVisitor
 import re
 from semanticVisitor import symbolTable
 from symbolTable import displacements
 
 intermidiate_code = {}
+stack_classes = []
+io_methods = ['in_string','in_int','in_bool','out_string','out_int','out_string']
+stack_methods = []
+limit_stack = 1e9
+limit_heap = 0
+current_class = ''
+current_method = ''
+gen_bracket_counter = 0
+basic_types = ['Int','String','Bool']
+executables_functions = {}
+executables_atributes = {}
+formals_functions = {}
+temporal_vars = []
+
+def print_intermidiate_code(my_string):
+    print(my_string)
 
 def clean_intermidiate_code():
     _executables_functions = {}
@@ -16,52 +33,144 @@ def clean_intermidiate_code():
     for node in executables_atributes:
         _executables_atributes[node] = [str(node) for  node in list(filter(lambda node: type(node) == TemporalVar, executables_atributes[node]))]
     
-    return (_executables_functions, _executables_atributes)
+    _formal_functions = {}
+    for node in formals_functions:
+        _formal_functions[node] = [str(node) for  node in list(filter(lambda node: type(node) == TemporalVar, formals_functions[node]))]
+    
+    return (_executables_functions, _executables_atributes, _formal_functions)
+
+def bakers_mark_and_sweep_algorithm(unscanned):
+    global temporal_vars
+    scanned = []
+    _unreached = unscanned[:]
+    while (len(unscanned)!=0):
+        o = unscanned.pop(0)
+        scanned.append(o)
+        unreached = [n.split(' ')[1] for n in re.findall('= _\(\d+\)_', o.code)]
+        referenced_objects = re.findall('_\(\d+\)_', o.code)
+        for n in _unreached:
+            if str(n) in referenced_objects:
+                if str(n) in unreached:
+                    _unreached.remove(n)
+    temporal_vars = _unreached
 
 def print_line(line):
-    print(re.findall('_\(\d\)_', intermidiate_code[line]))
-    print("\n" + line + " : \n" + intermidiate_code[line])
+    
+    # ==============================================================    
+    # Get the generated code for the line
+    code = intermidiate_code[str(line)]
+    # ==============================================================
+    
+    # ==============================================================
+    # Get the related lines to the current line
+    related_lines = re.findall('_\(\d+\)_', code[:])
+    for related_line in related_lines:
+        if related_line != line:
+            print_line(related_line)
+    # ==============================================================   
+    
+    # ==============================================================
+    # Check if there is an instance of an object
+    instance = re.findall('new .*', code[:])
+    if(len(instance)>0):
+        #Get the name of the Object
+        instance = instance[0].split('new ')[-1]
+        if instance not in stack_classes:
+            stack_classes.append(instance)
+    # ============================================================== 
+    
+    # ==============================================================
+    # Check if there is code of a bracket section
+    instance = re.findall('execute .*', code[:])
+    if(len(instance)>0):
+        #Get the name of the Object
+        instance = instance[0].split('execute ')[-1]
+        if instance not in stack_methods:
+            stack_methods.append(instance)
+    # ============================================================== 
+    
+    # ==============================================================
+    # Check if there is code of a method section
+    instance = re.findall('call .*,', code[:])
+    if(len(instance)>0):
+        #Get the name of the Object
+        instance = instance[0].split('call ')[-1].split(',')[0]
+        if instance not in stack_methods and instance not in io_methods:
+            stack_methods.append(instance)
+    # ============================================================== 
+    
+    # ============================================================== 
+    # Print line
+    print_intermidiate_code("\n" + str(line) + " : \n" + intermidiate_code[str(line)])
+    # ============================================================== 
 
 def get_intermidiate_code():
-    executables_functions, executables_atributes = clean_intermidiate_code()
+    executables_functions, executables_atributes, formals_functions = clean_intermidiate_code()
     
     #Code should initialize Main function and its atributes:
     
-    print("\n\nAtributes of Main\n")
+    print_intermidiate_code("\n\n++++++++++++++++  Atributes of Main  ++++++++++++++++\n")
     for line in executables_atributes.get('Main'):
         print_line(line)
         
     #Code should start with Main.main()
-    print("\n\nExucatbles at Main.main\n")
+    print_intermidiate_code("\n\n++++++++++++++++  Exucatbles at Main.main  ++++++++++++++++\n")
     for line in executables_functions.get('Main.main'):
-        
         print_line(line)
+        
+    for instance in stack_classes:
+        print_intermidiate_code("\n\n++++++++++++++++  Atributes of " + instance +"  ++++++++++++++++\n")
+        for line in executables_atributes.get(instance):
+            print_line(line)
+            
+    for method in stack_methods:
+        print_intermidiate_code("\n\n++++++++++++++++  Exucatbles at " + method + "  ++++++++++++++++\n")
+        
+        
+        if method.count('.')==1:
+            for parameter in formals_functions.get(method):
+                print_line(parameter)
+        
+        for line in executables_functions.get(method):
+            print_line(line)
+    
+    return temporal_vars
     
 
 class TemporalVar(object):
     counter = 0
     
-    def __init__(self):
+    def __init__(self, type=None):
         self.id = TemporalVar.counter
         TemporalVar.counter += 1
-        
         self.code = ''
+        self.address = None
+        self.type = type
+        
+    def assignCode(self, code):
+        is_assigation = len(re.findall('_\(\d+\)_ = .', code[:]))!=0
+        if(is_assigation):
+            self.type = 'String' if len(re.findall('"(.*?)"', code[:]))!=0 else self.type
+            self.type = 'Int' if len(re.findall('\d+', code[:]))!=0 else self.type
+            self.type = 'Bool' if len(re.findall('true|false', code[:]))!=0 else self.type
+            if(self.type!=None):
+                global limit_stack
+                self.address = hex(int(limit_stack - displacements.get(self.type)))
+                self.size = displacements.get(self.type)
+                limit_stack -= displacements.get(self.type)
+            self.code = str(self) + " : " + str(self.address) + '\n' + code
+        else:
+            self.code = code
+        intermidiate_code['_(' + str(self.id) + ')_'] = self.code
+        
         
     def setCode(self, code):
-        intermidiate_code['_(' + str(self.id) + ')_'] = code
-        self.code = code
+        self.assignCode(code)
+        temporal_vars.append(self)
+        bakers_mark_and_sweep_algorithm(temporal_vars)
     
     def __str__(self):
         return '_(' + str(self.id) + ')_'       
-
-limit_stack = 1e9
-limit_heap = 0
-current_class = ''
-current_method = ''
-gen_bracket_counter = 0
-basic_types = ['Int','String','Bool']
-executables_functions = {}
-executables_atributes = {}
 
 def addLineToIntermidiateCode(line):
     file = open('./intermediate_code.txt', 'a')
@@ -91,8 +200,12 @@ class Visitor(YAPLVisitor):
         expr = self.visit(ctx.expr())
         if current_class + "." + current_method not in executables_functions:
             executables_functions[current_class + "." + current_method] = [expr]
+            formals_functions[current_class + "." + current_method] = []
         else:
             executables_functions[current_class + "." + current_method].append(expr) 
+        for node in ctx.formal():
+            formal = self.visit(node)
+            formals_functions[current_class + "." + current_method].append(formal) 
     
      #------------------------------------------------------------
 
@@ -127,12 +240,14 @@ class Visitor(YAPLVisitor):
             symbol = symbolTable.FindSymbol(name=ids[-2], scope=current_class + '-')
             type = symbol[1]
             function_name = type + "." + func_name
+        else:
+            function_name = current_class + "." + function_name
         temporal = TemporalVar()
         parameters = ctx.parameter()
         code = ""
         for parameter in parameters:
             param = self.visit(parameter)
-            code += "\nparam " + str(param)
+            code += "param " + str(param)
         code += "\n" + str(temporal) + " = call " + function_name + ", " + str(len(parameters))
         temporal.setCode(code)
         return temporal
@@ -148,7 +263,10 @@ class Visitor(YAPLVisitor):
     
     # Visit a parse tree produced by YAPLParser#formal.
     def visitFormal(self, ctx):
-        return self.visitChildren(ctx)
+        temporal = TemporalVar()
+        id = str(ctx.ID())
+        temporal.setCode('received param ' + id)
+        return temporal
     
     #------------------------------------------------------------
     
@@ -203,7 +321,7 @@ class Visitor(YAPLVisitor):
             temporal_param.setCode(str(temporal_param) + " = true")
         elif 'false' in ctx.getText():
             temporal_param.setCode(str(temporal_param) + " = false")  
-        temporal.setCode("\nparam " + str(temporal_param) + "\n" + str(temporal) + " = call out_bool, 1")
+        temporal.setCode("param " + str(temporal_param) + "\n" + str(temporal) + " = call out_bool, 1")
         return temporal
 
     # Visit a parse tree produced by YAPLParser#outStringExpr.
@@ -215,7 +333,7 @@ class Visitor(YAPLVisitor):
                 temporal_param.setCode(str(temporal_param) + " = " + self.visit(ctx.call()))
         else:
             temporal_param.setCode(str(temporal_param) + " = " + ctx.getText().split("(")[-1].split(")")[0])
-        temporal.setCode("\nparam " + str(temporal_param) + "\n" + str(temporal) + " = call out_string, 1")
+        temporal.setCode("param " + str(temporal_param) + "\n" + str(temporal) + " = call out_string, 1")
         return temporal
     
     # Visit a parse tree produced by YAPLParser#outIntExpr.
@@ -227,20 +345,19 @@ class Visitor(YAPLVisitor):
                 temporal_param.setCode(str(temporal_param) + " = " + self.visit(ctx.call()))
         else:
             temporal_param.setCode(str(temporal_param) + " = " + ctx.getText().split("(")[-1].split(")")[0])
-        temporal.setCode("\nparam " + str(temporal_param) + "\n" + str(temporal) + " = call out_string, 1")
+        temporal.setCode("param " + str(temporal_param) + "\n" + str(temporal) + " = call out_string, 1")
         return temporal
     
     #------------------------------------------------------------
     
     # Visit a parse tree produced by YAPLParser#LetExpr.
     def visitLetExpr(self, ctx):
-        global limit_stack
-        
+        global limit_heap
         temporal = TemporalVar()
         id = str(ctx.ID())
         type = str(ctx.TYPE())
-        address = hex(int(limit_stack - displacements.get(type)))
-        limit_stack -= displacements.get(type)
+        address = hex(int(limit_heap))
+        limit_heap += displacements.get(type)
         
         code = id + " : " + address
         if ctx.expr():
@@ -287,7 +404,7 @@ class Visitor(YAPLVisitor):
             return ids[0]
         else:
             code = ids[0]
-            base = symbolTable.FindSymbol(name=ids[0], scope=current_class + '-' +current_method)[1]
+            base = symbolTable.FindSymbol(name=ids[0], scope=current_class + '-')[1]
             for i in range(1, len(ids)):
                 id = ids[i]
                 symbol = symbolTable.FindSymbol(name=id, scope=base + "-")
@@ -338,7 +455,7 @@ class Visitor(YAPLVisitor):
     # Visit a parse tree produced by YAPLParser#sumExpr.
     def visitSumExpr(self, ctx):
         expressions = []
-        temporal = TemporalVar()
+        temporal = TemporalVar('Int')
         for node in ctx.expr():
             expressions.append(self.visit(node))
         temporal.setCode(str(temporal) + ' = ' + str(expressions[0]) + ' + ' + str(expressions[1]))
@@ -347,7 +464,7 @@ class Visitor(YAPLVisitor):
     # Visit a parse tree produced by YAPLParser#minusExpr.
     def visitMinusExpr(self, ctx):
         expressions = []
-        temporal = TemporalVar()
+        temporal = TemporalVar('Int')
         for node in ctx.expr():
             expressions.append(self.visit(node))
         temporal.setCode(str(temporal) + ' = ' + str(expressions[0]) + ' - ' + str(expressions[1]))
@@ -356,7 +473,7 @@ class Visitor(YAPLVisitor):
     # Visit a parse tree produced by YAPLParser#timesExpr.
     def visitTimesExpr(self, ctx):
         expressions = []
-        temporal = TemporalVar()
+        temporal = TemporalVar('Int')
         for node in ctx.expr():
             expressions.append(self.visit(node))
         temporal.setCode(str(temporal) + ' = ' + str(expressions[0]) + ' * ' + str(expressions[1]))
@@ -365,7 +482,7 @@ class Visitor(YAPLVisitor):
     # Visit a parse tree produced by YAPLParser#divideExpr.
     def visitDivideExpr(self, ctx):
         expressions = []
-        temporal = TemporalVar()
+        temporal = TemporalVar('Int')
         for node in ctx.expr():
             expressions.append(self.visit(node))
         temporal.setCode(str(temporal) + ' = ' + str(expressions[0]) + ' / ' + str(expressions[1]))
@@ -373,14 +490,14 @@ class Visitor(YAPLVisitor):
     
     # Visit a parse tree produced by YAPLParser#unaryExpr.
     def visitUnaryExpr(self, ctx):
-        temporal = TemporalVar()
+        temporal = TemporalVar('Int')
         temporal.setCode(str(temporal) + ' = -' + str(self.visit(ctx.expr())))
         return temporal
 
     # Visit a parse tree produced by YAPLParser#lessThanExpr.
     def visitLessThanExpr(self, ctx):
         expressions = []
-        temporal = TemporalVar()
+        temporal = TemporalVar('Bool')
         for node in ctx.expr():
             expressions.append(self.visit(node))
         temporal.setCode(str(temporal) + ' = ' + str(expressions[0]) + ' < ' + str(expressions[1]))
@@ -395,7 +512,7 @@ class Visitor(YAPLVisitor):
     # Visit a parse tree produced by YAPLParser#lessThanEqualExpr.
     def visitLessThanEqualExpr(self, ctx):
         expressions = []
-        temporal = TemporalVar()
+        temporal = TemporalVar('Bool')
         for node in ctx.expr():
             expressions.append(self.visit(node))
         temporal.setCode(str(temporal) + ' = ' + str(expressions[0]) + ' <= ' + str(expressions[1]))
@@ -404,7 +521,7 @@ class Visitor(YAPLVisitor):
     # Visit a parse tree produced by YAPLParser#equalExpr.
     def visitEqualExpr(self, ctx):
         expressions = []
-        temporal = TemporalVar()
+        temporal = TemporalVar('Bool')
         for node in ctx.expr():
             expressions.append(self.visit(node))
         temporal.setCode(str(temporal) + ' = ' + str(expressions[0]) + ' == ' + str(expressions[1]))
@@ -412,7 +529,7 @@ class Visitor(YAPLVisitor):
     
     # Visit a parse tree produced by YAPLParser#notExpr.
     def visitNotExpr(self, ctx):
-        temporal = TemporalVar()
+        temporal = TemporalVar('Bool')
         temporal.setCode(str(temporal) + ' =  NOT' + str(self.visit(ctx.expr())))
         return temporal
     

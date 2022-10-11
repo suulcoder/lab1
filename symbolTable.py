@@ -52,7 +52,7 @@ class SymbolsTable:
                 else:
                     displacements[current_object] = size
                     
-            return self.symbols_table.append((name, type, scope, context, signature, value, size if size!=0 else "", displacement if displacement else "", memory))
+            return self.symbols_table.append((name, type, scope, context, signature, value, size if size!=0 else "", displacement if context=='Atribute' else "", memory))
         else:
             printError(name + ' has already been declared in current scope.', line)
             

@@ -84,8 +84,13 @@ def testGrammar(test_file):
     print("\n\n\n##############################  Intermidiate Code ##############################\n")
     intermidate_code_visitor = Visitor()
     intermidate_code_visitor.visit(tree)
-    get_intermidiate_code()
+    temporal_vars = get_intermidiate_code()
     
+    
+    print("\n\n\n##############################  Cleaned Final Temporal Variables ##############################\n")
+    for n in temporal_vars:
+        if "="  in n.code or '0x' in n.code:
+            print(n)
     
 def main(argv):
     test_file = argv[1]
