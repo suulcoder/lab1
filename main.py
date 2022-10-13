@@ -51,27 +51,6 @@ def testGrammar(test_file):
     visitor = SemanticVisitor()
     visitor.visit(tree)
     
-    
-    # #Print Table  
-    names = []
-    types = []
-    scopes = []
-    contexts = []
-    signatures = []
-    sizes = []
-    displacement = []
-    memory = []
-    print("\n\n\n##############################  Symbol Table  ##############################\n")
-    for symbol in symbolTable.symbols_table:
-        names.append(symbol[0])
-        types.append(symbol[1])
-        scopes.append(symbol[2])
-        contexts.append(symbol[3])
-        signatures.append(symbol[4])
-        sizes.append(symbol[6])
-        displacement.append(symbol[7])
-        memory.append(symbol[8])
-    print(tabulate({'Symbol Name:': names, 'Type:': types,  'Scope:':scopes, 'Context': contexts, 'Size (bytes)' : sizes, 'Displacement (bytes)': displacement, 'Memory type': memory}, headers="keys", tablefmt='fancy_grid'))
     # window = tk.Tk()
     # window.title('Tabla de Simbolos')
     # window.geometry('800x800')
@@ -91,6 +70,27 @@ def testGrammar(test_file):
     for n in temporal_vars:
         if "="  in n.code or '0x' in n.code:
             print("T" + str(n.id))
+            
+    #Print Table  
+    names = []
+    types = []
+    scopes = []
+    contexts = []
+    signatures = []
+    sizes = []
+    displacement = []
+    memory = []
+    print("\n\n\n##############################  Symbol Table  ##############################\n")
+    for symbol in symbolTable.symbols_table:
+        names.append(symbol[0])
+        types.append(symbol[1])
+        scopes.append(symbol[2])
+        contexts.append(symbol[3])
+        signatures.append(symbol[4])
+        sizes.append(symbol[6])
+        displacement.append(symbol[7])
+        memory.append(symbol[8])
+    print(tabulate({'Symbol Name:': names, 'Type:': types,  'Scope:':scopes, 'Context': contexts, 'Size (bytes)' : sizes, 'Displacement (bytes)': displacement, 'Address': memory}, headers="keys", tablefmt='fancy_grid'))
     
 def main(argv):
     test_file = argv[1]

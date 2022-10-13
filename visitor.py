@@ -3,7 +3,7 @@ import symbol
 from tkinter import NONE
 from Compiled.YAPLVisitor import YAPLVisitor
 import re
-from semanticVisitor import symbolTable
+from semanticVisitor import symbolTable, Symbol_not_found
 from symbolTable import displacements
 
 intermidiate_code = {}
@@ -149,7 +149,7 @@ class TemporalVar(object):
         
     def assignCode(self, code):
         is_assigation = len(re.findall('T\d+ = .', code[:]))!=0
-        if(is_assigation):
+        if(is_assigation and str(self.id) in code):
             self.type = 'String' if len(re.findall('"(.*?)"', code[:]))!=0 else self.type
             self.type = 'Int' if len(re.findall('\d+', code[:]))!=0 else self.type
             self.type = 'Bool' if len(re.findall('true|false', code[:]))!=0 else self.type
@@ -158,7 +158,7 @@ class TemporalVar(object):
                 self.address = hex(int(limit_stack - displacements.get(self.type)))
                 self.size = displacements.get(self.type)
                 limit_stack -= displacements.get(self.type)
-            self.code = str(self) + " : " + str(self.address) + '\n' + code
+            self.code = "T" + str(self.id) + " = & " + str(self.address) + '\n' + code
         else:
             self.code = code
         intermidiate_code['_(' + str(self.id) + ')_'] = self.code
@@ -221,6 +221,7 @@ class Visitor(YAPLVisitor):
                 executables_functions[current_class + "." + current_method + "." + str(gen_bracket_counter)] = [expr]
             else:
                 executables_functions[current_class + "." + current_method + "." + str(gen_bracket_counter)] += [expr]
+        
         temporal.setCode('execute ' + current_class + "." + current_method + "." + str(gen_bracket_counter))
         gen_bracket_counter -= 1
         return temporal
@@ -263,6 +264,7 @@ class Visitor(YAPLVisitor):
         temporal = TemporalVar()
         id = str(ctx.ID())
         temporal.setCode('received param ' + id)
+        symbolTable.addAddress(id, current_class + '-' + current_method, '* ' + id)
         return temporal
     
     #------------------------------------------------------------
@@ -371,19 +373,24 @@ class Visitor(YAPLVisitor):
             if expr:
                 code += "\n" + id + " = T" + str(expr.id)
         temporal.setCode(code)
-        
+        symbolTable.addAddress(id, current_class + "-" + current_method, address)
         return temporal
     
     # Visit a parse tree produced by YAPLParser#AtributeFeature.
     def visitAtributeFeature(self, ctx):
-        global limit_heap
+        code = ""
         temporal = TemporalVar()
         id = str(ctx.ID())
         type = str(ctx.TYPE())
-        address = hex(int(limit_heap))
-        limit_heap += displacements.get(type)
-        
-        code = id + " : " + address
+        if(current_class == 'Main'):
+            global limit_heap
+            address = hex(int(limit_heap))
+            limit_heap += displacements.get(type)
+            code = id + " : " + address
+            symbolTable.addAddress(id, current_class + "-", address)
+        else:
+            code = id + " : * self[" + str(symbolTable.FindSymbol(id, scope=current_class + "-")[7]) + "]"
+            symbolTable.addAddress(id, current_class + "-", "* self[" + str(symbolTable.FindSymbol(id, scope=current_class + "-")[7]) + "]")
         if ctx.expr():
             expr = self.visit(ctx.expr())
             code += "\n" + id + " = T" + str(expr.id)
@@ -405,12 +412,13 @@ class Visitor(YAPLVisitor):
         ids = []
         for node in ctx.ID():
             ids.append(node.getText())
+        symbol_ = symbolTable.FindSymbol(name=ids[0], scope=current_class + '-')
         if (len(ids)==1):
             temporal = TemporalVar()
-            temporal.setCode("T" + str(temporal.id) + " = " + ids[0])
+            temporal.setCode("T" + str(temporal.id) + " = " + str(symbol_[8] if symbol_ != Symbol_not_found else ("* " + ids[0])))
             return temporal
         else:
-            code = ids[0]
+            code = symbol_[8] if symbol_ != Symbol_not_found else ids[0]
             base = symbolTable.FindSymbol(name=ids[0], scope=current_class + '-')[1]
             for i in range(1, len(ids)):
                 id = ids[i]
