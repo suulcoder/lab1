@@ -46,11 +46,11 @@ def bakers_mark_and_sweep_algorithm(unscanned):
     while (len(unscanned)!=0):
         o = unscanned.pop(0)
         scanned.append(o)
-        unreached = [n.split(' ')[1] for n in re.findall('= _\(\d+\)_', o.code)]
-        referenced_objects = re.findall('_\(\d+\)_', o.code)
+        unreached = [n.split(' ')[1] for n in re.findall('= T\d+', o.code)]
+        referenced_objects = re.findall('T\d+', o.code)
         for n in _unreached:
-            if str(n) in referenced_objects:
-                if str(n) in unreached:
+            if "T" + str(n.id) in referenced_objects:
+                if "T" + str(n.id) in unreached:
                     _unreached.remove(n)
     temporal_vars = _unreached
 
@@ -63,7 +63,7 @@ def print_line(line):
     
     # ==============================================================
     # Get the related lines to the current line
-    related_lines = re.findall('_\(\d+\)_', code[:])
+    related_lines = re.findall('_\(\d+\)_', code[:]) + ['_(' + n[1:] + ')_' for n in re.findall('T\d+', code[:])]
     for related_line in related_lines:
         if related_line != line:
             print_line(related_line)
@@ -148,7 +148,7 @@ class TemporalVar(object):
         self.type = type
         
     def assignCode(self, code):
-        is_assigation = len(re.findall('_\(\d+\)_ = .', code[:]))!=0
+        is_assigation = len(re.findall('T\d+ = .', code[:]))!=0
         if(is_assigation):
             self.type = 'String' if len(re.findall('"(.*?)"', code[:]))!=0 else self.type
             self.type = 'Int' if len(re.findall('\d+', code[:]))!=0 else self.type
@@ -221,9 +221,6 @@ class Visitor(YAPLVisitor):
                 executables_functions[current_class + "." + current_method + "." + str(gen_bracket_counter)] = [expr]
             else:
                 executables_functions[current_class + "." + current_method + "." + str(gen_bracket_counter)] += [expr]
-        temporal_return = TemporalVar()
-        temporal_return.setCode("return " + str(expr))
-        executables_functions[current_class + "." + current_method + "." + str(gen_bracket_counter)] += [temporal_return]
         temporal.setCode('execute ' + current_class + "." + current_method + "." + str(gen_bracket_counter))
         gen_bracket_counter -= 1
         return temporal
@@ -247,7 +244,7 @@ class Visitor(YAPLVisitor):
         code = ""
         for parameter in parameters:
             param = self.visit(parameter)
-            code += "param " + str(param)
+            code += "param T" + str(param.id)
         code += "\n" + str(temporal) + " = call " + function_name + ", " + str(len(parameters))
         temporal.setCode(code)
         return temporal
@@ -256,7 +253,7 @@ class Visitor(YAPLVisitor):
     def visitParameter(self, ctx):
         temporal = TemporalVar()
         var = self.visitChildren(ctx)
-        temporal.setCode(str(temporal) + " = " + var)
+        temporal.setCode("T" + str(temporal.id) + " = " + str(var.id))
         return temporal
     
     #------------------------------------------------------------
@@ -272,22 +269,28 @@ class Visitor(YAPLVisitor):
     
     # Visit a parse tree produced by YAPLParser#InstanceExpr.
     def visitInstanceExpr(self, ctx):
+        
+        
+        
+    
         type = ctx.TYPE().getText()
+        temporal = TemporalVar(ctx.TYPE().getText())
         if(type == 'Int'):
-            return 0
+            temporal.setCode("T" + str(temporal.id) + " = 0")
         elif(type == 'String'):
-            return "''"
+            temporal.setCode("T" + str(temporal.id) + " = '")
         elif(type == 'Bool'):
-            return 'false'
+            temporal.setCode("T" + str(temporal.id) + " = false")
         else:
-            return "new " + type
+            temporal.setCode("T" + str(temporal.id) + " = new " + type)
+        return temporal
     
     # Visit a parse tree produced by YAPLParser#voidExpr.
     def visitVoidExpr(self, ctx):
         temporal = TemporalVar()
         temporal_param = TemporalVar()
-        temporal_param.setCode(str(temporal_param) + " = " + self.visit(ctx.expr()))
-        temporal.setCode(temporal_param.code + "\nparam " + str(temporal_param) + "\n" + str(temporal) + " = call isvoid, 1")
+        temporal_param.setCode("T" + str(temporal_param.id) + " = T" + str(self.visit(ctx.expr()).id))
+        temporal.setCode(temporal_param.code + "\nparam " + str(temporal_param) + "\nT" + str(temporal.id) + " = call isvoid, 1")
         return temporal
     
     #------------------------------------------------------------
@@ -295,19 +298,19 @@ class Visitor(YAPLVisitor):
     # Visit a parse tree produced by YAPLParser#inBoolExpr.
     def visitInBoolExpr(self, ctx):
         temporal = TemporalVar()
-        temporal.setCode(str(temporal) + " = call in_bool, 0")
+        temporal.setCode("T" + str(temporal.id) + " = call in_bool, 0")
         return temporal
     
     # Visit a parse tree produced by YAPLParser#inStringExpr.
     def visitInStringExpr(self, ctx):
         temporal = TemporalVar()
-        temporal.setCode(str(temporal) + " = call in_string, 0")
+        temporal.setCode("T" + str(temporal.id) + " = call in_string, 0")
         return temporal
     
     # Visit a parse tree produced by YAPLParser#inIntExpr.
     def visitInIntExpr(self, ctx):
         temporal = TemporalVar()
-        temporal.setCode(str(temporal) + " = call in_int, 0")
+        temporal.setCode("T" + str(temporal.id) + " = call in_int, 0")
         return temporal
     
     # Visit a parse tree produced by YAPLParser#outBoolExpr.
@@ -315,13 +318,14 @@ class Visitor(YAPLVisitor):
         temporal = TemporalVar()
         temporal_param = TemporalVar()
         if ctx.call():
-            if self.visit(ctx.call()):
-                temporal_param.setCode(str(temporal_param) + " = " + self.visit(ctx.call()))
+            _call = self.visit(ctx.call())
+            if _call:
+                temporal_param.setCode("T" + str(temporal_param.id) + " = " + str(_call.id))
         elif 'true' in ctx.getText():
-            temporal_param.setCode(str(temporal_param) + " = true")
+            temporal_param.setCode("T" + str(temporal_param.id) + " = true")
         elif 'false' in ctx.getText():
-            temporal_param.setCode(str(temporal_param) + " = false")  
-        temporal.setCode("param " + str(temporal_param) + "\n" + str(temporal) + " = call out_bool, 1")
+            temporal_param.setCode("T" + str(temporal_param.id) + " = false")  
+        temporal.setCode("param T" + str(temporal_param.id) + "\nT" + str(temporal.id) + " = call out_bool, 1")
         return temporal
 
     # Visit a parse tree produced by YAPLParser#outStringExpr.
@@ -329,11 +333,12 @@ class Visitor(YAPLVisitor):
         temporal = TemporalVar()
         temporal_param = TemporalVar()
         if ctx.call():
-            if self.visit(ctx.call()):
-                temporal_param.setCode(str(temporal_param) + " = " + self.visit(ctx.call()))
+            _call = self.visit(ctx.call())
+            if _call:
+                temporal_param.setCode("T" + str(temporal_param.id) + " = " + str(_call.id))
         else:
-            temporal_param.setCode(str(temporal_param) + " = " + ctx.getText().split("(")[-1].split(")")[0])
-        temporal.setCode("param " + str(temporal_param) + "\n" + str(temporal) + " = call out_string, 1")
+            temporal_param.setCode("T" + str(temporal_param.id) + " = " + ctx.getText().split("(")[-1].split(")")[0])
+        temporal.setCode("param T" + str(temporal_param.id) + "\nT" + str(temporal.id) + " = call out_string, 1")
         return temporal
     
     # Visit a parse tree produced by YAPLParser#outIntExpr.
@@ -341,11 +346,12 @@ class Visitor(YAPLVisitor):
         temporal = TemporalVar()
         temporal_param = TemporalVar()
         if ctx.call():
-            if self.visit(ctx.call()):
-                temporal_param.setCode(str(temporal_param) + " = " + self.visit(ctx.call()))
+            _call = self.visit(ctx.call())
+            if _call:
+                temporal_param.setCode("T" + str(temporal_param.id) + " = T" + str(_call.id))
         else:
-            temporal_param.setCode(str(temporal_param) + " = " + ctx.getText().split("(")[-1].split(")")[0])
-        temporal.setCode("param " + str(temporal_param) + "\n" + str(temporal) + " = call out_string, 1")
+            temporal_param.setCode("T" + str(temporal_param.id) + " = " + ctx.getText().split("(")[-1].split(")")[0])
+        temporal.setCode("param T" + str(temporal_param.id) + "\n" + str(temporal) + " = call out_int, 1")
         return temporal
     
     #------------------------------------------------------------
@@ -363,10 +369,9 @@ class Visitor(YAPLVisitor):
         if ctx.expr():
             expr = self.visit(ctx.expr())
             if expr:
-                code += "\n" + id + " = " + str(expr)
+                code += "\n" + id + " = T" + str(expr.id)
         temporal.setCode(code)
         
-        limit_stack += displacements.get(type)
         return temporal
     
     # Visit a parse tree produced by YAPLParser#AtributeFeature.
@@ -381,7 +386,7 @@ class Visitor(YAPLVisitor):
         code = id + " : " + address
         if ctx.expr():
             expr = self.visit(ctx.expr())
-            code += "\n" + id + " = " + str(expr)
+            code += "\n" + id + " = T" + str(expr.id)
         temporal.setCode(code)
         
         if current_class not in executables_atributes:
@@ -401,7 +406,9 @@ class Visitor(YAPLVisitor):
         for node in ctx.ID():
             ids.append(node.getText())
         if (len(ids)==1):
-            return ids[0]
+            temporal = TemporalVar()
+            temporal.setCode("T" + str(temporal.id) + " = " + ids[0])
+            return temporal
         else:
             code = ids[0]
             base = symbolTable.FindSymbol(name=ids[0], scope=current_class + '-')[1]
@@ -411,7 +418,9 @@ class Visitor(YAPLVisitor):
                 displacement = symbol[7]
                 code += "[" + str(displacement) + "]" 
                 base = symbol[1]
-            return code
+            temporal = TemporalVar()
+            temporal.setCode("T" + str(temporal.id) + " = " + code)
+            return temporal
         
     # Visit a parse tree produced by YAPLParser#DeclarationExpr.
     def visitDeclarationExpr(self, ctx):
@@ -420,9 +429,9 @@ class Visitor(YAPLVisitor):
             calls.append(self.visit(node))
         temporal = TemporalVar()
         if(len(calls)==2):
-            temporal.setCode(str(calls[0]) + " = " + str(calls[1]))
+            temporal.setCode("T" + str(calls[0].id) + " = T" + str(calls[1].id))
         elif(len(calls)==1):
-            temporal.setCode(str(calls[0]) + " = " + str(self.visit(ctx.expr())))
+            temporal.setCode("T" + str(calls[0].id) + " = T" + str(self.visit(ctx.expr()).id))
         return temporal
 
         
@@ -435,7 +444,7 @@ class Visitor(YAPLVisitor):
             expressions.append(self.visit(node))
         temporal = TemporalVar()
         temporal_end = TemporalVar()
-        temporal.setCode("ifFALSE " + str(expressions[0]) + " goto " + str(temporal_end) + "\n" + expressions[1].code + "\ngoto " + str(temporal))
+        temporal.setCode("ifFALSE T" + str(expressions[0].id) + " goto " + str(temporal_end) + "\n" + expressions[1].code + "\ngoto " + str(temporal))
         temporal_end.setCode('')
         return temporal
     
@@ -447,7 +456,7 @@ class Visitor(YAPLVisitor):
         temporal = TemporalVar()
         for node in ctx.expr():
             expressions.append(self.visit(node))
-        temporal.setCode("if " + str(expressions[0]) + " goto " + str(expressions[1]) + " \ngoto " + str(expressions[2]))
+        temporal.setCode("if T" + str(expressions[0].id) + " goto " + str(expressions[1]) + " \ngoto " + str(expressions[2]))
         return temporal
     
     #------------------------------------------------------------
@@ -458,7 +467,7 @@ class Visitor(YAPLVisitor):
         temporal = TemporalVar('Int')
         for node in ctx.expr():
             expressions.append(self.visit(node))
-        temporal.setCode(str(temporal) + ' = ' + str(expressions[0]) + ' + ' + str(expressions[1]))
+        temporal.setCode("T" + str(temporal.id) + ' = T' + str(expressions[0].id) + ' + T' + str(expressions[1].id))
         return temporal
     
     # Visit a parse tree produced by YAPLParser#minusExpr.
@@ -467,7 +476,7 @@ class Visitor(YAPLVisitor):
         temporal = TemporalVar('Int')
         for node in ctx.expr():
             expressions.append(self.visit(node))
-        temporal.setCode(str(temporal) + ' = ' + str(expressions[0]) + ' - ' + str(expressions[1]))
+        temporal.setCode("T" + str(temporal.id) + ' = T' + str(expressions[0].id) + ' - T' + str(expressions[1].id))
         return temporal
     
     # Visit a parse tree produced by YAPLParser#timesExpr.
@@ -476,7 +485,7 @@ class Visitor(YAPLVisitor):
         temporal = TemporalVar('Int')
         for node in ctx.expr():
             expressions.append(self.visit(node))
-        temporal.setCode(str(temporal) + ' = ' + str(expressions[0]) + ' * ' + str(expressions[1]))
+        temporal.setCode("T" + str(temporal.id) + ' = T' + str(expressions[0].id) + ' * T' + str(expressions[1].id))
         return temporal
     
     # Visit a parse tree produced by YAPLParser#divideExpr.
@@ -485,13 +494,13 @@ class Visitor(YAPLVisitor):
         temporal = TemporalVar('Int')
         for node in ctx.expr():
             expressions.append(self.visit(node))
-        temporal.setCode(str(temporal) + ' = ' + str(expressions[0]) + ' / ' + str(expressions[1]))
+        temporal.setCode("T" + str(temporal.id) + ' = T' + str(expressions[0].id) + ' / T' + str(expressions[1].id))
         return temporal
     
     # Visit a parse tree produced by YAPLParser#unaryExpr.
     def visitUnaryExpr(self, ctx):
         temporal = TemporalVar('Int')
-        temporal.setCode(str(temporal) + ' = -' + str(self.visit(ctx.expr())))
+        temporal.setCode("T" + str(temporal.id) + ' = -T' + str(self.visit(ctx.expr()).id))
         return temporal
 
     # Visit a parse tree produced by YAPLParser#lessThanExpr.
@@ -500,13 +509,13 @@ class Visitor(YAPLVisitor):
         temporal = TemporalVar('Bool')
         for node in ctx.expr():
             expressions.append(self.visit(node))
-        temporal.setCode(str(temporal) + ' = ' + str(expressions[0]) + ' < ' + str(expressions[1]))
+        temporal.setCode("T" + str(temporal.id) + ' = T' + str(expressions[0].id) + ' < T' + str(expressions[1].id))
         return temporal
 
     # Visit a parse tree produced by YAPLParser#parensExpr.
     def visitParensExpr(self, ctx):
         temporal = TemporalVar()
-        temporal.setCode(str(temporal) + ' = ' + str(self.visit(ctx.expr())))
+        temporal.setCode("T" + str(temporal.id) + ' = T' + str(self.visit(ctx.expr()).id))
         return temporal
     
     # Visit a parse tree produced by YAPLParser#lessThanEqualExpr.
@@ -515,7 +524,7 @@ class Visitor(YAPLVisitor):
         temporal = TemporalVar('Bool')
         for node in ctx.expr():
             expressions.append(self.visit(node))
-        temporal.setCode(str(temporal) + ' = ' + str(expressions[0]) + ' <= ' + str(expressions[1]))
+        temporal.setCode("T" + str(temporal.id) + ' = T' + str(expressions[0].id) + ' <= T' + str(expressions[1].id))
         return temporal
     
     # Visit a parse tree produced by YAPLParser#equalExpr.
@@ -524,30 +533,38 @@ class Visitor(YAPLVisitor):
         temporal = TemporalVar('Bool')
         for node in ctx.expr():
             expressions.append(self.visit(node))
-        temporal.setCode(str(temporal) + ' = ' + str(expressions[0]) + ' == ' + str(expressions[1]))
+        temporal.setCode("T" + str(temporal.id) + ' = T' + str(expressions[0].id) + ' == T' + str(expressions[1].id))
         return temporal
     
     # Visit a parse tree produced by YAPLParser#notExpr.
     def visitNotExpr(self, ctx):
         temporal = TemporalVar('Bool')
-        temporal.setCode(str(temporal) + ' =  NOT' + str(self.visit(ctx.expr())))
+        temporal.setCode("T" + str(temporal.id) + ' =  NOT T' + str(self.visit(ctx.expr()).id))
         return temporal
     
     #------------------------------------------------------------
     
     # Visit a parse tree produced by YAPLParser#stringExpr.
     def visitStringExpr(self, ctx):
-        return ctx.getText()
+        temporal = TemporalVar('String')
+        temporal.setCode("T" + str(temporal.id) + " = " + ctx.getText())
+        return temporal
     
     # Visit a parse tree produced by YAPLParser#intExpr.
     def visitIntExpr(self, ctx):
-        return ctx.getText()
+        temporal = TemporalVar('Int')
+        temporal.setCode("T" + str(temporal.id) + " = " + ctx.getText())
+        return temporal
     
     # Visit a parse tree produced by YAPLParser#trueExpr.
     def visitTrueExpr(self, ctx):
-        return 'true'
+        temporal = TemporalVar('Bool')
+        temporal.setCode("T" + str(temporal.id) + " = true")
+        return temporal
     
     # Visit a parse tree produced by YAPLParser#falseExpr.
     def visitFalseExpr(self, ctx):
-        return 'false'
+        temporal = TemporalVar('Bool')
+        temporal.setCode("T" + str(temporal.id) + " = false")
+        return temporal
 

@@ -52,7 +52,7 @@ def testGrammar(test_file):
     visitor.visit(tree)
     
     
-    # #Print Table
+    # #Print Table  
     names = []
     types = []
     scopes = []
@@ -90,7 +90,7 @@ def testGrammar(test_file):
     print("\n\n\n##############################  Cleaned Final Temporal Variables ##############################\n")
     for n in temporal_vars:
         if "="  in n.code or '0x' in n.code:
-            print(n)
+            print("T" + str(n.id))
     
 def main(argv):
     test_file = argv[1]

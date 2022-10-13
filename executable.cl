@@ -1,37 +1,23 @@
-class Person {
-   name : String;
-   energy : Int <- 100;
-   
-   walk(steps : Int) : Int {
-      {
-         energy <- energy - steps;
-         energy;
-      }
-   };
-};
-
 class Main {
    
-   my_person : Person  <- (new Person);
-   new_energy : Int;
+   current_number : Int  <- 1;
+   last_number : Int  <- 1;
+   back_up_number : Int;
+   n : Int;
+   control : Bool <- true;
 
-   print(my_string: String) : String {
+   main() : Int {
       {
-         out_string(my_string);
-         my_string;
-      }
-   };
-
-   main() : Person {
-      {
-         print("Type the name of your character: ");
-         my_person.name <- in_string();
-         print("Type the number of steps you want it to walk: ");
-         new_energy <- my_person.walk(2);
-         print("The energy of your character is: ");
-         out_int(new_energy);
-         my_person;
+         n <- in_int();
+         out_int(current_number);
+         while(control) loop {
+            back_up_number <- current_number;
+            current_number <- current_number + last_number;
+            last_number <- back_up_number;
+            out_int(current_number);
+            n <- n-1; 
+         } pool;
+         n;
       }
    };
 };
-
