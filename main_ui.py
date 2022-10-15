@@ -14,7 +14,7 @@ class numberLines(tk.Text):
         super().__init__(master, **kwargs)
 
         self.text_widget = text_widget
-        self.text_widget.bind('<FocusIn>', self.on_key_press)
+        self.text_widget.bind('<KeyPress>', self.on_key_press)
 
         self.insert(1.0, '1')
         self.configure(state='disabled')
@@ -74,6 +74,6 @@ if __name__ == '__main__':
     l = numberLines(window, text_area_code, width=2, height=38, font=("Times New Roman", 15), foreground="gray", highlightthickness=0)
     adharbtn.grid(row=0, column=0, columnspan=10)
     runbtn.grid(row=0, column=11, columnspan=10)
-    text_area_code.grid(column=0, row=1, columnspan=20, rowspan=50)
-    l.grid(column=0, row=1, padx=(0, 279))
+    text_area_code.grid(column=0, row=1, columnspan=17, rowspan=50, padx=(40, 0))
+    l.grid(column=0, row=1, padx=(0, 5), pady=(135, 0))
     window.mainloop()

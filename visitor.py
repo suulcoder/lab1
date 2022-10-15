@@ -5,7 +5,7 @@ from Compiled.YAPLVisitor import YAPLVisitor
 import re
 from semanticVisitor import symbolTable, Symbol_not_found
 from symbolTable import displacements
-
+intermediate_code_list = []
 intermidiate_code = {}
 stack_classes = []
 io_methods = ['in_string','in_int','in_bool','out_string','out_int','out_string']
@@ -21,7 +21,11 @@ executables_atributes = {}
 formals_functions = {}
 temporal_vars = []
 
+def get_intermidiate_code_list():
+    return intermediate_code_list
+    
 def print_intermidiate_code(my_string):
+    intermediate_code_list.append(my_string)
     print(my_string)
 
 def clean_intermidiate_code():
@@ -245,8 +249,8 @@ class Visitor(YAPLVisitor):
         code = ""
         for parameter in parameters:
             param = self.visit(parameter)
-            code += "param T" + str(param.id)
-        code += "\n" + str(temporal) + " = call " + function_name + ", " + str(len(parameters))
+            code += "param T" + str(param.id) + "\n"
+        code += "\n" + "T" + str(temporal.id) + " = call " + function_name + ", " + str(len(parameters))
         temporal.setCode(code)
         return temporal
 
@@ -254,7 +258,7 @@ class Visitor(YAPLVisitor):
     def visitParameter(self, ctx):
         temporal = TemporalVar()
         var = self.visitChildren(ctx)
-        temporal.setCode("T" + str(temporal.id) + " = " + str(var.id))
+        temporal.setCode("T" + str(temporal.id) + " = T" + str(var.id))
         return temporal
     
     #------------------------------------------------------------
@@ -271,10 +275,6 @@ class Visitor(YAPLVisitor):
     
     # Visit a parse tree produced by YAPLParser#InstanceExpr.
     def visitInstanceExpr(self, ctx):
-        
-        
-        
-    
         type = ctx.TYPE().getText()
         temporal = TemporalVar(ctx.TYPE().getText())
         if(type == 'Int'):
@@ -353,7 +353,7 @@ class Visitor(YAPLVisitor):
                 temporal_param.setCode("T" + str(temporal_param.id) + " = T" + str(_call.id))
         else:
             temporal_param.setCode("T" + str(temporal_param.id) + " = " + ctx.getText().split("(")[-1].split(")")[0])
-        temporal.setCode("param T" + str(temporal_param.id) + "\n" + str(temporal) + " = call out_int, 1")
+        temporal.setCode("param T" + str(temporal_param.id) + "\nT" + str(temporal.id) + " = call out_int, 1")
         return temporal
     
     #------------------------------------------------------------

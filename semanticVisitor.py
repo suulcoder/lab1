@@ -214,7 +214,13 @@ class SemanticVisitor(YAPLVisitor):
             'Atribute',                                     #Context
             line=name.getPayload().line
         )
-        self.visitChildren(ctx)
+        expr = ctx.expr()
+        if(expr!=None):
+            expr = self.visit(expr)
+            if(str(type)!=expr.get('type')):
+                printError('Atribute type must be the same as defined')
+        else:
+            self.visitChildren(ctx)
         
         # ==============================================================
         # Important to return ('method',name,len(ctx.formal())) 
