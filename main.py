@@ -13,6 +13,7 @@ from Compiled.YAPLParser import YAPLParser
 from tabulate import tabulate
 from main_ui import *
 from error import *
+from tkinter import messagebox
 #Error Listener when error is detected
 class MyErrorListener(ErrorListener):
     def syntaxError(self, recognizer, offendingSymbol, line, column, msg, e):
@@ -106,4 +107,6 @@ if __name__ == '__main__':
     if len(errorslist) > 0:
         for i in errorslist:
             text_area_error.insert(tk.INSERT,i)
+    else:
+        messagebox.showinfo("Say Hello", "Code compiled succesfully, no errors found!")
     window.mainloop()

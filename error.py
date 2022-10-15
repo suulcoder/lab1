@@ -24,6 +24,6 @@ def printError(error, line=None, start_index=None):
         print('\nSemantic Error: ' + error + '\n')
         errorslist.append('\nSemantic Error: ' + error + '\n')
         # text_area_error.insert(tk.INSERT,'\nSemantic Error: ' + error + '\n')
-    print('Hlolaaaaaa-',len(errorslist))
+    # print('Hlolaaaaaa-',len(errorslist))
     # window.mainloop()
     
