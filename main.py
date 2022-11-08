@@ -79,17 +79,19 @@ def testGrammar(test_file):
     # window.mainloop()
     
     #Intermidiate Code
-    if len(errorslist) == 0:
-        print("\n\n\n##############################  Intermidiate Code ##############################\n")
-        intermidate_code_visitor = Visitor()
-        intermidate_code_visitor.visit(tree)
-        temporal_vars = get_intermidiate_code()
-        
-        
-        print("\n\n\n##############################  Cleaned Final Temporal Variables ##############################\n")
-        for n in temporal_vars:
-            if "="  in n.code or '0x' in n.code:
-                print("T" + str(n.id))
+    print("\n\n\n##############################  Intermidiate Code ##############################\n")
+    intermidate_code_visitor = Visitor()
+    intermidate_code_visitor.visit(tree)
+    temporal_vars, intermidate_list = get_intermidiate_code()
+    with open('./intermediate_code.txt', 'w') as f:
+        for line in intermidate_list:
+            f.write("%s\n" % line)
+        f.close()
+    
+    print("\n\n\n##############################  Cleaned Final Temporal Variables ##############################\n")
+    for n in temporal_vars:
+        if "="  in n.code or '0x' in n.code:
+            print("T" + str(n.id))
             
     #Print Table  
     names = []

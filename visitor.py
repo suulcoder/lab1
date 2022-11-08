@@ -20,6 +20,7 @@ executables_functions = {}
 executables_atributes = {}
 formals_functions = {}
 temporal_vars = []
+intermidate_code_list = []
 
 def get_intermidiate_code_list():
     return intermediate_code_list
@@ -106,6 +107,8 @@ def print_line(line):
     # ============================================================== 
     # Print line
     print_intermidiate_code("\n" + str(line) + " : \n" + intermidiate_code[str(line)])
+    intermidate_code_list.append(str(line) + " :")
+    intermidate_code_list.append(intermidiate_code[str(line)])
     # ============================================================== 
 
 def get_intermidiate_code():
@@ -114,22 +117,25 @@ def get_intermidiate_code():
     #Code should initialize Main function and its atributes:
     
     print_intermidiate_code("\n\n++++++++++++++++  Atributes of Main  ++++++++++++++++\n")
+    intermidate_code_list.append("++++++++++++++++  Atributes of Main  ++++++++++++++++")
     for line in executables_atributes.get('Main'):
         print_line(line)
         
     #Code should start with Main.main()
     print_intermidiate_code("\n\n++++++++++++++++  Exucatbles at Main.main  ++++++++++++++++\n")
+    intermidate_code_list.append("++++++++++++++++  Exucatbles at Main.main  ++++++++++++++++")
     for line in executables_functions.get('Main.main'):
         print_line(line)
         
     for instance in stack_classes:
         print_intermidiate_code("\n\n++++++++++++++++  Atributes of " + instance +"  ++++++++++++++++\n")
+        intermidate_code_list.append("++++++++++++++++  Atributes of " + instance +"  ++++++++++++++++")
         for line in executables_atributes.get(instance):
             print_line(line)
             
     for method in stack_methods:
         print_intermidiate_code("\n\n++++++++++++++++  Exucatbles at " + method + "  ++++++++++++++++\n")
-        
+        intermidate_code_list.append("++++++++++++++++  Exucatbles at " + method + "  ++++++++++++++++")
         
         if method.count('.')==1:
             for parameter in formals_functions.get(method):
@@ -138,7 +144,7 @@ def get_intermidiate_code():
         for line in executables_functions.get(method):
             print_line(line)
     
-    return temporal_vars
+    return temporal_vars, intermidate_code_list
     
 
 class TemporalVar(object):
@@ -451,9 +457,7 @@ class Visitor(YAPLVisitor):
         for node in ctx.expr():
             expressions.append(self.visit(node))
         temporal = TemporalVar()
-        temporal_end = TemporalVar()
-        temporal.setCode("ifFALSE T" + str(expressions[0].id) + " goto " + str(temporal_end) + "\n" + expressions[1].code + "\ngoto " + str(temporal))
-        temporal_end.setCode('')
+        temporal.setCode("ifFALSE T" + str(expressions[0].id) + " goto " + "next" + "\n" + expressions[1].code + "\ngoto " + str(temporal))
         return temporal
     
     #------------------------------------------------------------
