@@ -1,36 +1,53 @@
 ++++++++++++++++  Atributes of Main  ++++++++++++++++
 _(1)_ :
-T1 = & 0x3b9ac9fc
 T1 = 1
 _(0)_ :
-a : 0x0
-a = T1
+current_number : 0x0
+current_number = T1
 _(3)_ :
-T3 = & 0x3b9ac9f8
-T3 = 2
+T3 = 1
 _(2)_ :
-b : 0x4
-b = T3
+last_number : 0x4
+last_number = T3
 _(4)_ :
-c : 0x8
-++++++++++++++++  Exucatbles at Main.main  ++++++++++++++++
+back_up_number : 0x8
 _(5)_ :
+n : 0xc
+_(7)_ :
+T7 = 1
+_(6)_ :
+control : 0x10
+control = T7
+++++++++++++++++  Exucatbles at Main.main  ++++++++++++++++
+_(8)_ :
 execute Main.main.1
 ++++++++++++++++  Exucatbles at Main.main.1  ++++++++++++++++
-_(6)_ :
-T6 = & 0x3b9ac9f4
-T6 = 0x8
 _(9)_ :
-T9 = & 0x3b9ac9f0
-T9 = 0x0
-_(10)_ :
-T10 = & 0x3b9ac9ec
-T10 = 0x4
-_(8)_ :
-T8 = & 0x3b9ac9e8
-T8 = T9 + T10
-_(7)_ :
-T6 = T8
+T9 = 0xc
 _(11)_ :
-T11 = & 0x3b9ac9e4
-T11 = 0
+T11 = 60
+_(10)_ :
+T9 = T11
+_(14)_ :
+T14 = 0xc
+_(17)_ :
+T17 = 0xc
+_(18)_ :
+T18 = 1
+_(16)_ :
+T16 = T17 + T18
+_(15)_ :
+T14 = T16
+_(19)_ :
+T19 = 0xc
+_(21)_ :
+T21 = 0
+_(20)_ :
+T19 = T21
+_(13)_ :
+T13 = 0x10
+_(12)_ :
+if T13 goto _(15)_ 
+goto _(20)_
+_(22)_ :
+T22 = 0xc

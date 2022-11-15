@@ -1,13 +1,16 @@
 class Main {
    
-   a : Int  <- 1;
-   b : Int  <- 2;
-   c : Int;
+   current_number : Int  <- 1;
+   last_number : Int  <- 1;
+   back_up_number : Int;
+   n : Int;
+   control : Bool <- true;
 
    main() : Int {
       {
-         c <- a + b;
-         0;
+         n <- 60;
+         if control then n <- n+1 else n <- 0 fi;
+         n;
       }
    };
 };

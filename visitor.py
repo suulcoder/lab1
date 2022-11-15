@@ -23,9 +23,11 @@ temporal_vars = []
 intermidate_code_list = []
 
 def get_intermidiate_code_list():
+    global intermidate_code_list
     return intermediate_code_list
     
 def print_intermidiate_code(my_string):
+    global intermidate_code_list
     intermediate_code_list.append(my_string)
     print(my_string)
 
@@ -168,7 +170,7 @@ class TemporalVar(object):
                 self.address = hex(int(limit_stack - displacements.get(self.type)))
                 self.size = displacements.get(self.type)
                 limit_stack -= displacements.get(self.type)
-            self.code = "T" + str(self.id) + " = & " + str(self.address) + '\n' + code
+            self.code = code
         else:
             self.code = code
         intermidiate_code['_(' + str(self.id) + ')_'] = self.code
@@ -330,9 +332,9 @@ class Visitor(YAPLVisitor):
             if _call:
                 temporal_param.setCode("T" + str(temporal_param.id) + " = " + str(_call.id))
         elif 'true' in ctx.getText():
-            temporal_param.setCode("T" + str(temporal_param.id) + " = true")
+            temporal_param.setCode("T" + str(temporal_param.id) + " = 1")
         elif 'false' in ctx.getText():
-            temporal_param.setCode("T" + str(temporal_param.id) + " = false")  
+            temporal_param.setCode("T" + str(temporal_param.id) + " = 0")  
         temporal.setCode("param T" + str(temporal_param.id) + "\nT" + str(temporal.id) + " = call out_bool, 1")
         return temporal
 
@@ -571,12 +573,12 @@ class Visitor(YAPLVisitor):
     # Visit a parse tree produced by YAPLParser#trueExpr.
     def visitTrueExpr(self, ctx):
         temporal = TemporalVar('Bool')
-        temporal.setCode("T" + str(temporal.id) + " = true")
+        temporal.setCode("T" + str(temporal.id) + " = 1")
         return temporal
     
     # Visit a parse tree produced by YAPLParser#falseExpr.
     def visitFalseExpr(self, ctx):
         temporal = TemporalVar('Bool')
-        temporal.setCode("T" + str(temporal.id) + " = false")
+        temporal.setCode("T" + str(temporal.id) + " = 0")
         return temporal
 

@@ -4,7 +4,7 @@ import sys
 
 from semanticVisitor import SemanticVisitor, symbolTable
 from visitor import Visitor, get_intermidiate_code, get_intermidiate_code_list
-
+from intermediate_code import get_assembly_code
 from antlr4 import *
 from antlr4.error.ErrorListener import ErrorListener
 from antlr4.tree.Trees import Trees
@@ -79,7 +79,6 @@ def testGrammar(test_file):
     # window.mainloop()
     
     #Intermidiate Code
-    print("\n\n\n##############################  Intermidiate Code ##############################\n")
     intermidate_code_visitor = Visitor()
     intermidate_code_visitor.visit(tree)
     temporal_vars, intermidate_list = get_intermidiate_code()
@@ -143,7 +142,14 @@ def testGrammar(test_file):
     # t = Table(root)
     # root.mainloop()
     
+    print("\n\n\n##############################  Intermidiate Code ##############################\n")
+    inter_list = get_intermidiate_code_list()
+    for n in inter_list:
+        print(n)
         
+    print("\n\n\n##############################  Assembly Code ##############################\n")
+    #Assembly Code:
+    assemby_code = get_assembly_code(inter_list)    
                 
 def main(argv):
     test_file = argv[1]
