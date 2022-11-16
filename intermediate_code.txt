@@ -1,40 +1,32 @@
 ++++++++++++++++  Atributes of Main  ++++++++++++++++
-_(1)_ :
-T1 = 1
 _(0)_ :
-current_number : 0x0
-current_number = T1
-_(3)_ :
-T3 = 1
+n : 0x0
 _(2)_ :
-last_number : 0x4
-last_number = T3
-_(4)_ :
-control : 0x8
+T2 = 1
+_(1)_ :
+control : 0x4
+control = T2
 ++++++++++++++++  Exucatbles at Main.main  ++++++++++++++++
-_(5)_ :
+_(3)_ :
 execute Main.main.1
 ++++++++++++++++  Exucatbles at Main.main.1  ++++++++++++++++
+_(4)_ :
+T4 = 0x0
 _(6)_ :
-T6 = 0x8
-_(8)_ :
-T8 = 1
-_(7)_ :
-T6 = T8
-_(9)_ :
-if T10 goto _(12)_ 
-goto _(15)_
-_(11)_ :
-T11 = 0x0
-_(13)_ :
-T13 = 0
+T6 = 100
+_(5)_ :
+T4 = T6
 _(12)_ :
-T11 = T13
-_(14)_ :
-T14 = 0x4
-_(16)_ :
-T16 = 0
-_(15)_ :
-T14 = T16
-_(10)_ :
-T10 = 0x8
+ifFALSE T7 goto next
+T9 = T11
+goto _(12)_
+_(8)_ :
+T8 = 0x4
+_(7)_ :
+T7 = T8
+_(9)_ :
+T9 = 0x4
+_(11)_ :
+T11 = 0
+_(13)_ :
+T13 = 0x0

@@ -1,13 +1,13 @@
 class Main {
    
-   current_number : Int  <- 1;
-   last_number : Int  <- 1;
-   control : Bool;
+   n : Int;
+   control : Bool <- true;
 
    main() : Int {
       {
-         control <- true;
-         if control then current_number <- 0 else last_number <- 0 fi;
+         n <- 100;
+         while(control) loop control<-false pool;
+         n;
       }
    };
 };
