@@ -68,6 +68,13 @@ def print_line(line):
     code = intermidiate_code[str(line)]
     # ==============================================================
     
+    if("if" in code or "while" in code):
+        # ============================================================== 
+        # Print line
+        print_intermidiate_code("\n" + str(line) + " : \n" + intermidiate_code[str(line)])
+        intermidate_code_list.append(str(line) + " :")
+        intermidate_code_list.append(intermidiate_code[str(line)])
+        # ============================================================== 
     # ==============================================================
     # Get the related lines to the current line
     related_lines = re.findall('_\(\d+\)_', code[:]) + ['_(' + n[1:] + ')_' for n in re.findall('T\d+', code[:])]
@@ -106,12 +113,14 @@ def print_line(line):
             stack_methods.append(instance)
     # ============================================================== 
     
-    # ============================================================== 
-    # Print line
-    print_intermidiate_code("\n" + str(line) + " : \n" + intermidiate_code[str(line)])
-    intermidate_code_list.append(str(line) + " :")
-    intermidate_code_list.append(intermidiate_code[str(line)])
-    # ============================================================== 
+    if("if" not in code and "while" not in code):
+        # ============================================================== 
+        # Print line
+        print_intermidiate_code("\n" + str(line) + " : \n" + intermidiate_code[str(line)])
+        intermidate_code_list.append(str(line) + " :")
+        intermidate_code_list.append(intermidiate_code[str(line)])
+        # ============================================================== 
+    
 
 def get_intermidiate_code():
     executables_functions, executables_atributes, formals_functions = clean_intermidiate_code()
