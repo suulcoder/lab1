@@ -8,13 +8,13 @@ class Main {
 
    main() : Int {
       {
-         n <- 1;
+         n <- 5;
          while(control) loop {
             back_up_number <- current_number;
             current_number <- current_number + last_number;
             last_number <- back_up_number;
-            n <- n-1; 
-            control <- n;
+            n <- n-1;
+            control <- not n = 0; 
          } pool;
          n;
       }

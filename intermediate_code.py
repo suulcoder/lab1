@@ -69,6 +69,7 @@ def get_per_line(lines):
                     first = asign(words[0])
                     asignations[words[0]] = first
                 last = asignations.get(words[-1])
+                print(line, first, last)
                 code.append("move $t" + first + ", $t" + last)
         if "++" in line:
             if " Exucatbles at" in line:
@@ -101,6 +102,20 @@ def get_per_line(lines):
             last = asignations.get(words[4])
             code.append("sub $t" + temporal + ", $t" + first + ", $t" + last)
             asignations[words[0]] = temporal
+        elif "==" in line:
+            temporal = get_temporal()
+            first = asignations.get(words[2])
+            last = asignations.get(words[4])
+            code.append("seq $t" + temporal + ", $t" + first + ", $t" + last)
+            asignations[words[0]] = temporal
+        elif "NOT" in line:
+            temporal = get_temporal()
+            temporal_ = get_temporal()
+            last = asignations.get(words[-1])
+            code.append("li $t" + temporal_ + ", 1")
+            code.append("slt $t" + temporal + ", $t" + last + ", $t" + temporal_)
+            asignations[words[0]] = temporal
+            
 
             #Acá hay que poner todas las operaciones aritmeticas y lógicas
             # la resta, la multi, la division, los mayor que, los mayor o igual

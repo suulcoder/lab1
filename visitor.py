@@ -275,7 +275,7 @@ class Visitor(YAPLVisitor):
         for parameter in parameters:
             param = self.visit(parameter)
             code += "param T" + str(param.id) + "\n"
-        code += "\n" + "T" + str(temporal.id) + " = call " + function_name + ", " + str(len(parameters))
+        code += "\n" + "T" + str(temporal.id) + " = execute " + function_name + ", " + str(len(parameters))
         temporal.setCode(code)
         return temporal
 
@@ -531,7 +531,7 @@ class Visitor(YAPLVisitor):
     # Visit a parse tree produced by YAPLParser#unaryExpr.
     def visitUnaryExpr(self, ctx):
         temporal = TemporalVar('Int')
-        temporal.setCode("T" + str(temporal.id) + ' = -T' + str(self.visit(ctx.expr()).id))
+        temporal.setCode("T" + str(temporal.id) + ' = ~ T' + str(self.visit(ctx.expr()).id))
         return temporal
 
     # Visit a parse tree produced by YAPLParser#lessThanExpr.
