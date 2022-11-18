@@ -144,6 +144,10 @@ def get_intermidiate_code():
         for line in executables_atributes.get(instance):
             print_line(line)
             
+        print_intermidiate_code("\n\n++++++++++++++++  End of " + method + "  ++++++++++++++++\n")
+        intermidate_code_list.append("++++++++++++++++  End of " + method + "  ++++++++++++++++")
+        
+            
     for method in stack_methods:
         print_intermidiate_code("\n\n++++++++++++++++  Exucatbles at " + method + "  ++++++++++++++++\n")
         intermidate_code_list.append("++++++++++++++++  Exucatbles at " + method + "  ++++++++++++++++")
@@ -154,6 +158,10 @@ def get_intermidiate_code():
         
         for line in executables_functions.get(method):
             print_line(line)
+            
+        print_intermidiate_code("\n\n++++++++++++++++  End of " + method + "  ++++++++++++++++\n")
+        intermidate_code_list.append("++++++++++++++++  End of " + method + "  ++++++++++++++++")
+        
     
     return temporal_vars, intermidate_code_list
     

@@ -70,11 +70,36 @@ def get_per_line(lines):
                     asignations[words[0]] = first
                 last = asignations.get(words[-1])
                 code.append("move $t" + first + ", $t" + last)
-        if "+" in line and "++" not in line:
+        if "++" in line:
+            if " Exucatbles at" in line:
+                if "Main.main  " in line:
+                    pass
+                else:
+                    code += ["executable_" + line.replace("++++++++++++++++  Exucatbles at ","").replace("  ++++++++++++++++","").replace(".","_") + ":"]
+            if "Atributes of " in line:
+                if "Main" in line:
+                    pass
+                else:
+                    code += ["atributes_" + line.replace("++++++++++++++++  Atributes of ", "").replace("  ++++++++++++++++","") + ":"]
+            if " End of " in line:
+                if "Main.main.1 " in line:
+                    code += ["j end"]
+                else:
+                    code += ["jr $ra"]
+        if "execute " in line:
+            function_name = "executable_" + line.replace("execute ","").replace(".","_")
+            code += ["jal " + function_name]
+        elif "+" in line and "++" not in line:
             temporal = get_temporal()
             first = asignations.get(words[2])
             last = asignations.get(words[4])
             code.append("add $t" + temporal + ", $t" + first + ", $t" + last)
+            asignations[words[0]] = temporal
+        elif "-" in line:
+            temporal = get_temporal()
+            first = asignations.get(words[2])
+            last = asignations.get(words[4])
+            code.append("sub $t" + temporal + ", $t" + first + ", $t" + last)
             asignations[words[0]] = temporal
 
             #Acá hay que poner todas las operaciones aritmeticas y lógicas
@@ -213,7 +238,8 @@ def get_assembly_code(intermidate_code):
             if_count += 1
         else:  
             code += get_per_line(lines) 
-                    
+    code += ["end:"]
+    
     print(registers)
     print(asignations)
 
