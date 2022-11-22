@@ -8,16 +8,18 @@ class Main {
 
    main() : Int {
       {
-         n <- in_int();
-         out_int(current_number);
+         n <- 5;
+         control <- not n = 0; 
          while(control) loop {
             back_up_number <- current_number;
             current_number <- current_number + last_number;
             last_number <- back_up_number;
-            out_int(current_number);
-            n <- n-1; 
+            n <- n-1;
+            control <- not n = 0; 
          } pool;
+         out_int(last_number);
          n;
       }
    };
 };
+

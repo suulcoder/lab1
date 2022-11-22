@@ -157,6 +157,7 @@ def main(argv):
 
 if __name__ == '__main__':
     main(sys.argv)
+    
     window = tk.Tk()
     window.title('Console')
     window.geometry('800x500')

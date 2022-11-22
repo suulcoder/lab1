@@ -3,7 +3,10 @@ import numbers
 operators="+-*/"
 asignations = {}
 code = [".text", "main:"]
-register_counter = 0
+data = [".data"]
+register_counter = 1
+parameter_counter = 0
+received_parameters = 0
 on_if = []
 if_count = 0
 
@@ -20,23 +23,70 @@ registers  = [
     ["9", None],
 ]
 
+parameters  = [
+    ["0", None],
+    ["1", None],
+    ["2", None],
+    ["3", None],
+]
+
+def get_temporal_for_parameters():
+    global received_parameters
+    return received_parameters % 4 
+
+#Functions for parameter control
+def available_parameter_temporal():
+    global parameter_counter
+    returnable = parameter_counter
+    parameter_counter += 1
+    parameter_counter %= 4
+    while (parameters[returnable][1] != None):
+        returnable = parameter_counter
+        parameter_counter += 1
+        parameter_counter %= 4
+    return str(returnable)
+
+def asign_parameter_temporal(address):
+    register = available_parameter_temporal()
+    parameters[int(register)][1] = address
+    return str(register)
+    
+def get_parameter_temporal(var=None):
+    if(var!=None):
+        for register in parameters:
+            if register[1] == var:
+                return register[0]
+        return None
+    return available_parameter_temporal()
+
+#Functions for register control
 def available():
     global register_counter
     returnable = register_counter
     register_counter += 1
     register_counter %= 10
+    areThereFree = False
+    for register in registers:
+        if(register[1] == None):
+            areThereFree = True
+    if(not areThereFree):
+        return None
     while (registers[returnable][1] != None):
         returnable = register_counter
         register_counter += 1
         register_counter %= 10
     return str(returnable)
 
-def asign(address):
+def asign(address, save=False):
     register = available()
-    registers[int(register)][1] = address
+    if register == None:
+        print("Here")
+        return
+    if(save):
+        registers[int(register)][1] = address
     return str(register)
     
-def get_temporal(var=None):
+def get_temporal(var=None): 
     if(var!=None):
         for register in registers:
             if register[1] == var:
@@ -45,75 +95,138 @@ def get_temporal(var=None):
     return available()
 
 def get_per_line(lines):
+    global data
     code = []
     for line in lines:
+        print(line)
         words = line.split()
         #When an atribute is declxared
         if ":" in line and "_(" not in line and ")_" not in line:
             temporal = get_temporal(words[-1])
             if temporal == None:
-                asignations[words[0]] = asign(words[-1])
+                asignations[words[0]] = "$t" +  asign(words[-1], True)
         #When a temporal is declared
         if "=" in line and "T" in words[0] and "x" in words[-1] and "&" not in line:
             temporal = get_temporal(words[-1])
-            asignations[words[0]] = temporal
+            asignations[words[0]] = "$t" +  temporal
         if line.count("=")==1:
             if words[-1].isnumeric():
-                if "T" in words[0]:
+                if "T" in words[0] and "call" not in line:
                     temporal = get_temporal()
                     code.append("li $t" + temporal + ", " + words[2])
-                    asignations[words[0]] = temporal
-            if "T" in words[-1] and len(words) == 3:
+                    asignations[words[0]] = "$t" + temporal
+            if '"' in line:
+                string_name = "string_" + words[0]
+                string = line.split('"')[-2]
+                data.append(string_name + ': .asciiz "' + string + '"')
+                asignations[words[0]] = string_name
+            elif "T" in words[-1] and len(words) == 3:
                 first = asignations.get(words[0])
                 if(first == None):
-                    first = asign(words[0])
+                    first = "$t" + asign(words[0])
                     asignations[words[0]] = first
                 last = asignations.get(words[-1])
-                print(line, first, last)
-                code.append("move $t" + first + ", $t" + last)
+                if("string_" in last):
+                    code.append("la " + first + ", " + last)
+                else:    
+                    code.append("move " + first + ", " + last)
+            elif "T" in words[0] and "0x" not in words[-1] and "call" not in line:
+                first = asignations.get(words[0])
+                if(first == None):
+                    first = "$t" + asign(words[0])
+                    asignations[words[0]] = first
+                last = asignations.get(words[-1])    
+                if("string_" in last):
+                    code.append("la " + first + ", " + last)
+                else:    
+                    code.append("move " + first + ", " + last)
         if "++" in line:
             if " Exucatbles at" in line:
                 if "Main.main  " in line:
                     pass
                 else:
-                    code += ["executable_" + line.replace("++++++++++++++++  Exucatbles at ","").replace("  ++++++++++++++++","").replace(".","_") + ":"]
+                    code += [
+                        "executable_" + line.replace("++++++++++++++++  Exucatbles at ","").replace("  ++++++++++++++++","").replace(".","_") + ":",
+                        "addi $sp, $sp, -12",
+                        "sw   $ra, 0($sp)",
+                        "sw   $s0, 4($sp)",
+                        "sw   $s1, 8($sp)"
+                        ] 
             if "Atributes of " in line:
                 if "Main" in line:
                     pass
                 else:
-                    code += ["atributes_" + line.replace("++++++++++++++++  Atributes of ", "").replace("  ++++++++++++++++","") + ":"]
+                    code += [
+                        "atributes_" + line.replace("++++++++++++++++  Atributes of ", "").replace("  ++++++++++++++++","") + ":"
+                        "addi $sp, $sp, -12",
+                        "sw   $ra, 0($sp)",
+                        "sw   $s0, 4($sp)",
+                        "sw   $s1, 8($sp)"
+                        ]
             if " End of " in line:
                 if "Main.main.1 " in line:
                     code += ["j end"]
                 else:
-                    code += ["jr $ra"]
+                    code += [
+                        "lw   $ra, 0($sp)",        
+                        "lw   $s0, 4($sp)",
+                        "lw   $s1, 8($sp)",
+                        "addi $sp, $sp, 12", 
+                        "jr $ra"
+                        ]
         if "execute " in line:
             function_name = "executable_" + line.replace("execute ","").replace(".","_")
             code += ["jal " + function_name]
+        elif "received param" in line:
+            global received_parameters
+            asignations[line.split(" ")[-1]] = "a" + str(get_temporal_for_parameters())
+            received_parameters = received_parameters + 1
+        elif "call " in line:
+            words = line.replace(",","").split(" ")
+            code += ["jal executable_" + words[3].replace(".","_")]
+            temporal_ = asignations.get(words[0])
+            if temporal_ == None:
+                temporal_ = "$t" + get_temporal()
+                asignations[words[0]] = temporal_
+            code += ["move " + temporal_ + ", $a0"]
+            global parameters
+            parameters  = [
+                ["0", None],
+                ["1", None],
+                ["2", None],
+                ["3", None],
+            ]
+        elif "param" in line:
+            temporal = asign_parameter_temporal(line.split(" ")[-1])
+            first = asignations.get(line.split(" ")[-1])
+            if("string_" in first):
+                code.append("la $a" + temporal + ", " + first)
+            else:    
+                code += ["move $a" + temporal + ", " + first]
         elif "+" in line and "++" not in line:
-            temporal = get_temporal()
+            temporal = "$t" + get_temporal()
             first = asignations.get(words[2])
             last = asignations.get(words[4])
-            code.append("add $t" + temporal + ", $t" + first + ", $t" + last)
+            code.append("add " + temporal + ", " + first + ", " + last)
             asignations[words[0]] = temporal
         elif "-" in line:
-            temporal = get_temporal()
+            temporal = "$t" + get_temporal()
             first = asignations.get(words[2])
             last = asignations.get(words[4])
-            code.append("sub $t" + temporal + ", $t" + first + ", $t" + last)
+            code.append("sub " + temporal + ", " + first + ", " + last)
             asignations[words[0]] = temporal
         elif "==" in line:
-            temporal = get_temporal()
+            temporal = "$t" + get_temporal()
             first = asignations.get(words[2])
             last = asignations.get(words[4])
-            code.append("seq $t" + temporal + ", $t" + first + ", $t" + last)
+            code.append("seq " + temporal + ", " + first + ", " + last)
             asignations[words[0]] = temporal
         elif "NOT" in line:
-            temporal = get_temporal()
-            temporal_ = get_temporal()
+            temporal = "$t" + get_temporal()
+            temporal_ = "$t" + get_temporal()
             last = asignations.get(words[-1])
-            code.append("li $t" + temporal_ + ", 1")
-            code.append("slt $t" + temporal + ", $t" + last + ", $t" + temporal_)
+            code.append("li " + temporal_ + ", 1")
+            code.append("slt " + temporal + ", " + last + ", " + temporal_)
             asignations[words[0]] = temporal
             
 
@@ -152,7 +265,7 @@ def get_assembly_code(intermidate_code):
                     for code_ in control_code:
                         on_if[-1][1][0] += [code_]
                     if(control_statement in code_line):
-                        on_if[-1][1][1].insert(1, "bne $t" + asignations.get(control_statement) + ", 0, true_statement" + str(on_if[-1][0][0][0]))
+                        on_if[-1][1][1].insert(1, "bne " + asignations.get(control_statement) + ", 0, true_statement" + str(on_if[-1][0][0][0]))
                         #Code is added
                         if_code = on_if[-1][1][0] + on_if[-1][1][1] + on_if[-1][1][2] + on_if[-1][1][3]
                         del on_if[-1]
@@ -193,7 +306,7 @@ def get_assembly_code(intermidate_code):
                     for code_ in while_code:
                         on_if[-1][1][1].insert(-1, code_)
                     if(next_statement in code_line):
-                        on_if[-1][1][1].insert(1, "bne $t" + asignations.get(control_statement) + ", 1, main" + str(on_if[-1][0][0][0]))
+                        on_if[-1][1][1].insert(1, "bne " + asignations.get(control_statement) + ", 1, main" + str(on_if[-1][0][0][0]))
                         extra_code = get_per_line([on_if[-1][0][1]])
                         for code_ in extra_code:
                             on_if[-1][1][1].insert(-1, code_)
@@ -253,11 +366,92 @@ def get_assembly_code(intermidate_code):
             if_count += 1
         else:  
             code += get_per_line(lines) 
-    code += ["end:"]
+    code += [
+        "end:",
+        "li $v0, 10",
+        "syscall"
+        ]
     
     print(registers)
     print(asignations)
-
+        
+    in_int = get_temporal()
+    code += [
+        "",
+        "executable_in_int:",
+        "addi $sp, $sp, -12",
+        "sw   $ra, 0($sp)",
+        "sw   $s0, 4($sp)",
+        "sw   $s1, 8($sp)",
+        "li $v0, 5",
+        "syscall",
+        "move $t" + in_int +", $v0",
+        "move $a0, $t" + in_int,
+        "lw   $ra, 0($sp)",        
+        "lw   $s0, 4($sp)",
+        "lw   $s1, 8($sp)",
+        "addi $sp, $sp, 12", 
+        "jr $ra",
+        " ",
+        "executable_out_int:",
+        "addi $sp, $sp, -12",
+        "sw   $ra, 0($sp)",
+        "sw   $s0, 4($sp)",
+        "sw   $s1, 8($sp)",
+        "li $v0, 1",
+        "syscall",
+        "lw   $ra, 0($sp)",        
+        "lw   $s0, 4($sp)",
+        "lw   $s1, 8($sp)",
+        "addi $sp, $sp, 12", 
+        "jr $ra",
+        " "
+        "",
+        "executable_in_bool:",
+        "addi $sp, $sp, -12",
+        "sw   $ra, 0($sp)",
+        "sw   $s0, 4($sp)",
+        "sw   $s1, 8($sp)",
+        "li $v0, 5",
+        "syscall",
+        "move $t" + in_int +", $v0",
+        "seq $a0, $t" + in_int + ", 1",
+        "lw   $ra, 0($sp)",        
+        "lw   $s0, 4($sp)",
+        "lw   $s1, 8($sp)",
+        "addi $sp, $sp, 12", 
+        "jr $ra",
+        " ",
+        "executable_out_bool:",
+        "addi $sp, $sp, -12",
+        "sw   $ra, 0($sp)",
+        "sw   $s0, 4($sp)",
+        "sw   $s1, 8($sp)",
+        "li $v0, 1",
+        "syscall",
+        "lw   $ra, 0($sp)",        
+        "lw   $s0, 4($sp)",
+        "lw   $s1, 8($sp)",
+        "addi $sp, $sp, 12", 
+        "jr $ra",
+        " ",
+        "executable_out_string:",
+        "addi $sp, $sp, -12",
+        "sw   $ra, 0($sp)",
+        "sw   $s0, 4($sp)",
+        "sw   $s1, 8($sp)",
+        "li $v0, 4",
+        "syscall",
+        "lw   $ra, 0($sp)",        
+        "lw   $s0, 4($sp)",
+        "lw   $s1, 8($sp)",
+        "addi $sp, $sp, 12", 
+        "jr $ra",
+        ""
+    ]
+    
+    global data
+    code += data
     print("----------- Code -----------")
     for line in code:
         print(line)

@@ -1,87 +1,47 @@
 ++++++++++++++++  Atributes of Main  ++++++++++++++++
 _(1)_ :
-T1 = 1
+T1 = "Hola "
 _(0)_ :
-current_number : 0x0
-current_number = T1
+myString1 : 0x0
+myString1 = T1
 _(3)_ :
-T3 = 1
+T3 = " un gusto!"
 _(2)_ :
-last_number : 0x4
-last_number = T3
+myString2 : 0x8
+myString2 = T3
 _(4)_ :
-back_up_number : 0x8
-_(5)_ :
-n : 0xc
-_(7)_ :
-T7 = 1
-_(6)_ :
-control : 0x10
-control = T7
+nombre : 0x10
 ++++++++++++++++  Exucatbles at Main.main  ++++++++++++++++
-_(8)_ :
+_(5)_ :
 execute Main.main.1
 ++++++++++++++++  Exucatbles at Main.main.1  ++++++++++++++++
+_(6)_ :
+T6 = 0x10
+_(8)_ :
+T8 = "saul"
+_(7)_ :
+T6 = T8
 _(9)_ :
-T9 = 0xc
-_(11)_ :
-T11 = 5
-_(10)_ :
-T9 = T11
-_(37)_ :
-ifFALSE T12 goto next
-execute Main.main.2
-goto _(37)_
+T9 = 0x10
 _(13)_ :
-T13 = 0x10
+T13 = 0x0
+_(14)_ :
+T14 = 0x10
 _(12)_ :
-T12 = T13
-_(38)_ :
-T38 = 0xc
-++++++++++++++++  End of Main.main.1  ++++++++++++++++
-++++++++++++++++  Exucatbles at Main.main.2  ++++++++++++++++
+T12 = T13 + T14
 _(15)_ :
 T15 = 0x8
-_(17)_ :
-T17 = 0x0
-_(16)_ :
-T15 = T17
+_(11)_ :
+T11 = T12 + T15
+_(10)_ :
+T9 = T11
 _(18)_ :
-T18 = 0x0
-_(21)_ :
-T21 = 0x0
-_(22)_ :
-T22 = 0x4
-_(20)_ :
-T20 = T21 + T22
+T18 = 0x10
+_(17)_ :
+T17 = T18
+_(16)_ :
+param T17
+T16 = call out_string, 1
 _(19)_ :
-T18 = T20
-_(23)_ :
-T23 = 0x4
-_(25)_ :
-T25 = 0x8
-_(24)_ :
-T23 = T25
-_(26)_ :
-T26 = 0xc
-_(29)_ :
-T29 = 0xc
-_(30)_ :
-T30 = 1
-_(28)_ :
-T28 = T29 - T30
-_(27)_ :
-T26 = T28
-_(31)_ :
-T31 = 0x10
-_(35)_ :
-T35 = 0xc
-_(36)_ :
-T36 = 0
-_(34)_ :
-T34 = T35 == T36
-_(33)_ :
-T33 =  NOT T34
-_(32)_ :
-T31 = T33
-++++++++++++++++  End of Main.main.2  ++++++++++++++++
+T19 = 0x10
+++++++++++++++++  End of Main.main.1  ++++++++++++++++

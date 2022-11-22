@@ -100,7 +100,7 @@ def print_line(line):
         #Get the name of the Object
         instance = instance[0].split('execute ')[-1]
         if instance not in stack_methods:
-            stack_methods.append(instance)
+            stack_methods.append(instance.split(",")[0])
     # ============================================================== 
     
     # ==============================================================
@@ -275,7 +275,7 @@ class Visitor(YAPLVisitor):
         for parameter in parameters:
             param = self.visit(parameter)
             code += "param T" + str(param.id) + "\n"
-        code += "\n" + "T" + str(temporal.id) + " = execute " + function_name + ", " + str(len(parameters))
+        code += "\n" + "T" + str(temporal.id) + " = call " + function_name + ", " + str(len(parameters))
         temporal.setCode(code)
         return temporal
 
@@ -347,7 +347,7 @@ class Visitor(YAPLVisitor):
         if ctx.call():
             _call = self.visit(ctx.call())
             if _call:
-                temporal_param.setCode("T" + str(temporal_param.id) + " = " + str(_call.id))
+                temporal_param.setCode("T" + str(temporal_param.id) + " = T" + str(_call.id))
         elif 'true' in ctx.getText():
             temporal_param.setCode("T" + str(temporal_param.id) + " = 1")
         elif 'false' in ctx.getText():
@@ -362,7 +362,7 @@ class Visitor(YAPLVisitor):
         if ctx.call():
             _call = self.visit(ctx.call())
             if _call:
-                temporal_param.setCode("T" + str(temporal_param.id) + " = " + str(_call.id))
+                temporal_param.setCode("T" + str(temporal_param.id) + " = T" + str(_call.id))
         else:
             temporal_param.setCode("T" + str(temporal_param.id) + " = " + ctx.getText().split("(")[-1].split(")")[0])
         temporal.setCode("param T" + str(temporal_param.id) + "\nT" + str(temporal.id) + " = call out_string, 1")
