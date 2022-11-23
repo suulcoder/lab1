@@ -115,7 +115,7 @@ def get_per_line(lines):
                     temporal = get_temporal()
                     code.append("li $t" + temporal + ", " + words[2])
                     asignations[words[0]] = "$t" + temporal
-            if '"' in line:
+            elif '"' in line:
                 string_name = "string_" + words[0]
                 string = line.split('"')[-2]
                 data.append(string_name + ': .asciiz "' + string + '"')
@@ -228,7 +228,12 @@ def get_per_line(lines):
             code.append("li " + temporal_ + ", 1")
             code.append("slt " + temporal + ", " + last + ", " + temporal_)
             asignations[words[0]] = temporal
-            
+        # elif "*" in line and "**" not in line:
+        #     temporal = "$t" + get_temporal()
+        #     first = asignations.get(words[2])
+        #     last = asignations.get(words[4])
+        #     code.append("mul " + temporal + ", " + first + ", " + last)
+        #     asignations[words[0]] = temporal
 
             #Acá hay que poner todas las operaciones aritmeticas y lógicas
             # la resta, la multi, la division, los mayor que, los mayor o igual
@@ -452,8 +457,9 @@ def get_assembly_code(intermidate_code):
     
     global data
     code += data
-    print("----------- Code -----------")
+    print("----------- Code - start -----------")
     for line in code:
         print(line)
+    print("------------ Code - end ------------")
         
     return code 
