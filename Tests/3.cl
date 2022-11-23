@@ -1,12 +1,12 @@
 class Main {
    
-   a : Int  <- 3;
-   b : Int  <- 2;
+   a : Int  <- 60;
+   b : Int  <- 15;
    c : Int;
 
    main() : Int {
       {
-         c <- a * b;
+         c <- a / b;
          0;
       }
    };

@@ -1,47 +1,30 @@
 ++++++++++++++++  Atributes of Main  ++++++++++++++++
 _(1)_ :
-T1 = "Hola "
+T1 = 60
 _(0)_ :
-myString1 : 0x0
-myString1 = T1
+a : 0x0
+a = T1
 _(3)_ :
-T3 = " un gusto!"
+T3 = 15
 _(2)_ :
-myString2 : 0x8
-myString2 = T3
+b : 0x4
+b = T3
 _(4)_ :
-nombre : 0x10
+c : 0x8
 ++++++++++++++++  Exucatbles at Main.main  ++++++++++++++++
 _(5)_ :
 execute Main.main.1
 ++++++++++++++++  Exucatbles at Main.main.1  ++++++++++++++++
 _(6)_ :
-T6 = 0x10
+T6 = 0x8
+_(9)_ :
+T9 = 0x0
+_(10)_ :
+T10 = 0x4
 _(8)_ :
-T8 = "saul"
+T8 = T9 / T10
 _(7)_ :
 T6 = T8
-_(9)_ :
-T9 = 0x10
-_(13)_ :
-T13 = 0x0
-_(14)_ :
-T14 = 0x10
-_(12)_ :
-T12 = T13 + T14
-_(15)_ :
-T15 = 0x8
 _(11)_ :
-T11 = T12 + T15
-_(10)_ :
-T9 = T11
-_(18)_ :
-T18 = 0x10
-_(17)_ :
-T17 = T18
-_(16)_ :
-param T17
-T16 = call out_string, 1
-_(19)_ :
-T19 = 0x10
+T11 = 0
 ++++++++++++++++  End of Main.main.1  ++++++++++++++++

@@ -8,8 +8,8 @@ from intermediate_code import get_assembly_code
 from antlr4 import *
 from antlr4.error.ErrorListener import ErrorListener
 from antlr4.tree.Trees import Trees
-from Compiled.YAPLLexer import YAPLLexer
-from Compiled.YAPLParser import YAPLParser
+from Compiled.__my__Lexer import __my__Lexer
+from Compiled.__my__Parser import __my__Parser
 from tabulate import tabulate
 from main_ui import *
 from error import *
@@ -49,13 +49,13 @@ def testGrammar(test_file):
     input_stream = FileStream(test_file)
     
     #Lexer actions
-    lexer = YAPLLexer(input_stream)
+    lexer = __my__Lexer(input_stream)
     lexer.removeErrorListeners()
     lexer.addErrorListener(error_listener)
     stream = CommonTokenStream(lexer)
     
     #Parser actions
-    parser = YAPLParser(stream)
+    parser = __my__Parser(stream)
     parser.removeErrorListeners()
     parser.addErrorListener(error_listener)
     
@@ -86,11 +86,6 @@ def testGrammar(test_file):
         for line in intermidate_list:
             f.write("%s\n" % line)
         f.close()
-    
-    print("\n\n\n##############################  Cleaned Final Temporal Variables ##############################\n")
-    for n in temporal_vars:
-        if "="  in n.code or '0x' in n.code:
-            print("T" + str(n.id))
             
     #Print Table  
     names = []
@@ -141,15 +136,23 @@ def testGrammar(test_file):
     # root = Tk()
     # t = Table(root)
     # root.mainloop()
-    
-    print("\n\n\n##############################  Intermidiate Code ##############################\n")
-    inter_list = get_intermidiate_code_list()
-    for n in inter_list:
-        print(n)
+
+    if len(errorslist) == 0:
+        print("\n\n\n##############################  Intermidiate Code ##############################\n")
+        inter_list = get_intermidiate_code_list()
+        for n in inter_list:
+            print(n)
+
+        print("\n\n\n##############################  Cleaned Final Temporal Variables ##############################\n")
+        for n in temporal_vars:
+            if "="  in n.code or '0x' in n.code:
+                print("T" + str(n.id))
         
-    print("\n\n\n##############################  Assembly Code ##############################\n")
-    #Assembly Code:
-    assemby_code = get_assembly_code(inter_list)    
+        print("\n\n\n##############################  Assembly Code ##############################\n")
+        #Assembly Code:
+        assemby_code = get_assembly_code(inter_list)
+    else:
+        print("\n####################################\n\nCode has errors, please check them.\n\n####################################\n")    
                 
 def main(argv):
     test_file = argv[1]
