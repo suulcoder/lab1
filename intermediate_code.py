@@ -179,7 +179,9 @@ def get_per_line(lines):
             code += ["jal " + function_name]
         elif "received param" in line:
             global received_parameters
-            asignations[line.split(" ")[-1]] = "a" + str(get_temporal_for_parameters())
+            temporal = get_temporal()
+            asignations[line.split(" ")[-1]] = "$t" + temporal
+            code.append("move $t" + temporal + ", $a" + str(received_parameters))
             received_parameters = received_parameters + 1
         elif "call " in line:
             words = line.replace(",","").split(" ")
@@ -228,7 +230,7 @@ def get_per_line(lines):
             code.append("li " + temporal_ + ", 1")
             code.append("slt " + temporal + ", " + last + ", " + temporal_)
             asignations[words[0]] = temporal
-        elif "*" in line and "**" not in line:
+        elif "*" in line and "**" not in line and not "= *":
             temporal = "$t" + get_temporal()
             first = asignations.get(words[2])
             last = asignations.get(words[4])
@@ -313,7 +315,7 @@ def get_assembly_code(intermidate_code):
                                 else:
                                     on_if[-1][1][1].insert(-1, code_)
                         else:
-                            code += if_code + ["main" + str(if_count) + ":"]
+                            code += if_code + ["main" + str(if_count - 1) + ":"]
             elif(control_status=="while"):
                 while_status = len(on_if[-1][0])
                 if(while_status==5):   #We are on control_statement
@@ -356,7 +358,7 @@ def get_assembly_code(intermidate_code):
                                 else:
                                     on_if[-1][1][1].insert(-1, code_)
                         else:
-                            code += while_code + ["main" + str(if_count) + ":"]
+                            code += while_code + ["main" + str(if_count - 1) + ":"]
         elif "ifFALSE" in code_line:
             while_structure = code_line.split("\n")
             control_statement = while_structure[2].split(" ")[1]
@@ -371,6 +373,7 @@ def get_assembly_code(intermidate_code):
                     ]
                 ]
             )
+            if_count += 1
         elif "if" in code_line:
             if_structure = code_line.replace("\n","").split(" ")
             control_statement = if_structure[3]
@@ -382,8 +385,8 @@ def get_assembly_code(intermidate_code):
                     [
                         ["control_statement" + str(if_count) + ":"], #Control_statement
                         ["if_statement" + str(if_count) + ":" , "j false_statement" + str(if_count)], #if_statement
-                        ["true_statement" + str(if_count) + ":", "j main" + str(if_count + 1)], #true_statement
-                        ["false_statement" + str(if_count) + ":", "j main" + str(if_count + 1)] #false_statement
+                        ["true_statement" + str(if_count) + ":", "j main" + str(if_count)], #true_statement
+                        ["false_statement" + str(if_count) + ":", "j main" + str(if_count)] #false_statement
                     ]
                 ]
             )

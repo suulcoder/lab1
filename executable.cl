@@ -1,15 +1,24 @@
 class Main {
    
-   myString1 : String  <- "Hola ";
-   myString2 : String  <- " un gusto!";
-   nombre : String;
+   current_number : Int  <- 1;
+   last_number : Int  <- 1;
+   back_up_number : Int;
+   n : Int;
+   control : Bool <- true;
 
-   main() : String {
+   main() : Int {
       {
-         nombre <- "saul";
-         nombre <- myString1 + nombre + myString2;
-         out_string(nombre);
-         nombre;
+         n <- 5;
+         control <- not n = 0; 
+         while(control) loop {
+            back_up_number <- current_number;
+            current_number <- current_number + last_number;
+            last_number <- back_up_number;
+            n <- n-1;
+            control <- not n = 0; 
+         } pool;
+         out_int(last_number);
+         n;
       }
    };
 };

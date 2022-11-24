@@ -8,8 +8,8 @@ from intermediate_code import get_assembly_code
 from antlr4 import *
 from antlr4.error.ErrorListener import ErrorListener
 from antlr4.tree.Trees import Trees
-from Compiled.__my__Lexer import __my__Lexer
-from Compiled.__my__Parser import __my__Parser
+from Compiled.YAPLLexer import YAPLLexer
+from Compiled.YAPLParser import YAPLParser
 from tabulate import tabulate
 from main_ui import *
 from error import *
@@ -49,13 +49,13 @@ def testGrammar(test_file):
     input_stream = FileStream(test_file)
     
     #Lexer actions
-    lexer = __my__Lexer(input_stream)
+    lexer = YAPLLexer(input_stream)
     lexer.removeErrorListeners()
     lexer.addErrorListener(error_listener)
     stream = CommonTokenStream(lexer)
     
     #Parser actions
-    parser = __my__Parser(stream)
+    parser = YAPLParser(stream)
     parser.removeErrorListeners()
     parser.addErrorListener(error_listener)
     
@@ -143,10 +143,10 @@ def testGrammar(test_file):
         for n in inter_list:
             print(n)
 
-        print("\n\n\n##############################  Cleaned Final Temporal Variables ##############################\n")
-        for n in temporal_vars:
-            if "="  in n.code or '0x' in n.code:
-                print("T" + str(n.id))
+        # print("\n\n\n##############################  Cleaned Final Temporal Variables ##############################\n")
+        # for n in temporal_vars:
+        #     if "="  in n.code or '0x' in n.code:
+        #         print("T" + str(n.id))
         
         print("\n\n\n##############################  Assembly Code ##############################\n")
         #Assembly Code:
