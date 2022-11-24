@@ -80,7 +80,6 @@ def available():
 def asign(address, save=False):
     register = available()
     if register == None:
-        print("Here")
         return
     if(save):
         registers[int(register)][1] = address
@@ -98,7 +97,6 @@ def get_per_line(lines):
     global data
     code = []
     for line in lines:
-        print(line)
         words = line.split()
         #When an atribute is declxared
         if ":" in line and "_(" not in line and ")_" not in line:
