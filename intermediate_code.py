@@ -240,18 +240,18 @@ def get_per_line(lines):
             last = asignations.get(words[4])
             code.append("div " + temporal + ", " + first + ", " + last)
             asignations[words[0]] = temporal
-        elif "<" in line and "<<" not in line:
+        elif "<" in line and "<=" not in line:
             temporal = "$t" + get_temporal()
             first = asignations.get(words[2])
             last = asignations.get(words[4])
             code.append("slt " + temporal + ", " + first + ", " + last)
             asignations[words[0]] = temporal
-        # elif "<=" in line:
-        #     temporal = "$t" + get_temporal()
-        #     first = asignations.get(words[2])
-        #     last = asignations.get(words[4])
-        #     code.append("slt " + temporal + ", " + first + ", " + last)
-        #     asignations[words[0]] = temporal
+        elif "<=" in line:
+            temporal = "$t" + get_temporal()
+            first = asignations.get(words[2])
+            last = asignations.get(words[4])
+            code.append("sle " + temporal + ", " + first + ", " + last)
+            asignations[words[0]] = temporal
 
 
             #Acá hay que poner todas las operaciones aritmeticas y lógicas
