@@ -1,7 +1,10 @@
 class Main {
    
    n : Int;
+   --m : Int <- 2;
+   --m : Int <- 3;
    m : Int <- 5;
+   --m : Int <- 7;
    control : Bool <- true;
 
    main() : Int {

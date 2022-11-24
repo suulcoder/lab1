@@ -3,7 +3,7 @@ import numbers
 operators="+-*/"
 asignations = {}
 code = [".text", "main:"]
-data = [".data"]
+data = [".data", 'newline: .asciiz "\n"']
 register_counter = 1
 parameter_counter = 0
 received_parameters = 0
@@ -230,7 +230,7 @@ def get_per_line(lines):
             code.append("li " + temporal_ + ", 1")
             code.append("slt " + temporal + ", " + last + ", " + temporal_)
             asignations[words[0]] = temporal
-        elif "*" in line and "**" not in line and not "= *":
+        elif "*" in line and not "= *":
             temporal = "$t" + get_temporal()
             first = asignations.get(words[2])
             last = asignations.get(words[4])
@@ -427,6 +427,9 @@ def get_assembly_code(intermidate_code):
         "sw   $s1, 8($sp)",
         "li $v0, 1",
         "syscall",
+        "li $v0, 4",
+        "la $a0, newline",
+        "syscall",
         "lw   $ra, 0($sp)",        
         "lw   $s0, 4($sp)",
         "lw   $s1, 8($sp)",
@@ -455,6 +458,9 @@ def get_assembly_code(intermidate_code):
         "sw   $s0, 4($sp)",
         "sw   $s1, 8($sp)",
         "li $v0, 1",
+        "syscall",
+        "li $v0, 4",
+        "la $a0, newline",
         "syscall",
         "lw   $ra, 0($sp)",        
         "lw   $s0, 4($sp)",
