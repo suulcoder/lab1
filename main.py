@@ -1,4 +1,5 @@
 from cmath import exp
+from email.policy import default
 from inspect import signature
 import sys
 
@@ -8,12 +9,13 @@ from intermediate_code import get_assembly_code
 from antlr4 import *
 from antlr4.error.ErrorListener import ErrorListener
 from antlr4.tree.Trees import Trees
-from Compiled.YAPLLexer import YAPLLexer
-from Compiled.YAPLParser import YAPLParser
+from Compiled.__my__Lexer import __my__Lexer
+from Compiled.__my__Parser import __my__Parser
 from tabulate import tabulate
 from main_ui import *
 from error import *
 from tkinter import messagebox
+from tkinter import filedialog as fd
 
 lst = []
 total_rows = 0
@@ -49,13 +51,13 @@ def testGrammar(test_file):
     input_stream = FileStream(test_file)
     
     #Lexer actions
-    lexer = YAPLLexer(input_stream)
+    lexer = __my__Lexer(input_stream)
     lexer.removeErrorListeners()
     lexer.addErrorListener(error_listener)
     stream = CommonTokenStream(lexer)
     
     #Parser actions
-    parser = YAPLParser(stream)
+    parser = __my__Parser(stream)
     parser.removeErrorListeners()
     parser.addErrorListener(error_listener)
     
@@ -167,8 +169,9 @@ if __name__ == '__main__':
     text_area_error = tk.Text(window, width=150, height=30, font=("Calibri", 15), foreground="black")
     text_area_error.grid(column=0, row=1, columnspan=10, rowspan=50)
     if len(get_intermidiate_code_list()) > 0:
-        for i in get_intermidiate_code_list():
-            text_area_error.insert(tk.INSERT,i+"\n")
+        with open('MIPS_generated/code.asm', 'r') as file:
+            for i in file:
+                text_area_error.insert(tk.INSERT,i+"\n")
     if len(errorslist) > 0:
         for i in errorslist:
             text_area_error.insert(tk.INSERT,i)

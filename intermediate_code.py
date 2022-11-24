@@ -488,6 +488,10 @@ def get_assembly_code(intermidate_code):
     print("----------- Code - start -----------")
     for line in code:
         print(line)
+    with open('MIPS_generated/code.asm', 'w') as file:
+        for n in code:
+            file.write(n + "\n")
+
     print("------------ Code - end ------------")
         
     return code 
