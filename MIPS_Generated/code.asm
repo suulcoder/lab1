@@ -130,5 +130,4 @@ addi $sp, $sp, 12
 jr $ra
 
 .data
-newline: .asciiz "
-"
+newline: .asciiz "\n"
